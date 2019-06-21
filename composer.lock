@@ -1,0 +1,52 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "ddc0d7eab827e02b52af880c681b84f7",
+    "packages": [],
+    "packages-dev": [
+        {
+            "name": "hell-sh/nose",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hell-sh/Nose.git",
+                "reference": "f962ae83686a8e2e0b3ceca5d65337a4e1bec58b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hell-sh/Nose/zipball/f962ae83686a8e2e0b3ceca5d65337a4e1bec58b",
+                "reference": "f962ae83686a8e2e0b3ceca5d65337a4e1bec58b",
+                "shasum": ""
+            },
+            "bin": [
+                "nose"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/AssertionFailedException.class.php",
+                    "src/Nose.class.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Nose sniffs out errors in your code with no dependencies.",
+            "homepage": "https://github.com/hell-sh/Nose",
+            "time": "2019-06-13T15:47:40+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^7.0"
+    },
+    "platform-dev": []
+}

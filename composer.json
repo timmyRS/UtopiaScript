@@ -1,0 +1,19 @@
+{
+	"name": "timmyrs/utopiascript",
+	"description": "An experimental scripting language aimed at everyone.",
+	"homepage": "https://github.com/timmyrs/UtopiaScript",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"UtopiaScript\\": "src/",
+			"UtopiaScriptDebugExtension\\": "extensions/debug/",
+			"UtopiaScriptPhpStatementExtension\\": "extensions/php-statement/"
+		}
+	},
+	"require": {
+		"php": "^7.0"
+	},
+	"require-dev": {
+		"hell-sh/nose": "^1.0"
+	}
+}

@@ -1,0 +1,5 @@
+<?php
+class ConditionalsTest
+{
+	// TODO
+}

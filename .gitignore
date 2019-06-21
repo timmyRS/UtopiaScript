@@ -1,0 +1,6 @@
+.idea/
+.sass-cache/
+_site/
+vendor/
+.phpunit.result.cache
+*.us

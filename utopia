@@ -1,0 +1,159 @@
+<?php /** @noinspection PhpUnhandledExceptionInspection */
+$flags = [
+    "repl" => false,
+	"stopwatch" => false,
+	"debug" => false,
+	"php-statement" => false,
+	"help" => false
+];
+function switchArg(string $arg) : bool
+{
+	global $flags;
+	switch($arg)
+	{
+        case "-i":
+        case "repl":
+        case "--repl":
+        case "interactive":
+        case "--interactive":
+            $flags["repl"] = true;
+            break;
+
+        case "-t":
+        case "--time":
+        case "stopwatch":
+        case "--stopwatch":
+            $flags["stopwatch"] = true;
+            break;
+
+        case "-d":
+        case "debug":
+        case "--debug":
+        case "--debug-mode":
+            $flags["debug"] = true;
+            break;
+
+	    case "-p":
+        case "--enable-php-statement":
+            $flags["php-statement"] = true;
+            break;
+
+        case "?":
+		case "-?":
+		case "help":
+		case "--help":
+			$flags["help"] = true;
+			break;
+
+		default:
+			return false;
+	}
+	return true;
+}
+$file = "";
+for($i = 1; $i < count($argv); $i++)
+{
+	$arg = strtolower($argv[$i]);
+	if(substr($arg, 0, 1) == "-" && substr($arg, 0, 2) != "--")
+	{
+		$arr = str_split($arg);
+		for($j = 1; $j < count($arr); $j++)
+		{
+			switchArg("-".$arr[$j]);
+		}
+	}
+	else if(!switchArg($arg))
+	{
+		$file = $arg;
+	}
+}
+if($flags["help"] || (!$file && !$flags["repl"]))
+{
+	die("Syntax: utopia [file] [-i|--repl|--interactive] [-t|--stopwatch] [-d|--debug] [-p|--enable-php-statement] [file]\r\nEither --repl or [file] has to be given.\r\n");
+}
+require "vendor/autoload.php";
+use UtopiaScript\
+{Exception\Exception, Exception\IncompleteCodeException, Statement\ExitStatement, Utopia};
+$utopia = new Utopia(fopen("php://stdin", "r"), null);
+$utopia->debug = $flags["debug"];
+$utopia->loadExtension(UtopiaScriptDebugExtension\DebugExtension::class);
+if($flags["php-statement"])
+{
+    $utopia->loadExtension(UtopiaScriptPhpStatementExtension\PhpStatementExtension::class);
+}
+if($flags["repl"])
+{
+	$code = "";
+	$local_vars = [];
+	echo "UtopiaScript REPL (Read-eval-print loop)".($flags["debug"] ? " [Debug Mode]" : "")."\r\n";
+	if($file)
+	{
+		echo "Note: [file] is not compatible REPL.\r\n";
+	}
+	echo "> ";
+	do
+	{
+		$input = rtrim(fgets($utopia->input_stream), "\r\n");
+		if($code != "")
+		{
+			$code .= "\r\n";
+		}
+		$code .= $input;
+		try
+		{
+			ob_start(function ($buffer)
+			{
+				if($buffer)
+				{
+					$buffer = "< ".$buffer;
+					if(substr($buffer, -1) != "\n")
+					{
+						$buffer .= "\r\n";
+					}
+				}
+				return $buffer;
+			});
+			$ret = $utopia->parseAndExecuteWithWritableLocalVars($code, $local_vars);
+			ob_end_flush();
+			echo "= ".Utopia::strval($ret)."\r\n";
+			$code = "";
+		}
+		catch(IncompleteCodeException $e)
+		{
+			ob_end_flush();
+			if(in_array(trim($input), ['', ';']))
+			{
+				$code = "";
+				echo get_class($e).": ".$e->getMessage()."\r\n";
+			}
+			else
+			{
+				echo '>';
+			}
+		}
+		catch(Exception $e)
+		{
+			ob_end_flush();
+			echo get_class($e).': '.$e->getMessage()."\r\n";
+			$code = "";
+		}
+		if($flags["stopwatch"])
+		{
+		    echo "Parsed and executed in ".($utopia->last_execution_time)." seconds.\r\n";
+		}
+		echo '> ';
+	}
+	while(true);
+}
+else
+{
+	$ret = $utopia->parseAndExecute(file_get_contents($file));
+	if($ret instanceof ExitStatement && $ret->value)
+	{
+		echo Utopia::externalize($ret->value);
+	}
+	if($flags["stopwatch"])
+	{
+		echo "\nParsed and executed in ".($utopia->last_execution_time)." seconds.\n";
+	}
+}
