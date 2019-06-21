@@ -9,4 +9,4 @@ An experimental scripting language aimed at everyone.
 
 **Profit!** You can now use the `utopia` command!
 
-Have a look at the [documentation](https://docs.utopia.sh/) to continue the journey from beginner to export. 
+Have a look at the [documentation](https://docs.utopia.sh/) to continue the journey from beginner to expert. 
