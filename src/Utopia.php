@@ -628,7 +628,7 @@ class Utopia
 				}
 				$ret = $statement->execute($this, $local_vars);
 			}
-			if($ret instanceof ExitStatement && $ret->value)
+			if($root_script && $ret instanceof ExitStatement && $ret->value)
 			{
 				if($this->debug)
 				{
