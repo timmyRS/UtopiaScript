@@ -328,16 +328,17 @@ class Utopia
 						{
 							$statement = new PrintStatement();
 						}
+						else if($literal == '' && $statement instanceof PrintLineStatement && !$statement->isExecutable())
+						{
+							throw new InvalidCodeException("Too much <");
+						}
+						else if($literal == '' && $statement instanceof PrintStatement && !$statement->isExecutable())
+						{
+							$statement = new PrintLineStatement();
+						}
 						else
 						{
-							if($literal == '' && $statement instanceof PrintStatement && !$statement->isExecutable())
-							{
-								$statement = new PrintLineStatement();
-							}
-							else
-							{
-								$this->specialCharacter('<', $literal, $statement, $local_vars, $ret);
-							}
+							$this->specialCharacter('<', $literal, $statement, $local_vars, $ret);
 						}
 						break;
 					case '>':
