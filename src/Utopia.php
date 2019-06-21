@@ -628,6 +628,17 @@ class Utopia
 				}
 				$ret = $statement->execute($this, $local_vars);
 			}
+			if($ret instanceof ExitStatement && $ret->value)
+			{
+				if($this->debug)
+				{
+					$this->say("<output>".Utopia::externalize($ret->value)."</output>");
+				}
+				else
+				{
+					$this->say(Utopia::externalize($ret->value));
+				}
+			}
 			if($this->debug)
 			{
 				$this->say("</block>");

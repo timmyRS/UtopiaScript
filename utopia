@@ -147,11 +147,7 @@ if($flags["repl"])
 }
 else
 {
-	$ret = $utopia->parseAndExecute(file_get_contents($file));
-	if($ret instanceof ExitStatement && $ret->value)
-	{
-		echo Utopia::externalize($ret->value);
-	}
+	$utopia->parseAndExecute(file_get_contents($file));
 	if($flags["stopwatch"])
 	{
 		echo "\nParsed and executed in ".($utopia->last_execution_time)." seconds.\n";
