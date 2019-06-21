@@ -466,7 +466,7 @@ class Utopia
 							$literal = '';
 							if($this->debug)
 							{
-								$this->say("<comment/>\r\n");
+								$this->say("<comment/>");
 							}
 							$star = false;
 							while(++$i < $end_i)
