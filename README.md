@@ -1,4 +1,4 @@
-# UtopiaScript
+# UtopiaScript [![Build Status](https://travis-ci.org/timmyrs/UtopiaScript.svg?branch=master)](https://travis-ci.org/timmyrs/UtopiaScript)
 
 An experimental scripting language aimed at everyone.
 
