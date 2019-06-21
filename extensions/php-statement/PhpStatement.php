@@ -2,7 +2,7 @@
 namespace UtopiaScriptPhpStatementExtension;
 use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\OneStringParamStatement, Statement\Statement, Utopia};
-class PhpStatement extends OneStringParamStatement
+final class PhpStatement extends OneStringParamStatement
 {
 	/**
 	 * @param Utopia $utopia
