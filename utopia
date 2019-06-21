@@ -71,6 +71,10 @@ if($flags["help"] || (!$file && !$flags["repl"]))
 {
 	die("Syntax: utopia [file] [-i|--repl|--interactive] [-t|--stopwatch] [-d|--debug] [-p|--enable-php-statement] [file]\r\nEither --repl or [file] has to be given.\r\n");
 }
+if(!is_file(__DIR__."/vendor/autoload.php"))
+{
+    passthru("composer dump-autoload -o -d \"".__DIR__."\"");
+}
 require __DIR__."/vendor/autoload.php";
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Statement\ExitStatement, Utopia};
