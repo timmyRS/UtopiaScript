@@ -4,3 +4,4 @@ _site/
 vendor/
 .phpunit.result.cache
 *.us
+composer.lock
