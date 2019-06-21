@@ -8,3 +8,4 @@ Note: Like UtopiaScript, the documentation is not yet finished. If you're lookin
 - [Actions](actions/)
 - [Constants](constants/)
 - [Extensions](extensions)
+- [Code Golfing](golfing)
