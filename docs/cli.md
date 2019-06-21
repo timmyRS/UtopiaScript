@@ -8,7 +8,7 @@ Once you've installed UtopiaScript via [Cone](https://getcone.org/) using `cone 
 
 ## REPL
 
-If you'd like to understand UtopiaScript statement-by-statement, enter a [read-eval-print loop](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) using `utopia repl`, which will allow you to enter a statement (`>`), execute it by pressing enter, and receiving its return value after `=`:
+If you'd like to understand UtopiaScript statement-by-statement, enter a [read-eval-print loop](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) using `utopia repl`, which will allow you to enter a statement (`>`), execute it by pressing enter, and receive its return value after `=`:
 
     > 1 + 2
     = 3
@@ -37,4 +37,4 @@ When using the `--stopwatch` or `-t` flag, the time it took to parse and execute
 ## Debug Mode
 
 When using the `--debug` or `-d` flag, debug mode will be enabled, resulting in verbose output which should hopefully reveal how your code is understood.
-Note that for big scripts the [Debug Extension](extensions.md#debug) is available to toggle debug mode on-demand, which is especially useful for bigger scripts.
+Note that the [Debug Extension](extensions.md#debug) is available to toggle debug mode on-demand, which is especially useful for bigger scripts.
