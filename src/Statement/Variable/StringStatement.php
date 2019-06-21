@@ -48,6 +48,7 @@ class StringStatement extends VariableStatement
 				case 'uppercase':
 				case 'toupper':
 				case 'to_uppercase':
+				case 'to_upper_case':
 				case 'touppercase':
 					$this->value = strtoupper($this->value);
 					break;
@@ -56,6 +57,7 @@ class StringStatement extends VariableStatement
 				case 'lowercase':
 				case 'tolower':
 				case 'to_lowercase':
+				case 'to_lower_case':
 				case 'tolowercase':
 					$this->value = strtolower($this->value);
 					break;

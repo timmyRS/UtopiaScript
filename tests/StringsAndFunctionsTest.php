@@ -46,7 +46,7 @@ class StringsAndFunctionsTest
 	{
 		$utopia = new Utopia();
 		ob_start();
-		foreach(["^", "upper", "uppercase", "toupper", "touppercase", "to_uppercase"] as $action)
+		foreach(["to_upper_case", "^"] as $action)
 		{
 			Nose::assertEquals('HI', Utopia::externalize($utopia->parseAndExecute("='Hi'{$action};")));
 		}
@@ -57,7 +57,7 @@ class StringsAndFunctionsTest
 	{
 		$utopia = new Utopia();
 		ob_start();
-		foreach(["v", "lower", "lowercase", "tolower", "tolowercase", "to_lowercase"] as $action)
+		foreach(["to_lower_case", "v"] as $action)
 		{
 			Nose::assertEquals('hi', Utopia::externalize($utopia->parseAndExecute("='Hi'{$action};")));
 		}
