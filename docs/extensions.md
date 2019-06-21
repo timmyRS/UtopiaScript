@@ -13,10 +13,13 @@ Some extensions are bundled with UtopiaScript because they're neat to have, but 
 
 ### Debug
 
-The debug extension provides `debug <on|off>;` to toggle debug mode on-demand, which is especially useful for debugging bigger scripts. It is enabled by default when using the `utopia` CLI command.
+The debug extension, which is enabled by default when using the `utopia` CLI command, provides two statements:
 
-An example using `utopia repl`:
-
+- `dump <var>` which will call [var_dump](https://www.php.net/manual/en/function.var-dump.php) on the given variable, and 
+- `debug <on|off>;` to toggle debug mode on-demand, which is especially useful for debugging bigger scripts.
+    
+    An example via `utopia repl`:
+    ```
     > debug on;
     <
     </block>
@@ -28,6 +31,7 @@ An example using `utopia repl`:
     > debug off;
     < <block>debug off;
     =
+    ```
 
 ### PHP Statement
 

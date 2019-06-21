@@ -1,11 +1,15 @@
 <?php
 namespace UtopiaScriptDebugExtension;
 use UtopiaScript\Extension;
-/** An extension providing `debug <on|off>;` to toggle debug mode on-demand. */
 final class DebugExtension extends Extension
 {
 	function getStatements(): array
 	{
-		return ["debug" => DebugStatement::class];
+		return [
+			"debug" => DebugStatement::class,
+			"dump" => DumpStatement::class,
+			"vardump" => DumpStatement::class,
+			"var_dump" => DumpStatement::class
+		];
 	}
 }
