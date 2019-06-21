@@ -4,6 +4,7 @@ Note: Like UtopiaScript, the documentation is not yet finished. If you're lookin
 
 - [CLI Command](cli)
 - [Language Constructs](constructs)
-- [Constants](constants/)
 - [Statements](statements/)
+- [Actions](actions/)
+- [Constants](constants/)
 - [Extensions](extensions)
