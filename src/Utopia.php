@@ -2,7 +2,7 @@
 namespace UtopiaScript;
 use InvalidArgumentException;
 use UtopiaScript\Exception\
-{Exception, IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
+{IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
 use UtopiaScript\Statement\
 {Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BoolStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
 /** An environment with global variables that can execute UtopiaScript code. */

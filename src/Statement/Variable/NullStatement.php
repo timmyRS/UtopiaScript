@@ -11,6 +11,11 @@ class NullStatement extends VariableStatement
 		parent::__construct(null);
 	}
 
+	static function getType(): string
+	{
+		return "null";
+	}
+
 	function acceptValue(VariableStatement $value)
 	{
 		if($this->_acceptValue($value))
@@ -62,11 +67,6 @@ class NullStatement extends VariableStatement
 	}
 
 	function toLiteral()
-	{
-		return "null";
-	}
-
-	static function getType() : string
 	{
 		return "null";
 	}

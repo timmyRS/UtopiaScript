@@ -12,6 +12,11 @@ class ArrayStatement extends VariableStatement
 		parent::__construct($value);
 	}
 
+	static function getType(): string
+	{
+		return "array";
+	}
+
 	function isExecutable(): bool
 	{
 		return $this->action == 0 || ($this->action_data["var_name"] !== null && $this->action_data["func"] !== null);
@@ -23,7 +28,6 @@ class ArrayStatement extends VariableStatement
 		{
 			case self::ACTION_FOR_EACH:
 				return $this->action_data["var_name"] !== null && $this->action_data["func"] !== null && $this->action_data["key_name"] !== null;
-
 			case self::ACTION_VALUE_OF_KEY:
 				return $this->action_data["key"] !== null;
 		}
@@ -274,10 +278,5 @@ class ArrayStatement extends VariableStatement
 			array_push($arr, Utopia::externalize($item));
 		}
 		return $arr;
-	}
-
-	static function getType() : string
-	{
-		return "array";
 	}
 }

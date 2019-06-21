@@ -25,6 +25,8 @@ abstract class VariableStatement extends Statement
 		$this->value = $value;
 	}
 
+	abstract static function getType(): string;
+
 	/**
 	 * Returns true if the statement can be executed.
 	 * This would be false, e.g. if not enough parameters have been provided.
@@ -153,7 +155,7 @@ abstract class VariableStatement extends Statement
 						break;
 					case '>=':
 					case '=>':
-							$this->action = self::ACTION_GREATER_OR_EQUALS;
+						$this->action = self::ACTION_GREATER_OR_EQUALS;
 						break;
 					case '<':
 						$this->action = self::ACTION_LESS;
@@ -175,7 +177,10 @@ abstract class VariableStatement extends Statement
 				}
 				if($this->action <= -100)
 				{
-					$this->action_data = ["value" => null, "execute" => false];
+					$this->action_data = [
+						"value" => null,
+						"execute" => false
+					];
 				}
 			}
 			else
@@ -265,8 +270,6 @@ abstract class VariableStatement extends Statement
 		}
 		return null;
 	}
-
-	abstract static function getType() : string;
 
 	abstract function __toString(): string;
 

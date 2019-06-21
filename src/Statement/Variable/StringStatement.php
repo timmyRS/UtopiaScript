@@ -15,6 +15,11 @@ class StringStatement extends VariableStatement
 		$this->exec = $exec;
 	}
 
+	static function getType(): string
+	{
+		return "string";
+	}
+
 	/**
 	 * @param mixed $value
 	 * @throws InvalidCodeException
@@ -103,10 +108,5 @@ class StringStatement extends VariableStatement
 			return '`'.$this->value.'`';
 		}
 		return "{".$this->value."}";
-	}
-
-	static function getType() : string
-	{
-		return "string";
 	}
 }

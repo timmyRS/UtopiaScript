@@ -55,26 +55,6 @@ class ArrayDeclarationStatement extends Statement
 	}
 
 	/**
-	 * @param string $literal
-	 * @throws InvalidCodeException
-	 */
-	function acceptLiteral(string $literal)
-	{
-		if($literal == ':' || $literal == '=')
-		{
-			if(count($this->arr) == 0)
-			{
-				throw new InvalidCodeException("Unexpected {$literal} as first literal in array");
-			}
-			$this->key = true;
-		}
-		else
-		{
-			$this->accept($literal);
-		}
-	}
-
-	/**
 	 * @param $value
 	 * @throws InvalidCodeException
 	 */
@@ -106,6 +86,26 @@ class ArrayDeclarationStatement extends Statement
 		else
 		{
 			array_push($this->arr, $value);
+		}
+	}
+
+	/**
+	 * @param string $literal
+	 * @throws InvalidCodeException
+	 */
+	function acceptLiteral(string $literal)
+	{
+		if($literal == ':' || $literal == '=')
+		{
+			if(count($this->arr) == 0)
+			{
+				throw new InvalidCodeException("Unexpected {$literal} as first literal in array");
+			}
+			$this->key = true;
+		}
+		else
+		{
+			$this->accept($literal);
 		}
 	}
 

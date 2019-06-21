@@ -13,6 +13,11 @@ class FunctionStatement extends VariableStatement
 		parent::__construct($value);
 	}
 
+	static function getType(): string
+	{
+		return "function";
+	}
+
 	/**
 	 * Returns true if the statement can be executed.
 	 * This would be false, e.g. if not enough parameters have been provided.
@@ -65,10 +70,5 @@ class FunctionStatement extends VariableStatement
 	function __toString(): string
 	{
 		return "void {".$this->value."}";
-	}
-
-	static function getType() : string
-	{
-		return "function";
 	}
 }

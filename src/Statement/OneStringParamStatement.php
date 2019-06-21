@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Variable\FunctionStatement, Statement\Variable\StringStatement, Statement\Variable\VariableStatement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Variable\StringStatement, Utopia};
 abstract class OneStringParamStatement extends OneValueParamStatement
 {
 	/**

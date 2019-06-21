@@ -7,6 +7,16 @@ class GetTypeStatement extends Statement
 	public $arg = null;
 
 	/**
+	 * Returns true if the statement accepts no more parameters.
+	 *
+	 * @return boolean
+	 */
+	function isFinished(): bool
+	{
+		return $this->isExecutable();
+	}
+
+	/**
 	 * Returns true if the statement can be executed.
 	 * This would be false, e.g. if not enough parameters have been provided.
 	 *
@@ -15,16 +25,6 @@ class GetTypeStatement extends Statement
 	function isExecutable(): bool
 	{
 		return $this->arg !== null;
-	}
-
-	/**
-	 * Returns true if the statement accepts no more parameters.
-	 *
-	 * @return boolean
-	 */
-	function isFinished(): bool
-	{
-		return $this->isExecutable();
 	}
 
 	/**
@@ -60,6 +60,6 @@ class GetTypeStatement extends Statement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		return new StringStatement( $this->arg instanceof VariableStatement ? $this->arg->getType() : (array_key_exists($this->arg, $utopia->statements)? "statement" : "undefined"), false);
+		return new StringStatement($this->arg instanceof VariableStatement ? $this->arg->getType() : (array_key_exists($this->arg, $utopia->statements) ? "statement" : "undefined"), false);
 	}
 }

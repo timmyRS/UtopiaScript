@@ -4,6 +4,11 @@ use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
 class NumberStatement extends VariableStatement
 {
+	static function getType(): string
+	{
+		return "number";
+	}
+
 	/**
 	 * @param mixed $value
 	 * @throws InvalidCodeException
@@ -136,10 +141,5 @@ class NumberStatement extends VariableStatement
 	function __toString(): string
 	{
 		return strval($this->value);
-	}
-
-	static function getType() : string
-	{
-		return "number";
 	}
 }

@@ -9,6 +9,11 @@ class BoolStatement extends VariableStatement
 		parent::__construct($value);
 	}
 
+	static function getType(): string
+	{
+		return "bool";
+	}
+
 	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
@@ -27,10 +32,5 @@ class BoolStatement extends VariableStatement
 	function __toString(): string
 	{
 		return $this->value ? "true" : "false";
-	}
-
-	static function getType() : string
-	{
-		return "bool";
 	}
 }
