@@ -2,6 +2,8 @@
 
 An experimental scripting language aimed at everyone.
 
+[Try it online!](https://utopia.sh/)
+
 ## Installation
 
 1. [Get Cone](https://getcone.org/) if you haven't already
