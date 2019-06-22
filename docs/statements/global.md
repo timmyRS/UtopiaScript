@@ -19,4 +19,4 @@ Note that global variables, or variables in higher scopes in general, can be ove
 
 ## See also
 
-- [const](const): Declares an immutable global variable.
+- [constant](constant): Declares an immutable global variable.

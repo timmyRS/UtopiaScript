@@ -4,7 +4,7 @@
     - [local](local)
     - [final](final)
     - [global](global)
-    - [const](const)
+    - [constant](constant)
     - [set](set)
     - **TODO:** unset
 - Standard Input/Output (STDIO)

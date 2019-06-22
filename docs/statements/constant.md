@@ -1,6 +1,6 @@
-# const
+# constant
 
-Aliases: `constant`, `!`
+Aliases: `const`, `!`
 
 ---
 
