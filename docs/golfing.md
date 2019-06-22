@@ -18,6 +18,9 @@
         - `<` = `print`
         - `<<` = `print_line`
         - `>` = `read`
+    - Variables
+        - `[...]` = `array ...`
+        - `*` = `function`
 - Variable actions
     - `=` = `equals`
     - `!=` = `not_equals`
