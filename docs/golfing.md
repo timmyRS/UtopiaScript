@@ -36,5 +36,3 @@
         - `f` = `floor`
     - Arrays
         - `@` = `for_each`
-- Constants
-    - `_` = `null` 

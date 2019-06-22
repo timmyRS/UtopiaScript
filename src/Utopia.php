@@ -70,7 +70,6 @@ class Utopia
 			'void' => new Variable(new NullStatement(), true),
 			'none' => new Variable(new NullStatement(), true),
 			'nil' => new Variable(new NullStatement(), true),
-			'_' => new Variable(new NullStatement(), true),
 			'cr' => new Variable(new StringStatement("\r"), true),
 			'lf' => new Variable(new StringStatement("\n"), true),
 			'nl' => new Variable(new StringStatement("\n"), true),
@@ -809,7 +808,6 @@ class Utopia
 	{
 		switch($type)
 		{
-			case '_':
 			case 'nil':
 			case 'void':
 			case 'none':

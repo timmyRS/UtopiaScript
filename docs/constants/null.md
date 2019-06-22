@@ -1,6 +1,6 @@
 # null
 
-Aliases: `void`, `none`, `nil`, `_`
+Aliases: `void`, `none`, `nil`
 
 ---
 
