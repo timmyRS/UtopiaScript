@@ -204,7 +204,7 @@ class Utopia
 		{
 			if(is_bool($value))
 			{
-				return new BoolStatement($value);
+				return new BooleanStatement($value);
 			}
 			else
 			{
@@ -759,9 +759,81 @@ class Utopia
 		}
 		else
 		{
-			throw new InvalidCodeException("Unknown statement or variable: ".$literal);
+			$type = self::getCanonicalType($literal);
+			if($type !== null)
+			{
+				$statement = new FunctionDeclarationStatement($type);
+			}
+			else
+			{
+				throw new InvalidCodeException("Unknown statement or variable: ".$literal);
+			}
 		}
 		$literal = '';
+	}
+
+	/**
+	 * @param $name
+	 * @param array $local_vars
+	 * @throws InvalidCodeException
+	 */
+	function scrutinizeVariableName($name, array $local_vars = [])
+	{
+		if(array_key_exists($name, $this->statements))
+		{
+			throw new InvalidCodeException("Can't overwrite statement: ".$name);
+		}
+		if(array_key_exists($name, $local_vars))
+		{
+			if($local_vars[$name]->final)
+			{
+				throw new InvalidCodeException("Can't overwrite final: ".$name);
+			}
+		}
+		else if(array_key_exists($name, $this->vars) && $this->vars[$name]->final)
+		{
+			throw new InvalidCodeException("Can't overwrite constant: ".$name);
+		}
+		if(self::getCanonicalType($name) !== null)
+		{
+			throw new InvalidCodeException("Invalid variable name: ".$name);
+		}
+	}
+
+	/**
+	 * @param string $type
+	 * @return string|null
+	 */
+	static function getCanonicalType(string $type)
+	{
+		switch($type)
+		{
+			case '_':
+			case 'nil':
+			case 'void':
+			case 'none':
+			case 'null':
+				return 'null';
+			case 'num':
+			case 'number':
+			case 'int':
+			case 'integer':
+				return 'number';
+			case 'str':
+			case 'string':
+				return 'string';
+			case 'arr':
+			case 'array':
+				return 'array';
+			case 'bool':
+			case 'boolean':
+				return 'boolean';
+			case 'mixed':
+			case 'anytype':
+			case 'any_type':
+				return 'any_type';
+		}
+		return null;
 	}
 
 	/**

@@ -1,13 +1,19 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
-use UtopiaScript\Statement\Statement;
-use UtopiaScript\Utopia;
-class FunctionDeclarationStatement extends Statement
+use UtopiaScript\
+{Exception\InvalidCodeException, Statement\ConsistentArgsStatement, Statement\Statement, Utopia};
+class FunctionDeclarationStatement extends ConsistentArgsStatement
 {
-	public $required_args = [];
-	public $optionals = false;
-	public $optional_args = [];
+	public $args = ["required" => [[]]];
 	public $body = null;
+
+	function __construct($first_arg_type = null)
+	{
+		if($first_arg_type !== null)
+		{
+			$this->args["required"][0]["type"] = $first_arg_type;
+		}
+	}
 
 	/**
 	 * Returns true if the statement can be executed.
@@ -20,14 +26,9 @@ class FunctionDeclarationStatement extends Statement
 		return $this->body !== null;
 	}
 
-	/**
-	 * Returns true if the statement accepts no more parameters.
-	 *
-	 * @return boolean
-	 */
-	function isFinished(): bool
+	function getCurrentArgType()
 	{
-		// TODO: Implement isFinished() method.
+		return array_key_exists("optionals", $this->args) ? "optionals" : "required";
 	}
 
 	/**
@@ -37,23 +38,69 @@ class FunctionDeclarationStatement extends Statement
 	 */
 	function acceptsValues(): bool
 	{
-		// TODO: Implement acceptsValues() method.
+		$arr = $this->args[$this->getCurrentArgType()];
+		return count($arr[count($arr) - 1]) == 0;
 	}
 
 	/**
 	 * @param VariableStatement $value
+	 * @throws InvalidCodeException
 	 */
 	function acceptValue(VariableStatement $value)
 	{
-		// TODO: Implement acceptValue() method.
+		if(get_class($value) != StringStatement::class)
+		{
+			throw new InvalidCodeException("Expected StringStatement, got ".get_class($value));
+		}
+		$this->body = $value->value;
 	}
 
 	/**
 	 * @param string $literal
+	 * @throws InvalidCodeException
 	 */
 	function acceptLiteral(string $literal)
 	{
-		// TODO: Implement acceptLiteral() method.
+		if(in_array($literal, [":", ","]))
+		{
+			return;
+		}
+		$type = $this->getCurrentArgType();
+		$arr = $this->args[$type];
+		$i = count($arr) - 1;
+		$arg = $arr[$i];
+		if(in_array($literal, ["?", "optional", "optionals"]))
+		{
+			if(count($arg) != 0)
+			{
+				throw new InvalidCodeException("Unexpected token: ".$literal);
+			}
+			unset($this->args[$type][$i]);
+			$this->args["optionals"] = [[]];
+			return;
+		}
+		if(!array_key_exists("type", $arg))
+		{
+			$literal_ = Utopia::getCanonicalType($literal);
+			if($literal_ == "null")
+			{
+				return;
+			}
+			if($literal_ != null)
+			{
+				$this->args[$type][$i]["type"] = $literal_;
+				return;
+			}
+			$this->args[$type][$i] = [
+				"type" => "any_type",
+				"name" => $literal
+			];
+		}
+		else if(!array_key_exists("name", $arg))
+		{
+			$this->args[$type][$i]["name"] = $literal;
+		}
+		array_push($this->args[$type], []);
 	}
 
 	/**
@@ -63,6 +110,8 @@ class FunctionDeclarationStatement extends Statement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		// TODO: Implement execute() method.
+		$type = $this->getCurrentArgType();
+		unset($this->args[$type][count($this->args[$type]) - 1]);
+		return new FunctionStatement($this->body, $this->args);
 	}
 }

@@ -22,7 +22,7 @@ class VariablesTest
 		});
 	}
 
-	function testFinalCantBeOverwritten()
+	function testFinal()
 	{
 		$utopia = new Utopia();
 		$local_vars = [];
@@ -32,5 +32,6 @@ class VariablesTest
 		{
 			$utopia->parseAndExecuteWithWritableLocalVars('final bla;', $local_vars);
 		});
+		$utopia->parseAndExecuteWithWritableLocalVars('const bla 1;', $local_vars);
 	}
 }

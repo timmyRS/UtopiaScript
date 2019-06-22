@@ -30,21 +30,13 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$this->_execute($utopia, $local_vars);
-		if(array_key_exists($this->name, $utopia->statements))
-		{
-			throw new InvalidCodeException("Can't overwrite statement: ".$this->name);
-		}
+		$this->_execute($utopia, $local_vars, $this->global);
 		if($this->global)
 		{
 			$utopia->vars[$this->name] = new Variable($this->value, $this->final);
 		}
 		else
 		{
-			if(array_key_exists($this->name, $local_vars) && $local_vars[$this->name]->final)
-			{
-				throw new InvalidCodeException("Can't overwrite final: ".$this->name);
-			}
 			$local_vars[$this->name] = new Variable($this->value, $this->final);
 		}
 		return $this->value;

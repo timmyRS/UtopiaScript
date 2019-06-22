@@ -205,18 +205,7 @@ class ArrayStatement extends VariableStatement
 				}
 				foreach($names as $name)
 				{
-					if(array_key_exists($this->action_data[$name], $utopia->statements))
-					{
-						throw new InvalidCodeException("Can't overwrite statement: ".$this->action_data[$name]);
-					}
-					if(array_key_exists($this->action_data[$name], $utopia->vars) && $utopia->vars[$this->action_data[$name]]->final)
-					{
-						throw new InvalidCodeException("Can't overwrite const: ".$this->action_data[$name]);
-					}
-					if(array_key_exists($this->action_data[$name], $local_vars) && $local_vars[$this->action_data[$name]]->final)
-					{
-						throw new InvalidCodeException("Can't overwrite final: ".$this->action_data[$name]);
-					}
+					$utopia->scrutinizeVariableName($name, $local_vars);
 				}
 				foreach($this->value as $key => $item)
 				{

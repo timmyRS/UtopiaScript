@@ -25,28 +25,18 @@ class ReadStatement extends OneOptionalLiteralParamStatement
 		$utopia->input_time += (microtime(true) - $start);
 		if($this->arg !== null)
 		{
+			$utopia->scrutinizeVariableName($this->arg, $local_vars);
 			if(array_key_exists($this->arg, $local_vars))
 			{
-				if($local_vars[$this->arg]->final)
-				{
-					throw new InvalidCodeException("Can't overwrite final: ".$this->arg);
-				}
 				$local_vars[$this->arg]->value = $val;
+			}
+			else if(array_key_exists($this->arg, $utopia->vars))
+			{
+				$utopia->vars[$this->arg]->value = $val;
 			}
 			else
 			{
-				if(array_key_exists($this->arg, $utopia->vars))
-				{
-					if($utopia->vars[$this->arg]->final)
-					{
-						throw new InvalidCodeException("Can't overwrite const: ".$this->arg);
-					}
-					$utopia->vars[$this->arg]->value = $val;
-				}
-				else
-				{
-					throw new InvalidCodeException("Undefined variable: ".$this->arg);
-				}
+				throw new InvalidCodeException("Undefined variable: ".$this->arg);
 			}
 		}
 		return $val;

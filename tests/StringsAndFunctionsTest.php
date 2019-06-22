@@ -42,6 +42,8 @@ class StringsAndFunctionsTest
 		ob_end_clean();
 	}
 
+	// TODO: Create test for functions with arguments
+
 	function testToUpperCase()
 	{
 		$utopia = new Utopia();

@@ -104,34 +104,30 @@ abstract class DeclarationStatement extends Statement
 	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
+	 * @param bool $global
 	 * @throws IncompleteCodeException
 	 * @throws InvalidCodeException
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array &$local_vars = [])
+	function _execute(Utopia $utopia, array &$local_vars = [], bool $global = false)
 	{
-		if(array_key_exists($this->name, $utopia->vars) && $utopia->vars[$this->name]->final)
-		{
-			throw new InvalidCodeException("Can't overwrite const: ".$this->name);
-		}
+		$utopia->scrutinizeVariableName($this->name, $global ? [] : $local_vars);
 		if($this->value === null)
 		{
 			$this->value = new NullStatement();
 		}
-		else
+		else if(gettype($this->value) == "string")
 		{
-			if(gettype($this->value) == "string")
-			{
-				$this->value = $utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars);
-			}
-			else
-			{
-				if($this->execute || Utopia::isStatementExecutionSafe($this->value))
-				{
-					$this->value = $this->value->execute($utopia, $local_vars);
-				}
-			}
+			$this->value = $utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars);
+		}
+		else if($this->execute || Utopia::isStatementExecutionSafe($this->value))
+		{
+			$this->value = $this->value->execute($utopia, $local_vars);
+		}
+		if(!$this->value instanceof VariableStatement)
+		{
+			throw new InvalidCodeException("Expected variable, got ".get_class($this->value));
 		}
 	}
 }
