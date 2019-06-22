@@ -1,4 +1,4 @@
-<?php /** @noinspection PhpUnhandledExceptionInspection */
+<?php
 $flags = [
     "repl" => false,
 	"stopwatch" => false,
@@ -151,9 +151,20 @@ if($flags["repl"])
 }
 else
 {
-	$utopia->parseAndExecute(file_get_contents($file));
-	if($flags["stopwatch"])
+    try
+    {
+	    $utopia->parseAndExecute(file_get_contents($file));
+	    if($flags["stopwatch"])
+        {
+            echo "\r\nParsed and executed in ".($utopia->last_execution_time)." seconds.\r\n";
+        }
+	}
+	catch(Exception $e)
 	{
-		echo "\nParsed and executed in ".($utopia->last_execution_time)." seconds.\n";
+	    echo get_class($e).': '.$e->getMessage()."\r\n";
+	    if($flags["debug"])
+	    {
+	        echo $e->getTraceAsString()."\r\n";
+	    }
 	}
 }
