@@ -4,7 +4,7 @@ use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
 use UtopiaScript\Statement\
-{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
+{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\FunctionStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
 /** An environment with global variables that can execute UtopiaScript code. */
 class Utopia
 {
@@ -462,36 +462,43 @@ class Utopia
 						}
 						break;
 					case '*':
-						if($statement === null && $literal == '/')
+						if($statement === null)
 						{
-							$literal = '';
-							if($this->debug)
+							if($literal == '')
 							{
-								$this->say("<comment/>");
+								$statement = new FunctionDeclarationStatement();
 							}
-							$star = false;
-							while(++$i < $end_i)
+							else if($literal == '/')
 							{
-								if($star && $chars[$i] == "/")
+								$literal = '';
+								if($this->debug)
 								{
-									break;
+									$this->say("<comment/>");
 								}
-								else if($chars[$i] == "*")
+								$star = false;
+								while(++$i < $end_i)
 								{
-									$star = true;
+									if($star && $chars[$i] == "/")
+									{
+										break;
+									}
+									else if($chars[$i] == "*")
+									{
+										$star = true;
+									}
+									else if($star)
+									{
+										$star = false;
+									}
 								}
-								else if($star)
+								if(!$star)
 								{
-									$star = false;
+									throw new IncompleteCodeException("Code unexpectedly ended whilst reading multi-line comment");
 								}
-							}
-							if(!$star)
-							{
-								throw new IncompleteCodeException("Code unexpectedly ended whilst reading multi-line comment");
-							}
-							if($this->debug)
-							{
-								$this->say("*/");
+								if($this->debug)
+								{
+									$this->say("*/");
+								}
 							}
 						}
 						else
