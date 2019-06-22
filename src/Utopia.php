@@ -4,7 +4,7 @@ use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
 use UtopiaScript\Statement\
-{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\FunctionStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
+{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
 /** An environment with global variables that can execute UtopiaScript code. */
 class Utopia
 {
@@ -777,30 +777,27 @@ class Utopia
 	}
 
 	/**
-	 * @param $name
+	 * @param Statement $statement
 	 * @param array $local_vars
-	 * @throws InvalidCodeException
+	 * @param           $ret
 	 */
-	function scrutinizeVariableName($name, array $local_vars = [])
+	function processStatement(Statement &$statement, array &$local_vars, &$ret)
 	{
-		if(array_key_exists($name, $this->statements))
+		if($statement->isFinished())
 		{
-			throw new InvalidCodeException("Can't overwrite statement: ".$name);
-		}
-		if(array_key_exists($name, $local_vars))
-		{
-			if($local_vars[$name]->final)
+			$ret = $statement->execute($this, $local_vars);
+			if($ret instanceof VariableStatement)
 			{
-				throw new InvalidCodeException("Can't overwrite final: ".$name);
+				$statement = $ret;
+				if($statement instanceof StringStatement)
+				{
+					$statement->exec = false;
+				}
 			}
-		}
-		else if(array_key_exists($name, $this->vars) && $this->vars[$name]->final)
-		{
-			throw new InvalidCodeException("Can't overwrite constant: ".$name);
-		}
-		if(self::getCanonicalType($name) !== null)
-		{
-			throw new InvalidCodeException("Invalid variable name: ".$name);
+			else
+			{
+				$statement = null;
+			}
 		}
 	}
 
@@ -838,31 +835,6 @@ class Utopia
 				return 'any_type';
 		}
 		return null;
-	}
-
-	/**
-	 * @param Statement $statement
-	 * @param array $local_vars
-	 * @param           $ret
-	 */
-	function processStatement(Statement &$statement, array &$local_vars, &$ret)
-	{
-		if($statement->isFinished())
-		{
-			$ret = $statement->execute($this, $local_vars);
-			if($ret instanceof VariableStatement)
-			{
-				$statement = $ret;
-				if($statement instanceof StringStatement)
-				{
-					$statement->exec = false;
-				}
-			}
-			else
-			{
-				$statement = null;
-			}
-		}
 	}
 
 	/**
@@ -1080,5 +1052,33 @@ class Utopia
 			}
 		}
 		throw new IncompleteCodeException("Code unexpectedly ended whilst reading array");
+	}
+
+	/**
+	 * @param $name
+	 * @param array $local_vars
+	 * @throws InvalidCodeException
+	 */
+	function scrutinizeVariableName($name, array $local_vars = [])
+	{
+		if(array_key_exists($name, $this->statements))
+		{
+			throw new InvalidCodeException("Can't overwrite statement: ".$name);
+		}
+		if(array_key_exists($name, $local_vars))
+		{
+			if($local_vars[$name]->final)
+			{
+				throw new InvalidCodeException("Can't overwrite final: ".$name);
+			}
+		}
+		else if(array_key_exists($name, $this->vars) && $this->vars[$name]->final)
+		{
+			throw new InvalidCodeException("Can't overwrite constant: ".$name);
+		}
+		if(self::getCanonicalType($name) !== null)
+		{
+			throw new InvalidCodeException("Invalid variable name: ".$name);
+		}
 	}
 }

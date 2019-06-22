@@ -26,11 +26,6 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 		return $this->body !== null;
 	}
 
-	function getCurrentArgType()
-	{
-		return array_key_exists("optionals", $this->args) ? "optionals" : "required";
-	}
-
 	/**
 	 * Returns true if the statement accepts value. If false, everything will be treated as literal.
 	 *
@@ -40,6 +35,11 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 	{
 		$arr = $this->args[$this->getCurrentArgType()];
 		return count($arr[count($arr) - 1]) == 0;
+	}
+
+	function getCurrentArgType()
+	{
+		return array_key_exists("optionals", $this->args) ? "optionals" : "required";
 	}
 
 	/**
@@ -61,7 +61,10 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 	 */
 	function acceptLiteral(string $literal)
 	{
-		if(in_array($literal, [":", ","]))
+		if(in_array($literal, [
+			":",
+			","
+		]))
 		{
 			return;
 		}
@@ -69,7 +72,11 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 		$arr = $this->args[$type];
 		$i = count($arr) - 1;
 		$arg = $arr[$i];
-		if(in_array($literal, ["?", "optional", "optionals"]))
+		if(in_array($literal, [
+			"?",
+			"optional",
+			"optionals"
+		]))
 		{
 			if(count($arg) != 0)
 			{

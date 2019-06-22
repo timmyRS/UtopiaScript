@@ -90,16 +90,6 @@ class FunctionStatement extends VariableStatement
 		return Utopia::unwrap($utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars_), true);
 	}
 
-	static function argsToString($args)
-	{
-		$str = '';
-		foreach($args as $arg)
-		{
-			$str .= $arg["type"].' '.$arg["name"].' ';
-		}
-		return $str;
-	}
-
 	function __toString(): string
 	{
 		$str = 'function ';
@@ -116,5 +106,15 @@ class FunctionStatement extends VariableStatement
 			}
 		}
 		return $str.'{'.$this->value.'}';
+	}
+
+	static function argsToString($args)
+	{
+		$str = '';
+		foreach($args as $arg)
+		{
+			$str .= $arg["type"].' '.$arg["name"].' ';
+		}
+		return $str;
 	}
 }
