@@ -1,13 +1,20 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require "vendor/autoload.php";
 use UtopiaScript\
-{Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Utopia};
+{Exception\InvalidCodeException, Utopia};
 use UtopiaScriptPhpStatementExtension\PhpStatementExtension;
 class StatementsTest
 {
 	function testPrint()
 	{
-		foreach(["<", "say", "out", "echo", "print", "output"] as $statement)
+		foreach([
+			"<",
+			"say",
+			"out",
+			"echo",
+			"print",
+			"output"
+		] as $statement)
 		{
 			$fh = fopen(".test_tmp_print", "w");
 			$utopia = new Utopia(null, $fh);
@@ -20,7 +27,10 @@ class StatementsTest
 
 	function testPrintln()
 	{
-		foreach(["<<", "println"] as $statement)
+		foreach([
+			"<<",
+			"println"
+		] as $statement)
 		{
 			$fh = fopen(".test_tmp_println", "w");
 			$utopia = new Utopia(null, $fh);

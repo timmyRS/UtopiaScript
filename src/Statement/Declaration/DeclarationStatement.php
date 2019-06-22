@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Declaration;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Statement\Variable\NullStatement, Statement\Variable\VariableStatement, Utopia, Variable};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Statement\Variable\NullStatement, Statement\Variable\VariableStatement, Utopia};
 abstract class DeclarationStatement extends Statement
 {
 	/**

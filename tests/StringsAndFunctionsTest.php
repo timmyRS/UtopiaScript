@@ -9,7 +9,7 @@ class StringsAndFunctionsTest
 		ob_start();
 		Nose::assertEquals("< {Utopia\nScript\n};", Utopia::externalize($utopia->parseAndExecute("= {< {Utopia\nScript\n};};")));
 		ob_end_clean();
-		Nose::expectException(IncompleteCodeException::class, function() use($utopia)
+		Nose::expectException(IncompleteCodeException::class, function() use ($utopia)
 		{
 			$utopia->parseAndExecute("< { There is an unfinished { bracket. }");
 		});
@@ -43,12 +43,14 @@ class StringsAndFunctionsTest
 	}
 
 	// TODO: Create test for functions with arguments
-
 	function testToUpperCase()
 	{
 		$utopia = new Utopia();
 		ob_start();
-		foreach(["to_upper_case", "^"] as $action)
+		foreach([
+			"to_upper_case",
+			"^"
+		] as $action)
 		{
 			Nose::assertEquals('HI', Utopia::externalize($utopia->parseAndExecute("='Hi'{$action};")));
 		}
@@ -59,7 +61,10 @@ class StringsAndFunctionsTest
 	{
 		$utopia = new Utopia();
 		ob_start();
-		foreach(["to_lower_case", "v"] as $action)
+		foreach([
+			"to_lower_case",
+			"v"
+		] as $action)
 		{
 			Nose::assertEquals('hi', Utopia::externalize($utopia->parseAndExecute("='Hi'{$action};")));
 		}

@@ -7,7 +7,7 @@ class VariablesTest
 	function testStatementCantBeOverwritten()
 	{
 		$utopia = new Utopia();
-		Nose::expectException(InvalidCodeException::class, function() use($utopia)
+		Nose::expectException(InvalidCodeException::class, function() use ($utopia)
 		{
 			$utopia->parseAndExecute('local local "bla";');
 		});
@@ -16,7 +16,7 @@ class VariablesTest
 	function testConstCantBeOverwritten()
 	{
 		$utopia = new Utopia();
-		Nose::expectException(InvalidCodeException::class, function() use($utopia)
+		Nose::expectException(InvalidCodeException::class, function() use ($utopia)
 		{
 			$utopia->parseAndExecute('local NL 1;');
 		});
