@@ -127,10 +127,7 @@ class ArrayDeclarationStatement extends Statement
 			{
 				$item = $utopia->parseAndExecuteWithWritableLocalVars($item, $local_vars);
 			}
-			if(!$item instanceof VariableStatement)
-			{
-				throw new InvalidCodeException("Invalid argument: ".$item);
-			}
+			assert($item instanceof VariableStatement);
 			$arr[$key] = $item;
 		}
 		return new ArrayStatement($arr);
