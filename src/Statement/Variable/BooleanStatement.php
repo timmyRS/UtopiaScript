@@ -25,8 +25,7 @@ class BooleanStatement extends VariableStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$res = $this->_execute($utopia, $local_vars);
-		return $res === null ? $this : $res;
+		return $this->_execute($utopia, $local_vars) ?? $this;
 	}
 
 	function __toString(): string

@@ -134,8 +134,7 @@ class NumberStatement extends VariableStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$ret = $this->_execute($utopia, $local_vars);
-		return $ret === null ? $this : $ret;
+		return $this->_execute($utopia, $local_vars) ?? $this;
 	}
 
 	function __toString(): string

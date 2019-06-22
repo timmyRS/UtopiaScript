@@ -171,13 +171,7 @@ class ArrayStatement extends VariableStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$res = $this->_execute($utopia, $local_vars);
-		if($res !== null)
-		{
-			return $res;
-		}
-		$ret = $this->execute_($utopia, $local_vars);
-		return $ret === null ? $this : $ret;
+		return ($this->_execute($utopia, $local_vars) ?? $this->execute_($utopia, $local_vars)) ?? $this;
 	}
 
 	/**
