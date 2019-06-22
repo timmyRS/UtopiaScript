@@ -118,7 +118,7 @@ abstract class DeclarationStatement extends Statement
 		}
 		if(!$this->value instanceof VariableStatement)
 		{
-			throw new InvalidCodeException("Expected variable, got ".get_class($this->value));
+			throw new InvalidCodeException("Declaration expected variable, got ".get_class($this->value));
 		}
 	}
 }

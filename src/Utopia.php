@@ -580,10 +580,7 @@ class Utopia
 					case '[':
 						$this->processLiteral($literal, $statement, $local_vars, $ret);
 						$arr = $this->parseAndExecuteWithWritableLocalVars("array ".$this->readArray($chars, $i, $end_i), $local_vars);
-						if(!$arr instanceof ArrayStatement)
-						{
-							throw new InvalidCodeException("Unexpected ".get_class($arr));
-						}
+						assert($arr instanceof ArrayStatement);
 						if($statement instanceof Statement)
 						{
 							if($statement->acceptsValues())

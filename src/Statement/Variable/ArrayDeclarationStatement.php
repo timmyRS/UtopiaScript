@@ -99,7 +99,7 @@ class ArrayDeclarationStatement extends Statement
 		{
 			if(count($this->arr) == 0)
 			{
-				throw new InvalidCodeException("Unexpected {$literal} as first literal in array");
+				throw new InvalidCodeException("Unexpected {$literal} as first literal in array declaration");
 			}
 			$this->key = true;
 		}

@@ -50,7 +50,7 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 	{
 		if(get_class($value) != StringStatement::class)
 		{
-			throw new InvalidCodeException("Expected StringStatement, got ".get_class($value));
+			throw new InvalidCodeException("Function body has to be a string, got ".get_class($value));
 		}
 		$this->body = $value->value;
 	}
@@ -73,7 +73,7 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 		{
 			if(count($arg) != 0)
 			{
-				throw new InvalidCodeException("Unexpected token: ".$literal);
+				throw new InvalidCodeException("Unexpected token in function declaration: ".$literal);
 			}
 			unset($this->args[$type][$i]);
 			$this->args["optionals"] = [[]];
