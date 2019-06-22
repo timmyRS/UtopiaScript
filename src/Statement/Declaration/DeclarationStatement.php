@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Declaration;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Statement\Variable\NullStatement, Statement\Variable\VariableStatement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Statement\Variable\NullStatement, Statement\Variable\VariableStatement, Utopia, Variable};
 abstract class DeclarationStatement extends Statement
 {
 	/**
@@ -35,7 +35,7 @@ abstract class DeclarationStatement extends Statement
 	 */
 	function isFinished(): bool
 	{
-		return false;
+		return $this->value instanceof VariableStatement && $this->value->isFinished();
 	}
 
 	function acceptsValues(): bool
@@ -53,16 +53,13 @@ abstract class DeclarationStatement extends Statement
 		{
 			$this->value = $value;
 		}
+		else if(gettype($this->value) == "string")
+		{
+			$this->value .= " ".$value->toLiteral();
+		}
 		else
 		{
-			if(gettype($this->value) == "string")
-			{
-				$this->value .= " ".$value->toLiteral();
-			}
-			else
-			{
-				$this->value->acceptValue($value);
-			}
+			$this->value->acceptValue($value);
 		}
 	}
 
@@ -76,28 +73,22 @@ abstract class DeclarationStatement extends Statement
 		{
 			$this->name = $literal;
 		}
+		else if($this->value === null)
+		{
+			if($literal == '=')
+			{
+				return;
+			}
+			$this->value = $literal;
+		}
+		else if(gettype($this->value) == "string")
+		{
+			$this->value .= " ".$literal;
+		}
 		else
 		{
-			if($this->value === null)
-			{
-				if($literal == '=')
-				{
-					return;
-				}
-				$this->value = $literal;
-			}
-			else
-			{
-				if(gettype($this->value) == "string")
-				{
-					$this->value .= " ".$literal;
-				}
-				else
-				{
-					$this->value->acceptLiteral($literal);
-					$this->execute = true;
-				}
-			}
+			$this->value->acceptLiteral($literal);
+			$this->execute = true;
 		}
 	}
 
