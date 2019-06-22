@@ -75,6 +75,7 @@ class FunctionStatement extends VariableStatement
 			if($arg_type == "required" && count($this->args["required"]) == $i)
 			{
 				$arg_type = "optionals";
+				$i = 0;
 			}
 			$arg = $this->args[$arg_type][$i];
 			$utopia->scrutinizeVariableName($arg["name"]);
