@@ -50,7 +50,7 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 	{
 		if(get_class($value) != StringStatement::class)
 		{
-			throw new InvalidCodeException("Function body has to be a string, got ".get_class($value));
+			throw new InvalidCodeException("Function body can't be ".$value->getType());
 		}
 		$this->body = $value->value;
 	}
@@ -89,10 +89,6 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 		if(!array_key_exists("type", $arg))
 		{
 			$literal_ = Utopia::getCanonicalType($literal);
-			if($literal_ == "null")
-			{
-				return;
-			}
 			if($literal_ != null)
 			{
 				$this->args[$type][$i]["type"] = $literal_;
