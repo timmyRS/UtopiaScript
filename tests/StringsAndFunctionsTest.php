@@ -37,7 +37,7 @@ class StringsAndFunctionsTest
 	{
 		$utopia = new Utopia();
 		ob_start();
-		$utopia->parseAndExecute('const myFunc void {= "Hi";};');
+		$utopia->parseAndExecute('const myFunc function {= "Hi";};');
 		Nose::assertEquals('Hi', Utopia::externalize($utopia->parseAndExecute('= myFunc;')));
 		ob_end_clean();
 	}

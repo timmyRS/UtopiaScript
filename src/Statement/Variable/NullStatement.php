@@ -18,24 +18,12 @@ class NullStatement extends VariableStatement
 
 	function acceptValue(VariableStatement $value)
 	{
-		if($this->_acceptValue($value))
-		{
-			if($value instanceof StringStatement)
-			{
-				if($this->function === null)
-				{
-					$this->function = $value->value;
-				}
-				else
-				{
-					$this->function .= $value->value;
-				}
-			}
-			else
-			{
-				throw new InvalidCodeException("NullStatement doesn't accept values in this context");
-			}
-		}
+		throw new InvalidCodeException("NullStatement doesn't accept values or literals");
+	}
+
+	function acceptLiteral(string $literal)
+	{
+		throw new InvalidCodeException("NullStatement doesn't accept literals or values");
 	}
 
 	/**
@@ -49,16 +37,7 @@ class NullStatement extends VariableStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$res = $this->_execute($utopia, $local_vars);
-		if($res !== null)
-		{
-			return $res;
-		}
-		if($this->function !== null)
-		{
-			return new FunctionStatement($this->function);
-		}
-		return $this;
+		return $this->_execute($utopia, $local_vars) ?? $this;
 	}
 
 	function __toString(): string
