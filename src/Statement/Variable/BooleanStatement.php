@@ -2,7 +2,7 @@
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
-class BoolStatement extends VariableStatement
+class BooleanStatement extends VariableStatement
 {
 	function __construct(bool $value)
 	{
@@ -11,7 +11,7 @@ class BoolStatement extends VariableStatement
 
 	static function getType(): string
 	{
-		return "bool";
+		return "boolean";
 	}
 
 	/**

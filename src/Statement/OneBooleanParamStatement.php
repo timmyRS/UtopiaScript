@@ -1,8 +1,8 @@
 <?php
 namespace UtopiaScript\Statement;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Variable\BoolStatement, Utopia};
-abstract class OneBoolParamStatement extends OneValueParamStatement
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Variable\BooleanStatement, Utopia};
+abstract class OneBooleanParamStatement extends OneValueParamStatement
 {
 	/**
 	 * @param Utopia $utopia
@@ -15,9 +15,9 @@ abstract class OneBoolParamStatement extends OneValueParamStatement
 	function _execute(Utopia $utopia, array &$local_vars = [])
 	{
 		parent::_execute($utopia, $local_vars);
-		if(!$this->value instanceof BoolStatement)
+		if(!$this->value instanceof BooleanStatement)
 		{
-			throw new InvalidCodeException(get_called_class()." only accepts numbers");
+			throw new InvalidCodeException(get_called_class()." only accepts booleans");
 		}
 	}
 }

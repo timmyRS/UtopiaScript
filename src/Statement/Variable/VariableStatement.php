@@ -238,21 +238,21 @@ abstract class VariableStatement extends Statement
 			switch($mode)
 			{
 				case self::ACTION_EQUALS:
-					return new BoolStatement($a0 == $a1);
+					return new BooleanStatement($a0 == $a1);
 				case self::ACTION_STRICT_EQUALS:
-					return new BoolStatement($a0 === $a1);
+					return new BooleanStatement($a0 === $a1);
 				case self::ACTION_NOT_EQUALS:
-					return new BoolStatement($a0 != $a1);
+					return new BooleanStatement($a0 != $a1);
 				case self::ACTION_NOT_STRICT_EQUALS:
-					return new BoolStatement($a0 !== $a1);
+					return new BooleanStatement($a0 !== $a1);
 				case self::ACTION_GREATER:
-					return new BoolStatement($a0 > $a1);
+					return new BooleanStatement($a0 > $a1);
 				case self::ACTION_GREATER_OR_EQUALS:
-					return new BoolStatement($a0 >= $a1);
+					return new BooleanStatement($a0 >= $a1);
 				case self::ACTION_LESS:
-					return new BoolStatement($a0 < $a1);
+					return new BooleanStatement($a0 < $a1);
 				case self::ACTION_LESS_OR_EQUALS:
-					return new BoolStatement($a0 <= $a1);
+					return new BooleanStatement($a0 <= $a1);
 			}
 		}
 		else

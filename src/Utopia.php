@@ -4,7 +4,7 @@ use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
 use UtopiaScript\Statement\
-{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BoolStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
+{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
 /** An environment with global variables that can execute UtopiaScript code. */
 class Utopia
 {
@@ -60,12 +60,12 @@ class Utopia
 		$this->input_stream = $input_stream;
 		$this->output_stream = $output_stream;
 		$this->vars = [
-			'true' => new Variable(new BoolStatement(true), true),
-			'yes' => new Variable(new BoolStatement(true), true),
-			'on' => new Variable(new BoolStatement(true), true),
-			'false' => new Variable(new BoolStatement(false), true),
-			'off' => new Variable(new BoolStatement(false), true),
-			'no' => new Variable(new BoolStatement(false), true),
+			'true' => new Variable(new BooleanStatement(true), true),
+			'yes' => new Variable(new BooleanStatement(true), true),
+			'on' => new Variable(new BooleanStatement(true), true),
+			'false' => new Variable(new BooleanStatement(false), true),
+			'off' => new Variable(new BooleanStatement(false), true),
+			'no' => new Variable(new BooleanStatement(false), true),
 			'null' => new Variable(new NullStatement(), true),
 			'void' => new Variable(new NullStatement(), true),
 			'none' => new Variable(new NullStatement(), true),

@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Conditional;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\OnlyLiteralParamsStatement, Statement\Statement, Statement\Variable\BoolStatement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\OnlyLiteralParamsStatement, Statement\Statement, Statement\Variable\BooleanStatement, Utopia};
 abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 {
 	public $condition;
@@ -75,7 +75,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	 */
 	function isConditionTrue(Utopia $utopia, array &$local_vars = [])
 	{
-		if($this->condition instanceof BoolStatement)
+		if($this->condition instanceof BooleanStatement)
 		{
 			if(!$this->condition->value)
 			{
@@ -110,7 +110,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
-	 * @return BoolStatement|Statement
+	 * @return BooleanStatement|Statement
 	 * @throws IncompleteCodeException
 	 * @throws InvalidCodeException
 	 * @throws InvalidEnvironmentException
@@ -118,7 +118,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	 */
 	function false(Utopia $utopia, array &$local_vars = [])
 	{
-		return $this->inverted_result ? $utopia->parseAndExecute($this->inverted_result, $local_vars) : new BoolStatement(false);
+		return $this->inverted_result ? $utopia->parseAndExecute($this->inverted_result, $local_vars) : new BooleanStatement(false);
 	}
 
 	/**

@@ -1,8 +1,8 @@
 <?php
 namespace UtopiaScriptDebugExtension;
 use UtopiaScript\
-{Statement\OneBoolParamStatement, Statement\Statement, Statement\Variable\NullStatement, Utopia};
-final class DebugStatement extends OneBoolParamStatement
+{Statement\OneBooleanParamStatement, Statement\Statement, Statement\Variable\NullStatement, Utopia};
+final class DebugStatement extends OneBooleanParamStatement
 {
 	/**
 	 * @param Utopia $utopia
