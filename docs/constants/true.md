@@ -1,7 +1,5 @@
 # true
 
-Aliases: `on`, `yes`
-
----
+- Aliases: `on`, `yes`
 
 The opposite of [false](false).

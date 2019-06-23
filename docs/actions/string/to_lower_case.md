@@ -1,8 +1,6 @@
 # to_lower_case
 
-Aliases: `to_lowercase`, `tolowercase`, `tolower`, `lowercase`, `lower`, `v`
-
----
+- Aliases: `to_lowercase`, `tolowercase`, `tolower`, `lowercase`, `lower`, `v`
 
 Transforms a string into an all-lower-case version.
 

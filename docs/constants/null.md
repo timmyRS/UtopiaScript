@@ -1,7 +1,5 @@
 # null
 
-Aliases: `void`, `none`, `nil`
+- Aliases: `void`, `none`, `nil`
 
----
-
-Used to indicate nothingness, and [functions without parameters](../constructs#function).
+Used to indicate nothingness.

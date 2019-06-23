@@ -1,8 +1,7 @@
 # set
 
-Alias: `$`
-
----
+- Alias: `$`
+- Syntax: `set <name> [=] <new_value>`
 
 Overwrites a variable, producing an error if it wasn't yet defined.
 

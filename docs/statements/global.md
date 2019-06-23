@@ -1,8 +1,7 @@
 # global
 
-Alias: `:`
-
----
+- Alias: `:`
+- Syntax: `global <name> [[=] value]`
 
 Declares a global variable.
 

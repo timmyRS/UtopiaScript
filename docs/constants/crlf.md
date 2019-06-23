@@ -1,8 +1,6 @@
 # crlf
 
-Alias: `crnl`
-
----
+- Alias: `crnl`
 
 A string containing [the carriage return character](cr) followed by [the new line character](nl), also known as the line feed character. This combination of characters is used to indicate that a new line is following on Windows and Telnet. On Telnet, this is analogous to returning the carriage to the beginning of the line, and then moving the paper up one line.
 

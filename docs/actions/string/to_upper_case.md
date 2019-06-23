@@ -1,8 +1,6 @@
 # to_upper_case
 
-Aliases: `to_uppercase`, `touppercase`, `toupper`, `uppercase`, `upper`, `^`
-
----
+- Aliases: `to_uppercase`, `touppercase`, `toupper`, `uppercase`, `upper`, `^`
 
 Transforms a string into an all-upper-case version.
 

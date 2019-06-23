@@ -1,8 +1,7 @@
 # final
 
-Alias: `,`
-
----
+- Alias: `,`
+- Syntax: `final <name> [[=] value]`
 
 Declares an immutable [local](local) variable.
 

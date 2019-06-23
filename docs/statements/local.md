@@ -1,8 +1,7 @@
 # local
 
-Alias: `.`
-
----
+- Alias: `.`
+- Syntax: `local <name> [[=] value]` 
 
 Declares a local variable, meaning that it is only accessible to the block it was defined in and sub-blocks:
 

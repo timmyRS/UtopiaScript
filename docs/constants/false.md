@@ -1,7 +1,5 @@
 # false
 
-Aliases: `off`, `no`
-
----
+- Aliases: `off`, `no`
 
 The opposite of [true](true).
