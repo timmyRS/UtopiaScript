@@ -78,7 +78,7 @@ if(!is_file(__DIR__."/vendor/autoload.php"))
 require __DIR__."/vendor/autoload.php";
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Statement\ExitStatement, Utopia};
-$utopia = new Utopia(fopen("php://stdin", "r"), null);
+$utopia = new Utopia(fopen("php://stdin", "r"));
 $utopia->debug = $flags["debug"];
 $utopia->loadExtension(UtopiaScriptDebugExtension\DebugExtension::class);
 if($flags["php-statement"])
