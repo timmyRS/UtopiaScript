@@ -13,9 +13,9 @@ class Utopia
 	 */
 	public $input_stream;
 	/**
-	 * @var resource $output_stream
+	 * @var resource|string $output
 	 */
-	public $output_stream;
+	public $output;
 	/**
 	 * If true, parsing will print debug information but take considerably longer.
 	 *
@@ -49,16 +49,22 @@ class Utopia
 	 * @var float $maximum_execution_time
 	 */
 	public $maximum_execution_time = 0;
+	/**
+	 * The output of the latest execution, if $output is "keep".
+	 *
+	 * @var string $last_output
+	 */
+	public $last_output = "";
 	protected $execute_start = null;
 
 	/**
-	 * @param resource $input_stream NULL to disable the `read` statement.
-	 * @param resource $output_stream NULL to use PHP's `echo` function.
+	 * @param resource $input_stream NULL to disable the STDIN reads.
+	 * @param resource|string $output Stream to write to, "echo" to use PHP's `echo` function, "keep" to write to Utopia::$last_output, or "suppress" to suppress output.
 	 */
-	function __construct($input_stream = null, $output_stream = null)
+	function __construct($input_stream = null, $output = "echo")
 	{
 		$this->input_stream = $input_stream;
-		$this->output_stream = $output_stream;
+		$this->output = $output;
 		$this->vars = [
 			'true' => new Variable(new BooleanStatement(true), true),
 			'yes' => new Variable(new BooleanStatement(true), true),
@@ -250,25 +256,6 @@ class Utopia
 
 	/**
 	 * @param string $code
-	 * @return string
-	 * @throws IncompleteCodeException
-	 * @throws InvalidCodeException
-	 * @throws InvalidEnvironmentException
-	 * @throws TimeoutException
-	 */
-	static function getOutput(string $code): string
-	{
-		$fh = fopen(__DIR__."/.assert_tmp", "w");
-		$utopia = new Utopia(null, $fh);
-		$utopia->parseAndExecute($code);
-		fclose($fh);
-		$res = file_get_contents(__DIR__."/.assert_tmp");
-		unlink(__DIR__."/.assert_tmp");
-		return $res;
-	}
-
-	/**
-	 * @param string $code
 	 * @param array $local_vars
 	 * @return Statement
 	 * @throws IncompleteCodeException
@@ -299,6 +286,7 @@ class Utopia
 			{
 				$this->execute_start = microtime(true);
 				$this->input_time = 0;
+				$this->last_output = "";
 			}
 			else if($this->maximum_execution_time > 0 && $this->maximum_execution_time < microtime(true) - $this->execute_start - $this->input_time)
 			{
@@ -661,19 +649,48 @@ class Utopia
 		}
 	}
 
+	/**
+	 * @param string $str
+	 * @throws InvalidEnvironmentException
+	 */
 	function say(string $str)
 	{
-		if($this->output_stream === null)
+		if(is_resource($this->output))
 		{
-			echo $str;
+			fwrite($this->output, $str);
+			fflush($this->output);
 		}
 		else
 		{
-			fwrite($this->output_stream, $str);
-			fflush($this->output_stream);
+			if(!is_string($this->output))
+			{
+				throw new InvalidEnvironmentException("Invalid output type: ".gettype($this->output));
+			}
+			switch($this->output)
+			{
+				case "echo":
+				case "print":
+					echo $str;
+					break;
+				case "keep":
+					$this->last_output .= $str;
+					break;
+				case "no":
+				case "none":
+				case "suppress":
+					break;
+				default:
+					throw new InvalidEnvironmentException("Invalid output method: ".$this->output);
+			}
 		}
 	}
 
+	/**
+	 * @param array $chars
+	 * @param int $i
+	 * @param int $end_i
+	 * @throws InvalidEnvironmentException
+	 */
 	function processComment(array &$chars, int &$i, int &$end_i)
 	{
 		if($this->debug)
@@ -844,6 +861,7 @@ class Utopia
 	 * @param int $end_i
 	 * @return string
 	 * @throws IncompleteCodeException
+	 * @throws InvalidEnvironmentException
 	 */
 	function readString(string $delimiter, array &$chars, int &$i, int &$end_i)
 	{
@@ -877,6 +895,7 @@ class Utopia
 	 * @param int $end_i
 	 * @return string
 	 * @throws IncompleteCodeException
+	 * @throws InvalidEnvironmentException
 	 */
 	function readBracketString(array &$chars, int &$i, int &$end_i)
 	{
@@ -929,6 +948,7 @@ class Utopia
 	 * @param int $end_i
 	 * @return string
 	 * @throws IncompleteCodeException
+	 * @throws InvalidEnvironmentException
 	 */
 	function readInlineStatement(array &$chars, int &$i, int &$end_i)
 	{
@@ -998,6 +1018,7 @@ class Utopia
 	 * @return string
 	 * @throws IncompleteCodeException
 	 * @throws InvalidCodeException
+	 * @throws InvalidEnvironmentException
 	 */
 	function readArray(array &$chars, int &$i, int &$end_i)
 	{

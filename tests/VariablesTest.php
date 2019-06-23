@@ -6,7 +6,8 @@ class VariablesTest
 {
 	function testScopedDeclarations()
 	{
-		Nose::assertEquals("HeyLater\r\nHiBye", Utopia::getOutput(<<<EOC
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
 global greeting "Hi";
 local farewell "Bye";
 {
@@ -16,7 +17,8 @@ local farewell "Bye";
 };
 print greeting farewell;
 EOC
-		));
+		);
+		Nose::assertEquals("HeyLater\r\nHiBye", $utopia->last_output);
 	}
 
 	function testStatementCantBeOverwritten()

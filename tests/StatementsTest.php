@@ -7,25 +7,29 @@ class StatementsTest
 {
 	function testPrint()
 	{
+		$utopia = new Utopia(null, "keep");
 		foreach([
 			"print ",
 			"print",
 			"<"
 		] as $statement)
 		{
-			Nose::assertEquals("Hi", Utopia::getOutput($statement.'"Hi";'));
+			$utopia->parseAndExecute($statement.'"Hi";');
+			Nose::assertEquals("Hi", $utopia->last_output);
 		}
 	}
 
-	function testPrintln()
+	function testPrintLine()
 	{
+		$utopia = new Utopia(null, "keep");
 		foreach([
 			"print_line ",
 			"print_line",
 			"<<"
 		] as $statement)
 		{
-			Nose::assertEquals("Hi\r\n", Utopia::getOutput($statement.'"Hi";'));
+			$utopia->parseAndExecute($statement.'"Hi";');
+			Nose::assertEquals("Hi\r\n", $utopia->last_output);
 		}
 	}
 
@@ -42,13 +46,10 @@ class StatementsTest
 
 	function testReturnAndExit()
 	{
-		$utopia = new Utopia();
-		ob_start(function($buffer)
-		{
-			Nose::assertEquals('ExitExit', $buffer);
-		});
+		$utopia = new Utopia(null, "keep");
 		Nose::assertEquals('Exit', Utopia::externalize($utopia->parseAndExecute('local myFunc function { return "Return"; print "Unreachable"; }; myFunc; exit "Exit"; print "Unreachable";')));
-		Nose::assertEquals('Exit', Utopia::externalize($utopia->parseAndExecute('local myFunc function { exit "Exit"; print "Unreachable"; }; myFunc; print "Unreachable";')));
-		ob_end_clean();
+		Nose::assertEquals('Exit', $utopia->last_output);
+		Nose::assertEquals('Exit', Utopia::externalize($utopia->parseAndExecute('local myFunc func { exit "Exit"; print "Unreachable"; }; myFunc; print "Unreachable";')));
+		Nose::assertEquals('Exit', $utopia->last_output);
 	}
 }

@@ -6,11 +6,9 @@ class FunctionsTest
 {
 	function testExplicitFunctionDeclaration()
 	{
-		$utopia = new Utopia();
-		ob_start();
+		$utopia = new Utopia(null, "suppress");
 		$utopia->parseAndExecute('const myFunc function {= "Hi";};');
 		Nose::assertEquals('Hi', Utopia::externalize($utopia->parseAndExecute('= myFunc;')));
-		ob_end_clean();
 	}
 
 	function testFunctionWithStrictParameters()
@@ -25,6 +23,8 @@ class FunctionsTest
 
 	function testFunctionWithAnytypeParameters()
 	{
-		Nose::assertEquals("string\r\nnumber\r\nnull\r\n", Utopia::getOutput(",myFunc = routine mixed:a b any_type c { [a b c]@v{print_line get_type v}; }; myFunc 'Hello' 1337 null;"));
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(",myFunc = routine mixed:a b any_type c { [a b c]@v{print_line get_type v}; }; myFunc 'Hello' 1337 null;");
+		Nose::assertEquals("string\r\nnumber\r\nnull\r\n", $utopia->last_output);
 	}
 }

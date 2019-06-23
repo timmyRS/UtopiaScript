@@ -6,14 +6,16 @@ class ConditionalsTest
 {
 	function testWhile()
 	{
-		Nose::assertEquals("10... 9... 8... 7... 6... 5... 4... 3... 2... 1... ", Utopia::getOutput(<<<EOC
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
 local counter 10;
 while counter > 0 {
     print counter "... ";
     set counter counter - 1;
 };
 EOC
-		));
+		);
+		Nose::assertEquals("10... 9... 8... 7... 6... 5... 4... 3... 2... 1... ", $utopia->last_output);
 	}
 
 	function testTimeLimit()
@@ -28,7 +30,8 @@ EOC
 
 	function testIfAndElse()
 	{
-		Nose::assertEquals("if\r\nelse\r\n", Utopia::getOutput(<<<EOC
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
 [0 1] for_each item {
 	if item == 0 {
 		print_line "if";
@@ -37,12 +40,14 @@ EOC
 	};
 };
 EOC
-		));
+		);
+		Nose::assertEquals("if\r\nelse\r\n", $utopia->last_output);
 	}
 
 	function testWhileOtherwise()
 	{
-		Nose::assertEquals("otherwise", Utopia::getOutput(<<<EOC
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
 local var = 0;
 while var >= 1
 {
@@ -53,6 +58,7 @@ otherwise
 	print "otherwise"
 }
 EOC
-		));
+		);
+		Nose::assertEquals("otherwise", $utopia->last_output);
 	}
 }
