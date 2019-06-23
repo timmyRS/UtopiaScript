@@ -77,15 +77,19 @@ class NumberStatement extends VariableStatement
 			else switch($literal)
 			{
 				case '+':
+				case 'plus':
 					$this->action = 1;
 					break;
 				case '-':
+				case 'minus':
 					$this->action = 2;
 					break;
 				case '*':
+				case 'times':
 					$this->action = 3;
 					break;
 				case '/':
+				case 'divided_by':
 					$this->action = 4;
 					break;
 				case '^':
@@ -95,6 +99,10 @@ class NumberStatement extends VariableStatement
 				case '%':
 				case 'mod':
 					$this->action = 6;
+					break;
+				case 'fact':
+				case 'factorial':
+					$this->value = self::factorial($this->value);
 					break;
 				case 'c':
 				case 'ceil':
@@ -107,10 +115,6 @@ class NumberStatement extends VariableStatement
 				case 'f':
 				case 'floor':
 					$this->value = floor($this->value);
-					break;
-				case '!':
-				case 'factorial':
-					$this->value = self::factorial($this->value);
 					break;
 				default:
 					throw new InvalidCodeException("Invalid action: ".$literal);
@@ -134,6 +138,10 @@ class NumberStatement extends VariableStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
+		if($this->action == self::ACTION_NOT)
+		{
+			$this->value = self::factorial($this->value);
+		}
 		return $this->_execute($utopia, $local_vars) ?? $this;
 	}
 

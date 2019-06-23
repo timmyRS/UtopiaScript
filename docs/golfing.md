@@ -23,14 +23,19 @@
         - `*` = `function`
 - Variable actions
     - `=` = `equals`
-    - `!=` = `not_equals`
+    - `!=` = `not_equal_to`
+    - `s` = `to_string`
     - Strings
         - `^` = `to_upper_case`
         - `v` = `to_lower_case`
     - Numbers
+        - `+` = `plus`
+        - `-` = `minus`
+        - `*` = `times`
+        - `/` = `divided_by`
         - `^` = `pow`
-        - `!` = `factorial`
         - `%` = `mod`
+        - `!` = `factorial`
         - `c` = `ceil`
         - `r` = `round`
         - `f` = `floor`

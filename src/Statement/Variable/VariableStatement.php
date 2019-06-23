@@ -4,7 +4,8 @@ use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
 abstract class VariableStatement extends Statement
 {
-	const ACTION_TO_STRING = -1;
+	const ACTION_NOT = -1;
+	const ACTION_TO_STRING = -2;
 	const ACTION_EQUALS = -100;
 	const ACTION_STRICT_EQUALS = -101;
 	const ACTION_NOT_EQUALS = -102;
@@ -35,7 +36,7 @@ abstract class VariableStatement extends Statement
 	 */
 	function isExecutable(): bool
 	{
-		return $this->action > -100 || $this->action_data["value"] !== null;
+		return $this->action > -100 || @$this->action_data["value"] !== null;
 	}
 
 	/**
@@ -118,6 +119,15 @@ abstract class VariableStatement extends Statement
 		}
 	}
 
+	private function setAction(int $action)
+	{
+		$this->action = $action;
+		$this->action_data = [
+			"value" => null,
+			"execute" => false
+		];
+	}
+
 	/**
 	 * @param string $literal
 	 * @return boolean
@@ -129,63 +139,108 @@ abstract class VariableStatement extends Statement
 		{
 			return true;
 		}
-		else
+		switch($literal)
 		{
-			if($this->action == 0)
-			{
-				switch($literal)
+			case '=':
+				switch($this->action)
 				{
-					case '=':
-					case 'equals':
-						$this->action = self::ACTION_EQUALS;
+					case self::ACTION_EQUALS:
+						$this->setAction(self::ACTION_STRICT_EQUALS);
 						break;
-					case '==':
-						$this->action = self::ACTION_STRICT_EQUALS;
+					case self::ACTION_NOT:
+						$this->setAction(self::ACTION_NOT_EQUALS);
 						break;
-					case '!=':
-					case 'notequals':
-					case 'not_equals':
-						$this->action = self::ACTION_NOT_EQUALS;
+					case self::ACTION_NOT_EQUALS:
+						$this->setAction(self::ACTION_NOT_STRICT_EQUALS);
 						break;
-					case '!==':
-						$this->action = self::ACTION_NOT_STRICT_EQUALS;
+					case self::ACTION_GREATER:
+						$this->setAction(self::ACTION_GREATER_OR_EQUALS);
 						break;
-					case '>':
-						$this->action = self::ACTION_GREATER;
+					case self::ACTION_LESS:
+						$this->setAction(self::ACTION_LESS_OR_EQUALS);
 						break;
-					case '>=':
-					case '=>':
-						$this->action = self::ACTION_GREATER_OR_EQUALS;
-						break;
-					case '<':
-						$this->action = self::ACTION_LESS;
-						break;
-					case '<=':
-					case '=<':
-						$this->action = self::ACTION_LESS_OR_EQUALS;
-						break;
-					case 'to_string':
-					case 'tostring':
-					case 'as_string':
-					case 'string':
-					case 'str':
-					case 's':
-						$this->action = self::ACTION_TO_STRING;
+					case 0:
+						$this->setAction(self::ACTION_EQUALS);
 						break;
 					default:
-						return true;
+						throw new InvalidCodeException('Unexpected =');
 				}
-				if($this->action <= -100)
+				break;
+			case '>':
+				switch($this->action)
 				{
-					$this->action_data = [
-						"value" => null,
-						"execute" => false
-					];
+					case self::ACTION_EQUALS:
+						$this->setAction(self::ACTION_GREATER_OR_EQUALS);
+						break;
+					case 0:
+						$this->setAction(self::ACTION_GREATER);
+						break;
+					default:
+						throw new InvalidCodeException('Unexpected >');
 				}
-			}
-			else
-			{
-				if($this->action < 0)
+				break;
+			case '<':
+				switch($this->action)
+				{
+					case self::ACTION_EQUALS:
+						$this->setAction(self::ACTION_LESS_OR_EQUALS);
+						break;
+					case 0:
+						$this->setAction(self::ACTION_LESS);
+						break;
+					default:
+						throw new InvalidCodeException('Unexpected <');
+				}
+				break;
+			default:
+				if($this->action == 0)
+				{
+					switch($literal)
+					{
+						case '!':
+							$this->action = self::ACTION_NOT;
+							break;
+						case 'equals':
+						case 'equal_to':
+							$this->setAction(self::ACTION_EQUALS);
+							break;
+						case 'strictly_equals':
+						case 'strictly_equal_to':
+							$this->setAction(self::ACTION_STRICT_EQUALS);
+							break;
+						case 'doesnt_equal':
+						case 'not_equal_to':
+							$this->setAction(self::ACTION_NOT_EQUALS);
+							break;
+						case 'doesnt_strictly_equal':
+						case 'not_strictly_equal_to':
+							$this->setAction(self::ACTION_NOT_STRICT_EQUALS);
+							break;
+						case 'greater_than':
+							$this->setAction(self::ACTION_GREATER);
+							break;
+						case 'greater_than_or_equal_to':
+							$this->setAction(self::ACTION_GREATER_OR_EQUALS);
+							break;
+						case 'less_than':
+							$this->setAction(self::ACTION_LESS);
+							break;
+						case 'less_than_or_equal_to':
+							$this->setAction(self::ACTION_LESS_OR_EQUALS);
+							break;
+						case 'to_string':
+						case 'tostring':
+						case 'as_string':
+						case 'string':
+						case 'str':
+						case 's':
+							$this->setAction(self::ACTION_TO_STRING);
+							break;
+						default:
+							return true;
+					}
+				}
+				else if($this->action < 0)
 				{
 					if($this->action < -99)
 					{
@@ -204,7 +259,6 @@ abstract class VariableStatement extends Statement
 						throw new InvalidCodeException(get_called_class()." doesn't accept literals in this context");
 					}
 				}
-			}
 		}
 		return false;
 	}
@@ -255,17 +309,20 @@ abstract class VariableStatement extends Statement
 					return new BooleanStatement($a0 <= $a1);
 			}
 		}
-		else
+		else if($this->action < 0)
 		{
-			if($this->action < 0)
+			$mode = $this->action;
+			$this->action = 0;
+			switch($mode)
 			{
-				$mode = $this->action;
-				$this->action = 0;
-				switch($mode)
-				{
-					case self::ACTION_TO_STRING:
-						return new StringStatement($this->__toString());
-				}
+				case self::ACTION_NOT:
+					if(!$this instanceof NumberStatement)
+					{
+						throw new InvalidCodeException("Invalid action: !");
+					}
+					break;
+				case self::ACTION_TO_STRING:
+					return new StringStatement($this->__toString());
 			}
 		}
 		return null;

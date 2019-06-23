@@ -36,7 +36,9 @@ class NumbersTest
 	function testFactorial()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(6, Utopia::externalize($utopia->parseAndExecute("3!")));
-		Nose::assertEquals(6, Utopia::externalize($utopia->parseAndExecute("3 factorial")));
+		foreach(["!", " factorial", " fact"] as $action)
+		{
+			Nose::assertEquals(6, Utopia::externalize($utopia->parseAndExecute('3'.$action)));
+		}
 	}
 }

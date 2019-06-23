@@ -38,9 +38,9 @@ class StringStatement extends VariableStatement
 	 */
 	function acceptLiteral(string $literal)
 	{
+		$this->exec = false;
 		if($this->_acceptLiteral($literal))
 		{
-			$this->exec = false;
 			switch($literal)
 			{
 				case '^':
