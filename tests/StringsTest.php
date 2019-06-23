@@ -1,7 +1,8 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
+require_once "vendor/autoload.php";
 use UtopiaScript\
 {Exception\IncompleteCodeException, Utopia};
-class StringsAndFunctionsTest
+class StringsTest
 {
 	function testBracketStrings()
 	{
@@ -9,7 +10,7 @@ class StringsAndFunctionsTest
 		ob_start();
 		Nose::assertEquals("< {Utopia\nScript\n};", Utopia::externalize($utopia->parseAndExecute("= {< {Utopia\nScript\n};};")));
 		ob_end_clean();
-		Nose::expectException(IncompleteCodeException::class, function() use ($utopia)
+		Nose::expectException(IncompleteCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute("< { There is an unfinished { bracket. }");
 		});
@@ -33,16 +34,6 @@ class StringsAndFunctionsTest
 		ob_end_clean();
 	}
 
-	function testExplicitFunctionDeclaration()
-	{
-		$utopia = new Utopia();
-		ob_start();
-		$utopia->parseAndExecute('const myFunc function {= "Hi";};');
-		Nose::assertEquals('Hi', Utopia::externalize($utopia->parseAndExecute('= myFunc;')));
-		ob_end_clean();
-	}
-
-	// TODO: Create test for functions with arguments
 	function testToUpperCase()
 	{
 		$utopia = new Utopia();

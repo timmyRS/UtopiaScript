@@ -249,20 +249,22 @@ class Utopia
 	}
 
 	/**
-	 * @param string|Extension $extension
-	 * @throws InvalidArgumentException
+	 * @param string $code
+	 * @return string
+	 * @throws IncompleteCodeException
+	 * @throws InvalidCodeException
+	 * @throws InvalidEnvironmentException
+	 * @throws TimeoutException
 	 */
-	function loadExtension($extension)
+	static function getOutput(string $code): string
 	{
-		if(gettype($extension) == "string")
-		{
-			$extension = new $extension();
-		}
-		if(!$extension instanceof Extension)
-		{
-			throw new InvalidArgumentException("Parameter is not a valid extension.");
-		}
-		$this->statements = array_merge($this->statements, $extension->getStatements());
+		$fh = fopen(__DIR__."/.assert_tmp", "w");
+		$utopia = new Utopia(null, $fh);
+		$utopia->parseAndExecute($code);
+		fclose($fh);
+		$res = file_get_contents(__DIR__."/.assert_tmp");
+		unlink(__DIR__."/.assert_tmp");
+		return $res;
 	}
 
 	/**
@@ -1050,6 +1052,23 @@ class Utopia
 			}
 		}
 		throw new IncompleteCodeException("Code unexpectedly ended whilst reading array");
+	}
+
+	/**
+	 * @param string|Extension $extension
+	 * @throws InvalidArgumentException
+	 */
+	function loadExtension($extension)
+	{
+		if(gettype($extension) == "string")
+		{
+			$extension = new $extension();
+		}
+		if(!$extension instanceof Extension)
+		{
+			throw new InvalidArgumentException("Parameter is not a valid extension.");
+		}
+		$this->statements = array_merge($this->statements, $extension->getStatements());
 	}
 
 	/**

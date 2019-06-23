@@ -1,4 +1,5 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
+require_once "vendor/autoload.php";
 use UtopiaScript\Utopia;
 class ArraysTest
 {

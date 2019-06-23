@@ -1,5 +1,5 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
-require "vendor/autoload.php";
+require_once "vendor/autoload.php";
 use UtopiaScript\
 {Exception\InvalidCodeException, Utopia};
 use UtopiaScriptPhpStatementExtension\PhpStatementExtension;
@@ -8,43 +8,31 @@ class StatementsTest
 	function testPrint()
 	{
 		foreach([
-			"<",
-			"say",
-			"out",
-			"echo",
+			"print ",
 			"print",
-			"output"
+			"<"
 		] as $statement)
 		{
-			$fh = fopen(".test_tmp_print", "w");
-			$utopia = new Utopia(null, $fh);
-			$utopia->parseAndExecute($statement.' "Hi";');
-			fclose($fh);
-			Nose::assertEquals("Hi", file_get_contents(".test_tmp_print"));
-			unlink(".test_tmp_print");
+			Nose::assertEquals("Hi", Utopia::getOutput($statement.'"Hi";'));
 		}
 	}
 
 	function testPrintln()
 	{
 		foreach([
-			"<<",
-			"println"
+			"print_line ",
+			"print_line",
+			"<<"
 		] as $statement)
 		{
-			$fh = fopen(".test_tmp_println", "w");
-			$utopia = new Utopia(null, $fh);
-			$utopia->parseAndExecute($statement.' "Hi";');
-			fclose($fh);
-			Nose::assertEquals("Hi\r\n", file_get_contents(".test_tmp_println"));
-			unlink(".test_tmp_println");
+			Nose::assertEquals("Hi\r\n", Utopia::getOutput($statement.'"Hi";'));
 		}
 	}
 
 	function testPhp()
 	{
 		$utopia = new Utopia();
-		Nose::expectException(InvalidCodeException::class, function() use ($utopia)
+		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute("php { return \"H\".'i'; }");
 		});
