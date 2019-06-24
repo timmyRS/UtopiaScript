@@ -2,4 +2,4 @@
 
 - Aliases: `on`, `yes`
 
-The opposite of [false](false).
+The counterpart to [false](false), both being [booleans](../types#boolean).

@@ -2,4 +2,4 @@
 
 - Aliases: `off`, `no`
 
-The opposite of [true](true).
+The counterpart to [true](true), both being [booleans](../types#boolean).
