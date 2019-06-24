@@ -51,4 +51,6 @@ EOC
 		});
 		$utopia->parseAndExecuteWithWritableLocalVars('const bla 1;', $local_vars);
 	}
+
+	// TODO: Add test for type contracts / strict types
 }

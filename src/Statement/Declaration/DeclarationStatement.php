@@ -95,15 +95,13 @@ abstract class DeclarationStatement extends Statement
 	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
-	 * @param bool $global
 	 * @throws IncompleteCodeException
 	 * @throws InvalidCodeException
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array &$local_vars = [], bool $global = false)
+	function _execute(Utopia $utopia, array &$local_vars = [])
 	{
-		$utopia->scrutinizeVariableName($this->name, $global ? [] : $local_vars);
 		if($this->value === null)
 		{
 			$this->value = new NullStatement();

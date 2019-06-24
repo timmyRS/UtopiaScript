@@ -18,11 +18,11 @@ final class SetStatement extends DeclarationStatement
 		$this->_execute($utopia, $local_vars);
 		if(array_key_exists($this->name, $local_vars))
 		{
-			$local_vars[$this->name]->value = $this->value;
+			$local_vars[$this->name]->setValue($this->value);
 		}
 		else if(array_key_exists($this->name, $utopia->vars))
 		{
-			$utopia->vars[$this->name]->value = $this->value;
+			$utopia->vars[$this->name]->setValue($this->value);
 		}
 		else
 		{

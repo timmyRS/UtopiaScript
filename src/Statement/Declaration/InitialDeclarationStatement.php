@@ -5,6 +5,10 @@ use UtopiaScript\
 abstract class InitialDeclarationStatement extends DeclarationStatement
 {
 	/**
+	 * @var string $strict_type
+	 */
+	public $strict_type = "any_type";
+	/**
 	 * @var boolean $global
 	 */
 	public $global;
@@ -20,6 +24,24 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 	}
 
 	/**
+	 * @param string $literal
+	 * @throws InvalidCodeException
+	 */
+	function acceptLiteral(string $literal)
+	{
+		if($this->name === null)
+		{
+			$type = Utopia::getCanonicalType($literal);
+			if($type !== null)
+			{
+				$this->strict_type = $type;
+				return;
+			}
+		}
+		parent::acceptLiteral($literal);
+	}
+
+	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 * @return Statement
@@ -30,14 +52,23 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$this->_execute($utopia, $local_vars, $this->global);
+		$utopia->scrutinizeVariableName($this->name, $this->global ? [] : $local_vars, $this->strict_type);
+		$this->_execute($utopia, $local_vars);
 		if($this->global)
 		{
-			$utopia->vars[$this->name] = new Variable($this->value, $this->final);
+			if($this->strict_type != "any_type" && array_key_exists($this->name, $utopia->vars) && $utopia->vars[$this->name]->strict_type != "any_type" && $utopia->vars[$this->name]->strict_type != $this->strict_type)
+			{
+				throw new InvalidCodeException($this->name." is already bound to be ".$utopia->vars[$this->name]->strict_type.", so it can't/shouldn't be changed to ".$this->strict_type);
+			}
+			$utopia->vars[$this->name] = new Variable($this->value, $this->final, $this->strict_type);
 		}
 		else
 		{
-			$local_vars[$this->name] = new Variable($this->value, $this->final);
+			if($this->strict_type != "any_type" && array_key_exists($this->name, $local_vars) && $local_vars[$this->name]->strict_type != "any_type" && $local_vars[$this->name]->strict_type != $this->strict_type)
+			{
+				throw new InvalidCodeException($this->name." is already bound to be ".$local_vars[$this->name]->strict_type.", so it can't/shouldn't be changed to ".$this->strict_type);
+			}
+			$local_vars[$this->name] = new Variable($this->value, $this->final, $this->strict_type);
 		}
 		return $this->value;
 	}

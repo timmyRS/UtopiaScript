@@ -65,25 +65,31 @@ class Utopia
 	{
 		$this->input_stream = $input_stream;
 		$this->output = $output;
-		$this->vars = [
-			'true' => new Variable(new BooleanStatement(true), true),
-			'yes' => new Variable(new BooleanStatement(true), true),
-			'on' => new Variable(new BooleanStatement(true), true),
-			'false' => new Variable(new BooleanStatement(false), true),
-			'off' => new Variable(new BooleanStatement(false), true),
-			'no' => new Variable(new BooleanStatement(false), true),
-			'null' => new Variable(new NullStatement(), true),
-			'void' => new Variable(new NullStatement(), true),
-			'none' => new Variable(new NullStatement(), true),
-			'nil' => new Variable(new NullStatement(), true),
-			'cr' => new Variable(new StringStatement("\r"), true),
-			'lf' => new Variable(new StringStatement("\n"), true),
-			'nl' => new Variable(new StringStatement("\n"), true),
-			'crlf' => new Variable(new StringStatement("\r\n"), true),
-			'crnl' => new Variable(new StringStatement("\r\n"), true),
-			'eol' => new Variable(new StringStatement(PHP_EOL), true),
-			'pi' => new Variable(new NumberStatement(M_PI), false)
-		];
+		try
+		{
+			$this->vars = [
+				'true' => new Variable(new BooleanStatement(true), true),
+				'yes' => new Variable(new BooleanStatement(true), true),
+				'on' => new Variable(new BooleanStatement(true), true),
+				'false' => new Variable(new BooleanStatement(false), true),
+				'off' => new Variable(new BooleanStatement(false), true),
+				'no' => new Variable(new BooleanStatement(false), true),
+				'null' => new Variable(new NullStatement(), true),
+				'void' => new Variable(new NullStatement(), true),
+				'none' => new Variable(new NullStatement(), true),
+				'nil' => new Variable(new NullStatement(), true),
+				'cr' => new Variable(new StringStatement("\r"), true),
+				'lf' => new Variable(new StringStatement("\n"), true),
+				'nl' => new Variable(new StringStatement("\n"), true),
+				'crlf' => new Variable(new StringStatement("\r\n"), true),
+				'crnl' => new Variable(new StringStatement("\r\n"), true),
+				'eol' => new Variable(new StringStatement(PHP_EOL), true),
+				'pi' => new Variable(new NumberStatement(M_PI), false)
+			];
+		}
+		catch(InvalidCodeException $e)
+		{
+		}
 		$this->statements = [// Conditional
 			'if' => IfStatement::class,
 			'ifnt' => IfNotStatement::class,

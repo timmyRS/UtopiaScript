@@ -1,7 +1,7 @@
 # global
 
 - Alias: `:`
-- Syntax: `global <name> [[=] value]`
+- Syntax: `global [type] <name> [[=] value]`
 
 Declares a global variable.
 
