@@ -1093,11 +1093,11 @@ class Utopia
 	}
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function scrutinizeVariableName($name, array $local_vars = [])
+	function scrutinizeVariableName(string $name, array $local_vars = [])
 	{
 		if(array_key_exists($name, $this->statements))
 		{
@@ -1110,11 +1110,14 @@ class Utopia
 				throw new InvalidCodeException("Can't overwrite final: ".$name);
 			}
 		}
-		else if(array_key_exists($name, $this->vars) && $this->vars[$name]->final)
+		else if(array_key_exists($name, $this->vars))
 		{
-			throw new InvalidCodeException("Can't overwrite constant: ".$name);
+			if($this->vars[$name]->final)
+			{
+				throw new InvalidCodeException("Can't overwrite constant: ".$name);
+			}
 		}
-		if(self::getCanonicalType($name) !== null)
+		if(self::getCanonicalType($name) !== null || self::is_numeric($name))
 		{
 			throw new InvalidCodeException("Invalid variable name: ".$name);
 		}
