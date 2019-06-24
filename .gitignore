@@ -1,7 +1,8 @@
 .idea/
 .sass-cache/
 _site/
+docs/Gemfile.lock
 vendor/
 .phpunit.result.cache
-*.us
 composer.lock
+test.us
