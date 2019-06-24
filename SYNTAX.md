@@ -225,17 +225,11 @@ You can also use `return` outside of a block to the same effect:
     return "Goodnight!";
     print "Hi!";
 
-## Arrays
-
-Do you know what's even better than variables? Variables within variables!
-
-TODO: Write section
-
 ## Code Golfing
 
 For code golfing, there are a couple of things to note:
 
-- The [aliases](ALIASES.md) — especially the one-character ones!
+- [Noteworthy aliases](https://docs.utopia.sh/golfing#noteworthy-aliases)
 - Spaces are not the only delimiter for literals. For example, tokens such as quotation marks, `@`, etc. also delimit literals, allowing you to use `<"Hi "name` and `myarray@i{<i}`
 - Semicolons are not required at the end of a block and when a statement doesn't accept any (further) parameters.
 
