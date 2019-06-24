@@ -202,9 +202,9 @@ class Utopia
 
 	/**
 	 * @param mixed $value
-	 * @return Statement
+	 * @return VariableStatement
 	 */
-	static function internalize($value): Statement
+	static function internalize($value): VariableStatement
 	{
 		$value = self::unwrap($value);
 		if($value === null)

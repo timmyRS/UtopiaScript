@@ -25,14 +25,13 @@ class ReadStatement extends OneOptionalLiteralParamStatement
 		$utopia->input_time += (microtime(true) - $start);
 		if($this->arg !== null)
 		{
-			$utopia->scrutinizeVariableName($this->arg, $local_vars);
 			if(array_key_exists($this->arg, $local_vars))
 			{
-				$local_vars[$this->arg]->value = $val;
+				$local_vars[$this->arg]->setValue($val);
 			}
 			else if(array_key_exists($this->arg, $utopia->vars))
 			{
-				$utopia->vars[$this->arg]->value = $val;
+				$utopia->vars[$this->arg]->setValue($val);
 			}
 			else
 			{
