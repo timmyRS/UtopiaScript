@@ -1,10 +1,6 @@
 # Language Constructs
 
 - [Comments](#comments)
-- [String](#string)
-- [Number](#number)
-- [Function](#function)
-- [Array](#array)
 
 ## Comments
 
@@ -19,19 +15,3 @@ If you like comments that go for multiple lines and/or ASCII art, feel free to u
      * Copyright (c) 20XX, John Doe
      * Licensed under the MIT license
      *********************************/
-
-## String
-
-TODO
-
-## Number
-
-TODO
-
-## Function
-
-TODO
-
-## Array
-
-TODO
