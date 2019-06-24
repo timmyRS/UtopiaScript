@@ -404,16 +404,6 @@ class Utopia
 							$this->specialCharacter('!', $literal, $statement, $local_vars, $ret);
 						}
 						break;
-					case '$':
-						if($statement === null && $literal == '')
-						{
-							$statement = new SetStatement();
-						}
-						else
-						{
-							$this->specialCharacter('$', $literal, $statement, $local_vars, $ret);
-						}
-						break;
 					case '?':
 						if($statement === null && $literal == '')
 						{
