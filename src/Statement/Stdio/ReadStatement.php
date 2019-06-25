@@ -1,10 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Stdio;
-use UtopiaScript\Exception\InvalidCodeException;
-use UtopiaScript\Exception\InvalidEnvironmentException;
-use UtopiaScript\Statement\OneOptionalLiteralParamStatement;
-use UtopiaScript\Statement\Statement;
-use UtopiaScript\Utopia;
+use UtopiaScript\
+{Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Statement\OneOptionalLiteralParamStatement, Statement\Statement, Utopia};
 class ReadStatement extends OneOptionalLiteralParamStatement
 {
 	/**

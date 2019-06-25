@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript;
-use UtopiaScript\Exception\InvalidCodeException;
-use UtopiaScript\Statement\Variable\VariableStatement;
+use UtopiaScript\
+{Exception\InvalidCodeException, Statement\Variable\VariableStatement};
 class Variable
 {
 	/**

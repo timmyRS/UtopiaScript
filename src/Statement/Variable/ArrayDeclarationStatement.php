@@ -1,11 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
-use UtopiaScript\Exception\IncompleteCodeException;
-use UtopiaScript\Exception\InvalidCodeException;
-use UtopiaScript\Exception\InvalidEnvironmentException;
-use UtopiaScript\Exception\TimeoutException;
-use UtopiaScript\Statement\Statement;
-use UtopiaScript\Utopia;
+use UtopiaScript\
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
 class ArrayDeclarationStatement extends Statement
 {
 	/**
