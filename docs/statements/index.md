@@ -1,10 +1,10 @@
 # Statements
 
 - Conditional
-    - if
-    - if_not
-    - while
-    - while_not
+    - [if](if)
+    - [unless](unless)
+    - [while](while)
+    - [while_not](while_not)
 - [Declaration](declaration/)
 - Standard Input/Output (STDIO)
     - [print](print)

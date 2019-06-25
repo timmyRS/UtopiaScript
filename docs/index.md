@@ -1,7 +1,5 @@
 # Documentation
 
-Note: Like UtopiaScript, the documentation is not yet finished. If you're looking to learn UtopiaScript, the all-in-one [SYNTAX.md](https://github.com/timmyrs/UtopiaScript/blob/master/SYNTAX.md) would be the best document to look at.
-
 - [CLI Command](cli)
 - [Language Constructs](constructs)
 - [Types](types)
@@ -10,3 +8,5 @@ Note: Like UtopiaScript, the documentation is not yet finished. If you're lookin
 - [Constants](constants/)
 - [Extensions](extensions)
 - [Code Golfing](golfing)
+
+Note that some information is still in the [SYNTAX.md](https://github.com/timmyrs/UtopiaScript/blob/master/SYNTAX.md) which is yet to be ported into this documentation.

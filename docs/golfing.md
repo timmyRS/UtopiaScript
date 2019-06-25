@@ -9,6 +9,7 @@
         - `?!` = `unless`
         - `@` = `while`
         - `@!` = `while_not`
+        - `|` = `otherwise`
     - Declaration
         - `.` = `local`
         - `,` = `final`

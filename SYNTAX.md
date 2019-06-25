@@ -138,51 +138,6 @@ Obviously, doing everything in only one way is boring:
     print floor m_e; # 2
     print ceil(m_pi); # 4
 
-## Conditionals
-
-Conditionals — no programming language would be (Turing) complete without them!
-
-But first, let's ask the user if he wants conditionals:
-
-    print "Do you want conditionals? [Y/n] ";
-    local choice read;
-    # The user could've answered anything so we're simplifying "choice" to a yes or no (true or false).
-    set choice (choice tolowercase not_equals "n");
-    if choice = yes {
-        print "Great!";
-    } otherwise {
-        print ":(";
-    };
-
-In some cases, you might also want an "inverted if:"
-
-    local better_plans no;
-    unless better_plans {
-        print "Conditionals it is!";
-    };
-
-Of course, you can also use `otherwise` with `unless` — the possibilities are endless!
-
-### Loops
-
-With `if` and `unless` you can compare yes or no... once, but what if you wanted to execute some code until a condition is no longer met? This is where loops come in:
-
-    local counter 10;
-    while counter > 0 {
-        print counter "... ";
-        set counter counter - 1;
-    };
-    # Output: 10... 9... 8... 7... 6... 5... 4... 3... 2... 1...
-
-And, of course, loops can also be inverted and use `otherwise`:
-
-    local counter 10;
-    while_not counter > 0 {
-        # counter is greater than 0, so the while_not fails.
-    } unless {
-        print "counter is greater than 0!";
-    };
-
 ## Functions
 
 Functions are strings which happen to represent valid UtopiaScript code:
