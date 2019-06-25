@@ -84,7 +84,8 @@ class Utopia
 				'crlf' => new Variable(new StringStatement("\r\n"), true),
 				'crnl' => new Variable(new StringStatement("\r\n"), true),
 				'eol' => new Variable(new StringStatement(PHP_EOL), true),
-				'pi' => new Variable(new NumberStatement(M_PI), false)
+				'm_pi' => new Variable(new NumberStatement(M_PI), true),
+				'm_e' => new Variable(new NumberStatement(M_E), true)
 			];
 		}
 		catch(InvalidCodeException $e)

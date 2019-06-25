@@ -6,7 +6,8 @@
     - [crlf](crlf)
     - [eol](eol)
 - Numbers
-    - [pi](pi)
+    - [m_pi](m_pi)
+    - [m_e](m_e)
 - [true](true)
 - [false](false)
 - [null](null)

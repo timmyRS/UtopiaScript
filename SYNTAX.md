@@ -129,14 +129,14 @@ Note that UtopiaScript uses a literal order of operations:
 
 There are also some actions to manipulate numbers:
 
-    print pi floor; # 3
-    print pi ceil; # 4
+    print m_e floor; # 2
+    print m_pi ceil; # 4
     print 3.5 round; # 3.5
 
 Obviously, doing everything in only one way is boring:
 
-    print floor pi; # 3
-    print ceil(pi); # 4
+    print floor m_e; # 2
+    print ceil(m_pi); # 4
 
 ## Conditionals
 
