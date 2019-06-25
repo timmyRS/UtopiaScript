@@ -20,18 +20,7 @@ class StatementsTest
 << get_type f;
 EOC
 		);
-		Nose::assertEquals(<<<EOO
-undefined
-statement
-string
-number
-boolean
-null
-function
-function
-
-EOO
-			, $utopia->last_output);
+		Nose::assertEquals("undefined\r\nstatement\r\nstring\r\nnumber\r\nboolean\r\nnull\r\nfunction\r\nfunction\r\n", $utopia->last_output);
 	}
 
 	function testPrint()
