@@ -4,17 +4,17 @@ use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
 class FunctionStatement extends VariableStatement
 {
-	public $args;
-	public $provided_args = [];
+	public $params;
+	public $args = [];
 
-	function __construct(string $value, array $args = ["required" => []])
+	function __construct(string $value, array $params = ["required" => []])
 	{
 		parent::__construct($value);
-		if(!array_key_exists("optionals", $args))
+		if(!array_key_exists("optionals", $params))
 		{
-			$args["optionals"] = [[]];
+			$params["optionals"] = [[]];
 		}
-		$this->args = $args;
+		$this->params = $params;
 	}
 
 	static function getType(): string
@@ -30,7 +30,7 @@ class FunctionStatement extends VariableStatement
 	 */
 	function isExecutable(): bool
 	{
-		return count($this->provided_args) >= count($this->args["required"]);
+		return count($this->args) >= count($this->params["required"]);
 	}
 
 	/**
@@ -40,7 +40,7 @@ class FunctionStatement extends VariableStatement
 	 */
 	function isFinished(): bool
 	{
-		return count($this->provided_args) == (count($this->args["required"]) + count($this->args["optionals"]));
+		return count($this->args) == (count($this->params["required"]) + count($this->params["optionals"]));
 	}
 
 	/**
@@ -48,7 +48,7 @@ class FunctionStatement extends VariableStatement
 	 */
 	function acceptValue(VariableStatement $value)
 	{
-		array_push($this->provided_args, $value);
+		array_push($this->args, $value);
 	}
 
 	/**
@@ -68,23 +68,23 @@ class FunctionStatement extends VariableStatement
 			return $ret;
 		}
 		$i = 0;
-		$arg_type = "required";
+		$param_type = "required";
 		$local_vars_ = [];
-		foreach($this->provided_args as $arg_value)
+		foreach($this->args as $param_value)
 		{
-			if($arg_type == "required" && count($this->args["required"]) == $i)
+			if($param_type == "required" && count($this->params["required"]) == $i)
 			{
-				$arg_type = "optionals";
+				$param_type = "optionals";
 				$i = 0;
 			}
-			$arg = $this->args[$arg_type][$i];
-			$utopia->scrutinizeVariableName($arg["name"]);
-			assert($arg_value instanceof VariableStatement);
-			if($arg["type"] != "any_type" && $arg["type"] != $arg_value->getType())
+			$param = $this->params[$param_type][$i];
+			$utopia->scrutinizeVariableName($param["name"]);
+			assert($param_value instanceof VariableStatement);
+			if($param["type"] != "any_type" && $param["type"] != $param_value->getType())
 			{
-				throw new InvalidCodeException("Parameter ".$arg["name"]." has to be of type ".$arg["type"]);
+				throw new InvalidCodeException("Parameter ".$param["name"]." has to be of type ".$param["type"]);
 			}
-			$local_vars_[$arg["name"]] = new Variable($arg_value, true);
+			$local_vars_[$param["name"]] = new Variable($param_value, true);
 			$i++;
 		}
 		return Utopia::unwrap($utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars_), true);
@@ -93,12 +93,12 @@ class FunctionStatement extends VariableStatement
 	function __toString(): string
 	{
 		$str = 'function ';
-		if(count($this->args["required"]) > 0)
+		if(count($this->params["required"]) > 0)
 		{
-			$str .= self::argsToString($this->args["required"]);
-			if(count($this->args["required"]) > 0)
+			$str .= self::paramsToString($this->params["required"]);
+			if(count($this->params["required"]) > 0)
 			{
-				$str .= ' optionals '.self::argsToString($this->args["required"]);
+				$str .= ' optionals '.self::paramsToString($this->params["required"]);
 			}
 		}
 		return $str.'{'.$this->value.'}';
@@ -109,12 +109,12 @@ class FunctionStatement extends VariableStatement
 		return "(".$this->__toString().")";
 	}
 
-	static function argsToString($args)
+	static function paramsToString($params)
 	{
 		$str = '';
-		foreach($args as $arg)
+		foreach($params as $param)
 		{
-			$str .= $arg["type"].' '.$arg["name"].' ';
+			$str .= $param["type"].' '.$param["name"].' ';
 		}
 		return $str;
 	}

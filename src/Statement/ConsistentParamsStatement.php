@@ -1,6 +1,6 @@
 <?php
 namespace UtopiaScript\Statement;
-abstract class ConsistentArgsStatement extends Statement
+abstract class ConsistentParamsStatement extends Statement
 {
 	/**
 	 * Returns true if the statement accepts no more parameters.

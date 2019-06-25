@@ -1,17 +1,17 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
-{Exception\InvalidCodeException, Statement\ConsistentArgsStatement, Statement\Statement, Utopia};
-class FunctionDeclarationStatement extends ConsistentArgsStatement
+{Exception\InvalidCodeException, Statement\ConsistentParamsStatement, Statement\Statement, Utopia};
+class FunctionDeclarationStatement extends ConsistentParamsStatement
 {
-	public $args = ["required" => [[]]];
+	public $params = ["required" => [[]]];
 	public $body = null;
 
-	function __construct($first_arg_type = null)
+	function __construct($first_param_type = null)
 	{
-		if($first_arg_type !== null)
+		if($first_param_type !== null)
 		{
-			$this->args["required"][0]["type"] = $first_arg_type;
+			$this->params["required"][0]["type"] = $first_param_type;
 		}
 	}
 
@@ -33,13 +33,13 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 	 */
 	function acceptsValues(): bool
 	{
-		$arr = $this->args[$this->getCurrentArgType()];
+		$arr = $this->params[$this->getCurrentparamType()];
 		return count($arr[count($arr) - 1]) == 0;
 	}
 
-	function getCurrentArgType()
+	function getCurrentparamType()
 	{
-		return array_key_exists("optionals", $this->args) ? "optionals" : "required";
+		return array_key_exists("optionals", $this->params) ? "optionals" : "required";
 	}
 
 	/**
@@ -68,42 +68,42 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 		{
 			return;
 		}
-		$type = $this->getCurrentArgType();
-		$arr = $this->args[$type];
+		$type = $this->getCurrentparamType();
+		$arr = $this->params[$type];
 		$i = count($arr) - 1;
-		$arg = $arr[$i];
+		$param = $arr[$i];
 		if(in_array($literal, [
 			"?",
 			"optional",
 			"optionals"
 		]))
 		{
-			if(count($arg) != 0)
+			if(count($param) != 0)
 			{
 				throw new InvalidCodeException("Unexpected token in function declaration: ".$literal);
 			}
-			unset($this->args[$type][$i]);
-			$this->args["optionals"] = [[]];
+			unset($this->params[$type][$i]);
+			$this->params["optionals"] = [[]];
 			return;
 		}
-		if(!array_key_exists("type", $arg))
+		if(!array_key_exists("type", $param))
 		{
 			$literal_ = Utopia::getCanonicalType($literal);
 			if($literal_ != null)
 			{
-				$this->args[$type][$i]["type"] = $literal_;
+				$this->params[$type][$i]["type"] = $literal_;
 				return;
 			}
-			$this->args[$type][$i] = [
+			$this->params[$type][$i] = [
 				"type" => "any_type",
 				"name" => $literal
 			];
 		}
-		else if(!array_key_exists("name", $arg))
+		else if(!array_key_exists("name", $param))
 		{
-			$this->args[$type][$i]["name"] = $literal;
+			$this->params[$type][$i]["name"] = $literal;
 		}
-		array_push($this->args[$type], []);
+		array_push($this->params[$type], []);
 	}
 
 	/**
@@ -113,8 +113,8 @@ class FunctionDeclarationStatement extends ConsistentArgsStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$type = $this->getCurrentArgType();
-		unset($this->args[$type][count($this->args[$type]) - 1]);
-		return new FunctionStatement($this->body, $this->args);
+		$type = $this->getCurrentparamType();
+		unset($this->params[$type][count($this->params[$type]) - 1]);
+		return new FunctionStatement($this->body, $this->params);
 	}
 }

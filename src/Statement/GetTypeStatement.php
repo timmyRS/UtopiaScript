@@ -2,7 +2,7 @@
 namespace UtopiaScript\Statement;
 use UtopiaScript\
 {Statement\Variable\StringStatement, Statement\Variable\VariableStatement, Utopia};
-class GetTypeStatement extends ConsistentArgsStatement
+class GetTypeStatement extends ConsistentParamsStatement
 {
 	public $arg = null;
 

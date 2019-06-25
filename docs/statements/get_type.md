@@ -14,7 +14,7 @@ This includes [variable types](../types):
 
 [[ Run it online ]](https://utopia.sh/?code=print_line+get_type+%22Hi%22%3B+%23+string%0D%0Aprint_line+get_type+69%3B+%23+number%0D%0Aprint_line+get_type+true%3B+%23+boolean%0D%0Aprint_line+get_type+null%3B+%23+null)
 
-but also "statement" and "undefined" if the given parameter has not been defined, neither as a variable, nor as a statement:
+but also "statement" and "undefined" if the given argument is unknown as a statement or variable:
 
     print_line get_type print; # statement
     print_line get_type bla; # undefined
