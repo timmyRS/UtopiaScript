@@ -18,3 +18,6 @@
     - ceil
     - round
     - floor
+- exit
+- return
+- get_type
