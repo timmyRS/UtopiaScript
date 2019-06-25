@@ -837,6 +837,10 @@ class Utopia
 			case 'str':
 			case 'string':
 				return 'string';
+			case 'func':
+			case 'routine':
+			case 'function':
+				return 'function';
 			case 'arr':
 			case 'array':
 				return 'array';
