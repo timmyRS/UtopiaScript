@@ -93,19 +93,20 @@ class FunctionStatement extends VariableStatement
 	function __toString(): string
 	{
 		$str = 'function ';
-		if(count($this->args["required"]) == 0)
-		{
-			$str .= 'void ';
-		}
-		else
+		if(count($this->args["required"]) > 0)
 		{
 			$str .= self::argsToString($this->args["required"]);
-			if(count($this->args["required"]) != 0)
+			if(count($this->args["required"]) > 0)
 			{
 				$str .= ' optionals '.self::argsToString($this->args["required"]);
 			}
 		}
 		return $str.'{'.$this->value.'}';
+	}
+
+	function toLiteral() : string
+	{
+		return "(".$this->__toString().")";
 	}
 
 	static function argsToString($args)
