@@ -1,7 +1,20 @@
 # Statements
 
+- Conditional
+    - if
+    - if_not
+    - while
+    - while_not
 - [Declaration](declaration/)
 - Standard Input/Output (STDIO)
     - [print](print)
     - [print_line](print_line)
     - [read](read)
+- Time
+    - time
+    - milli_time
+    - micro_time
+- Variable Action
+    - ceil
+    - round
+    - floor
