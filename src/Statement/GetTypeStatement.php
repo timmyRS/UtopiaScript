@@ -7,16 +7,6 @@ class GetTypeStatement extends ConsistentArgsStatement
 	public $arg = null;
 
 	/**
-	 * Returns true if the statement accepts no more parameters.
-	 *
-	 * @return boolean
-	 */
-	function isFinished(): bool
-	{
-		return $this->isExecutable();
-	}
-
-	/**
 	 * Returns true if the statement can be executed.
 	 * This would be false, e.g. if not enough parameters have been provided.
 	 *
