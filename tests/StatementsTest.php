@@ -5,6 +5,35 @@ use UtopiaScript\
 use UtopiaScriptPhpStatementExtension\PhpStatementExtension;
 class StatementsTest
 {
+	function testGetType()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+<< get_type bla;
+<< get_type print;
+<< get_type "Hi";
+<< get_type 69;
+<< get_type true;
+<< get_type null;
+<< get_type (*{});
+.f*{};
+<< get_type f;
+EOC
+		);
+		Nose::assertEquals(<<<EOO
+undefined
+statement
+string
+number
+boolean
+null
+function
+function
+
+EOO
+			, $utopia->last_output);
+	}
+
 	function testPrint()
 	{
 		$utopia = new Utopia(null, "keep");
