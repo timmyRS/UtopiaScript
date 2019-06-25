@@ -363,7 +363,7 @@ class Utopia
 						}
 						else
 						{
-							$this->specialCharacter('.', $literal, $statement, $local_vars, $ret);
+							$literal .= '.';
 						}
 						break;
 					case ':':
