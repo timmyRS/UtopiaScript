@@ -1,23 +1,23 @@
 # Statements
 
+- get_type
+- exit
+- return
+- Standard Input/Output (STDIO)
+    - [print](print)
+    - [print_line](print_line)
+    - [read](read)
+- [Declaration](declaration/)
+- Variable Action
+    - ceil
+    - round
+    - floor
 - Conditional
     - [if](if)
     - [unless](unless)
     - [while](while)
     - [while_not](while_not)
-- [Declaration](declaration/)
-- Standard Input/Output (STDIO)
-    - [print](print)
-    - [print_line](print_line)
-    - [read](read)
 - Time
     - time
     - milli_time
     - micro_time
-- Variable Action
-    - ceil
-    - round
-    - floor
-- exit
-- return
-- get_type
