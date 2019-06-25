@@ -333,7 +333,7 @@ abstract class VariableStatement extends Statement
 	/**
 	 * @return string
 	 */
-	function toLiteral()
+	function toLiteral() : string
 	{
 		return $this->__toString();
 	}

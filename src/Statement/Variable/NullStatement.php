@@ -45,7 +45,7 @@ class NullStatement extends VariableStatement
 		return "";
 	}
 
-	function toLiteral()
+	function toLiteral() : string
 	{
 		return "null";
 	}
