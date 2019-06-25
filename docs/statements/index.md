@@ -1,6 +1,6 @@
 # Statements
 
-- get_type
+- [get_type](get_type)
 - exit
 - return
 - Standard Input/Output (STDIO)
