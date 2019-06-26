@@ -4,6 +4,8 @@ use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
 class NumberStatement extends VariableStatement
 {
+	public $concatenation_string;
+
 	static function getType(): string
 	{
 		return "number";
@@ -19,9 +21,19 @@ class NumberStatement extends VariableStatement
 		{
 			if($this->action == 0)
 			{
-				throw new InvalidCodeException("NumberStatement doesn't accept values in this context");
+				if($value instanceof StringStatement)
+				{
+					$this->concatenation_string = $value->value;
+				}
+				else
+				{
+					throw new InvalidCodeException("NumberStatement doesn't accept ".get_class($value));
+				}
 			}
-			$this->finishAction($value);
+			else
+			{
+				$this->finishAction($value);
+			}
 		}
 	}
 
@@ -57,7 +69,7 @@ class NumberStatement extends VariableStatement
 				$this->value = $this->value % $action_value;
 				break;
 			default:
-				throw new InvalidCodeException("Invalid action: ".$action_value);
+				throw new InvalidCodeException("Invalid action: ".$this->action);
 		}
 		$this->action = 0;
 	}
@@ -142,7 +154,16 @@ class NumberStatement extends VariableStatement
 		{
 			$this->value = self::factorial($this->value);
 		}
-		return $this->_execute($utopia, $local_vars) ?? $this;
+		$res = $this->_execute($utopia, $local_vars);
+		if($res !== null)
+		{
+			return $res;
+		}
+		if($this->concatenation_string !== null)
+		{
+			return new StringStatement($this->value.$this->concatenation_string);
+		}
+		return $this;
 	}
 
 	function __toString(): string

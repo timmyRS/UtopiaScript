@@ -15,7 +15,7 @@ while counter > 0 {
 };
 EOC
 		);
-		Nose::assertEquals("10... 9... 8... 7... 6... 5... 4... 3... 2... 1... ", $utopia->last_output);
+		Nose::assertEquals($utopia->last_output, "10... 9... 8... 7... 6... 5... 4... 3... 2... 1... ");
 	}
 
 	function testTimeLimit()

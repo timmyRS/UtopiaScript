@@ -5,22 +5,6 @@ use UtopiaScript\
 abstract class OneStringParamStatement extends OneValueParamStatement
 {
 	/**
-	 * @param VariableStatement $value
-	 * @throws InvalidCodeException
-	 */
-	function acceptValue(VariableStatement $value)
-	{
-		if($this->value === null && $value instanceof NumberStatement)
-		{
-			$this->value = new StringStatement($value->__toString(), false);
-		}
-		else
-		{
-			parent::acceptValue($value);
-		}
-	}
-
-	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 * @throws IncompleteCodeException

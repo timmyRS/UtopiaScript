@@ -54,16 +54,13 @@ abstract class OneValueParamStatement extends Statement
 		{
 			$this->value = $value;
 		}
+		else if(gettype($this->value) == "string")
+		{
+			$this->value .= " ".$value->toLiteral();
+		}
 		else
 		{
-			if(gettype($this->value) == "string")
-			{
-				$this->value .= " ".$value->toLiteral();
-			}
-			else
-			{
-				$this->value->acceptValue($value);
-			}
+			$this->value->acceptValue($value);
 		}
 	}
 
@@ -107,12 +104,9 @@ abstract class OneValueParamStatement extends Statement
 			{
 				$this->value = $utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars);
 			}
-			else
+			else if($this->execute || Utopia::isStatementExecutionSafe($this->value))
 			{
-				if($this->execute || Utopia::isStatementExecutionSafe($this->value))
-				{
-					$this->value = $this->value->execute($utopia, $local_vars);
-				}
+				$this->value = $this->value->execute($utopia, $local_vars);
 			}
 		}
 	}
