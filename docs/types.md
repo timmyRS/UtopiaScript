@@ -20,9 +20,15 @@ A boolean can either be [true](constants/true) or [false](constants/false).
 
 ## String
 
+- Names: `string`, `str`
+
 ## Function
 
+- Names: `function`, `func`, `routine`
+
 ## Array
+
+- Names: `array`, `arr`
 
 ## Null
 
