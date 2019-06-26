@@ -99,7 +99,7 @@ class ArrayDeclarationStatement extends Statement
 			}
 			$this->key = true;
 		}
-		else
+		else if($literal != ',')
 		{
 			$this->accept($literal);
 		}
