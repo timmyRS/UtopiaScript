@@ -3,10 +3,10 @@
 - Implicit
     - Concatenation
 - Explicit
-    - plus
-    - minus
-    - times
-    - divided_by
+    - [plus](plus)
+    - [minus](minus)
+    - [times](times)
+    - [divided_by](divided_by)
     - pow
     - mod
     - factorial
