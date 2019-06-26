@@ -95,7 +95,7 @@ class StringStatement extends VariableStatement
 		return $this->value;
 	}
 
-	function toLiteral() : string
+	function toLiteral(): string
 	{
 		if(strpos($this->value, '"') === false)
 		{

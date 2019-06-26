@@ -90,6 +90,11 @@ class FunctionStatement extends VariableStatement
 		return Utopia::unwrap($utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars_), true);
 	}
 
+	function toLiteral(): string
+	{
+		return "(".$this->__toString().")";
+	}
+
 	function __toString(): string
 	{
 		$str = 'function ';
@@ -102,11 +107,6 @@ class FunctionStatement extends VariableStatement
 			}
 		}
 		return $str.'{'.$this->value.'}';
-	}
-
-	function toLiteral() : string
-	{
-		return "(".$this->__toString().")";
 	}
 
 	static function paramsToString($params)

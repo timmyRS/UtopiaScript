@@ -119,15 +119,6 @@ abstract class VariableStatement extends Statement
 		}
 	}
 
-	private function setAction(int $action)
-	{
-		$this->action = $action;
-		$this->action_data = [
-			"value" => null,
-			"execute" => false
-		];
-	}
-
 	/**
 	 * @param string $literal
 	 * @return boolean
@@ -265,6 +256,15 @@ abstract class VariableStatement extends Statement
 		return false;
 	}
 
+	private function setAction(int $action)
+	{
+		$this->action = $action;
+		$this->action_data = [
+			"value" => null,
+			"execute" => false
+		];
+	}
+
 	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
@@ -335,7 +335,7 @@ abstract class VariableStatement extends Statement
 	/**
 	 * @return string
 	 */
-	function toLiteral() : string
+	function toLiteral(): string
 	{
 		return $this->__toString();
 	}
