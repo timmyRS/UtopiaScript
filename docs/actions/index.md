@@ -5,8 +5,8 @@ Having variables is great, but performing actions on them is even better.
 - General
     - equals
     - strictly_equals
-    - doesnt_equal
-    - doesnt_strictly_equal
+    - does_not_equal
+    - does_not_strictly_equal
     - greater_than
     - greater_than_or_equal_to
     - less_than
