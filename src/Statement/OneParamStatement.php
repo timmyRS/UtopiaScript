@@ -1,6 +1,7 @@
 <?php
 namespace UtopiaScript\Statement;
-use UtopiaScript\Statement\Variable\VariableStatement;
+use UtopiaScript\
+{Statement\Variable\VariableStatement, Utopia};
 abstract class OneParamStatement extends ConsistentParamsStatement
 {
 	/**
@@ -31,16 +32,20 @@ abstract class OneParamStatement extends ConsistentParamsStatement
 
 	/**
 	 * @param VariableStatement $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		$this->arg = $value;
 	}
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		$this->arg = $literal;
 	}

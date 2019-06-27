@@ -33,9 +33,11 @@ class NumberStatement extends VariableStatement
 
 	/**
 	 * @param mixed $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -59,9 +61,11 @@ class NumberStatement extends VariableStatement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptLiteral($literal))
 		{
@@ -177,14 +181,18 @@ class NumberStatement extends VariableStatement
 		return $this;
 	}
 
-	static function factorial(int $number): int
+	/**
+	 * @param $a
+	 * @param $b
+	 * @return ArrayStatement|NumberStatement
+	 * @throws InvalidCodeException
+	 */
+	static function add($a, $b)
 	{
-		return $number < 1 ? 1 : $number * self::factorial($number - 1);
-	}
-
-	function __toString(): string
-	{
-		return strval($this->value);
+		return self::performArithmetic($a, $b, function(&$a, &$b)
+		{
+			return $a + $b;
+		});
 	}
 
 	/**
@@ -246,20 +254,6 @@ class NumberStatement extends VariableStatement
 	 * @return ArrayStatement|NumberStatement
 	 * @throws InvalidCodeException
 	 */
-	static function add($a, $b)
-	{
-		return self::performArithmetic($a, $b, function(&$a, &$b)
-		{
-			return $a + $b;
-		});
-	}
-
-	/**
-	 * @param $a
-	 * @param $b
-	 * @return ArrayStatement|NumberStatement
-	 * @throws InvalidCodeException
-	 */
 	static function sub($a, $b)
 	{
 		return self::performArithmetic($a, $b, function(&$a, &$b)
@@ -294,5 +288,15 @@ class NumberStatement extends VariableStatement
 		{
 			return $a / $b;
 		});
+	}
+
+	static function factorial(int $number): int
+	{
+		return $number < 1 ? 1 : $number * self::factorial($number - 1);
+	}
+
+	function __toString(): string
+	{
+		return strval($this->value);
 	}
 }

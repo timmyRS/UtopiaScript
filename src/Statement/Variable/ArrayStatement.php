@@ -49,9 +49,11 @@ class ArrayStatement extends VariableStatement
 
 	/**
 	 * @param VariableStatement $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -68,9 +70,9 @@ class ArrayStatement extends VariableStatement
 				case self::ACTION_VALUE_OF_KEY:
 					if($this->action_data["key"] === null)
 					{
-						if($value instanceof FunctionStatement)
+						if(!self::isValidKey($value))
 						{
-							throw new InvalidCodeException("A function can't be an array key");
+							throw new InvalidCodeException($value->getType()." can't be an array key");
 						}
 						if(!array_key_exists($value->value, $this->value))
 						{
@@ -80,7 +82,7 @@ class ArrayStatement extends VariableStatement
 					}
 					break;
 				case 0:
-					if(!$value instanceof FunctionStatement)
+					if(self::isValidKey($value))
 					{
 						if(!array_key_exists($value->value, $this->value))
 						{
@@ -97,11 +99,23 @@ class ArrayStatement extends VariableStatement
 		}
 	}
 
+	static function isValidKey(VariableStatement $statement)
+	{
+		return in_array($statement->getType(), [
+			"string",
+			"number",
+			"boolean",
+			"null"
+		]);
+	}
+
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptLiteral($literal))
 		{
@@ -296,7 +310,7 @@ class ArrayStatement extends VariableStatement
 	{
 		$arr = [];
 		foreach($this->value as $key => $value)
-	{
+		{
 			$arr[$key] = Utopia::externalize($value);
 		}
 		return $arr;

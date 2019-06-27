@@ -44,9 +44,11 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 
 	/**
 	 * @param VariableStatement $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if(get_class($value) != StringStatement::class)
 		{
@@ -57,9 +59,11 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if(in_array($literal, [
 			":",

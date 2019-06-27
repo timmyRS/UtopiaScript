@@ -25,9 +25,11 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if($this->name === null)
 		{
@@ -38,7 +40,7 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 				return;
 			}
 		}
-		parent::acceptLiteral($literal);
+		parent::acceptLiteral($literal, $utopia, $local_vars);
 	}
 
 	/**
@@ -52,7 +54,7 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		$utopia->scrutinizeVariableName($this->name, $this->global ? [] : $local_vars, $this->strict_type);
+		$utopia->scrutinizeVariableName($this->name, $this->global ? [] : $local_vars);
 		$this->_execute($utopia, $local_vars);
 		if($this->global)
 		{

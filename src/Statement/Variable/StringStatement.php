@@ -22,9 +22,11 @@ class StringStatement extends VariableStatement
 
 	/**
 	 * @param mixed $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -34,9 +36,11 @@ class StringStatement extends VariableStatement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		$this->exec = false;
 		if($this->_acceptLiteral($literal))

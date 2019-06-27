@@ -43,9 +43,11 @@ class ArrayDeclarationStatement extends Statement
 
 	/**
 	 * @param mixed $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		$this->accept($value);
 	}
@@ -70,9 +72,9 @@ class ArrayDeclarationStatement extends Statement
 			unset($this->arr[$last_index]);
 			if($key instanceof VariableStatement)
 			{
-				if($key instanceof FunctionStatement)
+				if(!ArrayStatement::isValidKey($key))
 				{
-					throw new InvalidCodeException("A function can't be an array key");
+					throw new InvalidCodeException($key->getType()." can't be an array key");
 				}
 				$key = $key->value;
 			}
@@ -87,9 +89,11 @@ class ArrayDeclarationStatement extends Statement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if($literal == ':' || $literal == '=')
 		{

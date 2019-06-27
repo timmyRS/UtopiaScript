@@ -61,9 +61,11 @@ abstract class VariableStatement extends Statement
 
 	/**
 	 * @param mixed $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -109,9 +111,11 @@ abstract class VariableStatement extends Statement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if($this->_acceptLiteral($literal))
 		{
@@ -330,6 +334,11 @@ abstract class VariableStatement extends Statement
 		return null;
 	}
 
+	function externalize()
+	{
+		return $this->value;
+	}
+
 	abstract function __toString(): string;
 
 	/**
@@ -338,10 +347,5 @@ abstract class VariableStatement extends Statement
 	function toLiteral(): string
 	{
 		return $this->__toString();
-	}
-
-	function externalize()
-	{
-		return $this->value;
 	}
 }

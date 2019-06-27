@@ -1,6 +1,7 @@
 <?php
 namespace UtopiaScript\Statement;
-use UtopiaScript\Exception\InvalidCodeException;
+use UtopiaScript\
+{Exception\InvalidCodeException, Utopia};
 abstract class NoParamStatement extends OnlyLiteralParamsStatement
 {
 	/**
@@ -26,9 +27,11 @@ abstract class NoParamStatement extends OnlyLiteralParamsStatement
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		throw new InvalidCodeException(get_called_class()." doesn't accept parameters");
 	}

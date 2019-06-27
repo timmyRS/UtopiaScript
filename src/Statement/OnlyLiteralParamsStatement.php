@@ -1,6 +1,7 @@
 <?php
 namespace UtopiaScript\Statement;
 use UtopiaScript\Statement\Variable\VariableStatement;
+use UtopiaScript\Utopia;
 abstract class OnlyLiteralParamsStatement extends Statement
 {
 	/**
@@ -15,8 +16,10 @@ abstract class OnlyLiteralParamsStatement extends Statement
 
 	/**
 	 * @param VariableStatement $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 	}
 }

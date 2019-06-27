@@ -530,11 +530,11 @@ class Utopia
 						{
 							if($statement->acceptsValues())
 							{
-								$statement->acceptValue(new StringStatement($str));
+								$statement->acceptValue(new StringStatement($str), $this, $local_vars);
 							}
 							else
 							{
-								$statement->acceptLiteral($chars[$i].$str.$chars[$i]);
+								$statement->acceptLiteral($chars[$i].$str.$chars[$i], $this, $local_vars);
 							}
 							$this->processStatement($statement, $local_vars, $ret);
 						}
@@ -550,11 +550,11 @@ class Utopia
 						{
 							if($statement->acceptsValues())
 							{
-								$statement->acceptValue(new StringStatement($str));
+								$statement->acceptValue(new StringStatement($str), $this, $local_vars);
 							}
 							else
 							{
-								$statement->acceptLiteral("{".$str."}");
+								$statement->acceptLiteral("{".$str."}", $this, $local_vars);
 							}
 							$this->processStatement($statement, $local_vars, $ret);
 						}
@@ -579,11 +579,11 @@ class Utopia
 								{
 									throw new InvalidCodeException("Return of inline code is unusable: ".gettype($ret));
 								}
-								$statement->acceptValue($ret);
+								$statement->acceptValue($ret, $this, $local_vars);
 							}
 							else
 							{
-								$statement->acceptLiteral($str);
+								$statement->acceptLiteral($str, $this, $local_vars);
 							}
 							$this->processStatement($statement, $local_vars, $ret);
 						}
@@ -600,11 +600,11 @@ class Utopia
 						{
 							if($statement->acceptsValues())
 							{
-								$statement->acceptValue($arr);
+								$statement->acceptValue($arr, $this, $local_vars);
 							}
 							else
 							{
-								$statement->acceptLiteral($arr->toLiteral());
+								$statement->acceptLiteral($arr->toLiteral(), $this, $local_vars);
 							}
 						}
 						else
@@ -767,24 +767,24 @@ class Utopia
 			{
 				if(array_key_exists($literal, $local_vars))
 				{
-					$statement->acceptValue(clone $local_vars[$literal]->value);
+					$statement->acceptValue(clone $local_vars[$literal]->value, $this, $local_vars);
 				}
 				else if(array_key_exists($literal, $this->vars))
 				{
-					$statement->acceptValue(clone $this->vars[$literal]->value);
+					$statement->acceptValue(clone $this->vars[$literal]->value, $this, $local_vars);
 				}
 				else if(self::is_numeric($literal))
 				{
-					$statement->acceptValue(new NumberStatement(self::numval($literal)));
+					$statement->acceptValue(new NumberStatement(self::numval($literal)), $this, $local_vars);
 				}
 				else
 				{
-					$statement->acceptLiteral($literal);
+					$statement->acceptLiteral($literal, $this, $local_vars);
 				}
 			}
 			else
 			{
-				$statement->acceptLiteral($literal);
+				$statement->acceptLiteral($literal, $this, $local_vars);
 			}
 			$this->processStatement($statement, $local_vars, $ret);
 		}

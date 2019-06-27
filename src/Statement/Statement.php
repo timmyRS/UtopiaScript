@@ -28,13 +28,17 @@ abstract class Statement
 
 	/**
 	 * @param VariableStatement $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	abstract function acceptValue(VariableStatement $value);
+	abstract function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars);
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	abstract function acceptLiteral(string $literal);
+	abstract function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars);
 
 	/**
 	 * @param Utopia $utopia

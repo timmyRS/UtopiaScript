@@ -16,12 +16,12 @@ class NullStatement extends VariableStatement
 		return "null";
 	}
 
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		throw new InvalidCodeException("Null doesn't accept values or literals");
 	}
 
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		throw new InvalidCodeException("Null doesn't accept literals or values");
 	}

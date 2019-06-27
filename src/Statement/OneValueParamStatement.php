@@ -8,10 +8,6 @@ abstract class OneValueParamStatement extends Statement
 	 * @var VariableStatement|string $value
 	 */
 	public $value;
-	/**
-	 * @var boolean $execute
-	 */
-	public $execute = false;
 
 	/**
 	 * Returns true if the statement can be executed.
@@ -46,9 +42,11 @@ abstract class OneValueParamStatement extends Statement
 
 	/**
 	 * @param VariableStatement $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if($this->value === null)
 		{
@@ -60,30 +58,36 @@ abstract class OneValueParamStatement extends Statement
 		}
 		else
 		{
-			$this->value->acceptValue($value);
+			$this->value->acceptValue($value, $utopia, $local_vars);
+			if($this->value->isFinished())
+			{
+				$this->value = $this->value->execute($utopia, $local_vars);
+			}
 		}
 	}
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		if($this->value === null)
 		{
 			$this->value = $literal;
 		}
+		else if(gettype($this->value) == "string")
+		{
+			$this->value .= " ".$literal;
+		}
 		else
 		{
-			if(gettype($this->value) == "string")
+			$this->value->acceptLiteral($literal, $utopia, $local_vars);
+			if($this->value->isFinished())
 			{
-				$this->value .= " ".$literal;
-			}
-			else
-			{
-				$this->value->acceptLiteral($literal);
-				$this->execute = true;
+				$this->value = $this->value->execute($utopia, $local_vars);
 			}
 		}
 	}
@@ -104,7 +108,7 @@ abstract class OneValueParamStatement extends Statement
 			{
 				$this->value = $utopia->parseAndExecuteWithWritableLocalVars($this->value, $local_vars);
 			}
-			else if($this->execute || Utopia::isStatementExecutionSafe($this->value))
+			else if($this->value->isExecutable() && Utopia::isStatementExecutionSafe($this->value))
 			{
 				$this->value = $this->value->execute($utopia, $local_vars);
 			}

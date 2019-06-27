@@ -45,8 +45,10 @@ class FunctionStatement extends VariableStatement
 
 	/**
 	 * @param mixed $value
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value)
+	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		array_push($this->args, $value);
 	}

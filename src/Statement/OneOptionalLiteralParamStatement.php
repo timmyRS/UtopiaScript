@@ -1,5 +1,6 @@
 <?php
 namespace UtopiaScript\Statement;
+use UtopiaScript\Utopia;
 abstract class OneOptionalLiteralParamStatement extends OnlyLiteralParamsStatement
 {
 	public $arg;
@@ -27,8 +28,10 @@ abstract class OneOptionalLiteralParamStatement extends OnlyLiteralParamsStateme
 
 	/**
 	 * @param string $literal
+	 * @param Utopia $utopia
+	 * @param array $local_vars
 	 */
-	function acceptLiteral(string $literal)
+	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
 	{
 		$this->arg = $literal;
 	}
