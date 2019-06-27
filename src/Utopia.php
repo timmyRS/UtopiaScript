@@ -17,6 +17,10 @@ class Utopia
 	 */
 	public $output;
 	/**
+	 * @var resource|string $error_output
+	 */
+	public $error_output;
+	/**
 	 * If true, parsing will print debug information but take considerably longer.
 	 *
 	 * @var boolean $debug
@@ -55,16 +59,31 @@ class Utopia
 	 * @var string $last_output
 	 */
 	public $last_output = "";
+	/**
+	 * The output of the latest execution, if $error_output is "keep".
+	 *
+	 * @var string $last_error_output
+	 */
+	public $last_error_output = "";
 	protected $execute_start = null;
 
 	/**
 	 * @param resource $input_stream NULL to disable the STDIN reads.
-	 * @param resource|string $output Stream to write to, "echo" to use PHP's `echo` function, "keep" to write to Utopia::$last_output, or "suppress" to suppress output.
+	 * @param resource|string $output Stream to write standard output to, "echo" to use PHP's `echo` function (= STDOUT in CLI), "keep" to write to Utopia::$last_output, or "suppress" to suppress output.
+	 * @param resource|string $error_output Stream to write error output to, "stderr" to use STDERR, "keep" to write to Utopia::$last_error_output, or "suppress" to suppress output.
 	 */
-	function __construct($input_stream = null, $output = "echo")
+	function __construct($input_stream = null, $output = "echo", $error_output = "stderr")
 	{
 		$this->input_stream = $input_stream;
 		$this->output = $output;
+		if($error_output === "stderr")
+		{
+			$this->error_output = fopen("php://stderr", "w");
+		}
+		else
+		{
+			$this->error_output = $error_output;
+		}
 		try
 		{
 			$this->vars = [
@@ -1074,6 +1093,38 @@ class Utopia
 			}
 		}
 		throw new IncompleteCodeException("Code unexpectedly ended whilst reading array");
+	}
+
+	/**
+	 * @param string $str
+	 * @throws InvalidEnvironmentException
+	 */
+	function complain(string $str)
+	{
+		if(is_resource($this->error_output))
+		{
+			fwrite($this->error_output, $str);
+			fflush($this->error_output);
+		}
+		else
+		{
+			if(!is_string($this->error_output))
+			{
+				throw new InvalidEnvironmentException("Invalid error output type: ".gettype($this->output));
+			}
+			switch($this->output)
+			{
+				case "keep":
+					$this->last_error_output .= $str;
+					break;
+				case "no":
+				case "none":
+				case "suppress":
+					break;
+				default:
+					throw new InvalidEnvironmentException("Invalid error output method: ".$this->output);
+			}
+		}
 	}
 
 	/**
