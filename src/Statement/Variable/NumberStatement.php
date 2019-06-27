@@ -10,11 +10,11 @@ class NumberStatement extends VariableStatement
 	const ACTION_DIVIDED_BY = 4;
 	const ACTION_POW = 5;
 	const ACTION_MOD = 6;
+	const ACTION_CONCAT = 7;
 	const ACTION_FACTORIAL = 100;
 	const ACTION_FLOOR = 101;
 	const ACTION_ROUND = 102;
 	const ACTION_CEIL = 103;
-	public $concatenation_string;
 
 	static function getType(): string
 	{
@@ -28,7 +28,7 @@ class NumberStatement extends VariableStatement
 
 	function isExecutable(): bool
 	{
-		return $this->concatenation_string !== null || ($this->action > 0 && ($this->action > 99 || $this->action_data["b"] !== null)) || ($this->action <= 0 && parent::isExecutable());
+		return ($this->action > 0 && ($this->action > 99 || $this->action_data["b"] !== null)) || ($this->action <= 0 && parent::isExecutable());
 	}
 
 	/**
@@ -43,7 +43,8 @@ class NumberStatement extends VariableStatement
 			{
 				if($value instanceof StringStatement)
 				{
-					$this->concatenation_string = $value->value;
+					$this->action = self::ACTION_CONCAT;
+					$this->action_data["b"] = $value->value;
 					return;
 				}
 			}
@@ -164,6 +165,8 @@ class NumberStatement extends VariableStatement
 			case self::ACTION_MOD:
 				$this->value %= $this->action_data["b"];
 				break;
+			case self::ACTION_CONCAT:
+				return new StringStatement($this->value.$this->action_data["b"]);
 			case self::ACTION_FACTORIAL:
 				$this->value = self::factorial($this->value);
 				break;
