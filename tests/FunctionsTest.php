@@ -24,7 +24,7 @@ class FunctionsTest
 	function testFunctionWithAnytypeParameters()
 	{
 		$utopia = new Utopia(null, "keep");
-		$utopia->parseAndExecute(",myFunc = routine mixed:a b any_type c { [a b c]@v{print_line get_type v}; }; myFunc 'Hello' 1337 null;");
-		Nose::assertEquals("string\r\nnumber\r\nnull\r\n", $utopia->last_output);
+		$utopia->parseAndExecute(",myFunc = routine mixed:a b any_type c { [a b c]@v{print_line get_type v}; }; myFunc 'Hello' 1337 null; print get_type a = 'undefined';");
+		Nose::assertEquals("string\r\nnumber\r\nnull\r\ntrue", $utopia->last_output);
 	}
 }
