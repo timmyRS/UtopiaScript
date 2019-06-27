@@ -67,7 +67,7 @@ class ArrayStatement extends VariableStatement
 			{
 				if(!$value instanceof ArrayStatement)
 				{
-					throw new InvalidCodeException("ArrayStatement doesn't accept ".get_class($value)." in this context");
+					throw new InvalidCodeException("Array doesn't accept ".$value->getType()." in this context");
 				}
 				$this->action_data["b"] = $value->value;
 			}
@@ -76,9 +76,9 @@ class ArrayStatement extends VariableStatement
 				case self::ACTION_VALUE_OF_KEY:
 					if($this->action_data["key"] === null)
 					{
-						if(!$value instanceof VariableStatement || $value instanceof FunctionStatement)
+						if($value instanceof FunctionStatement)
 						{
-							throw new InvalidCodeException("Invalid array key: ".get_class($value));
+							throw new InvalidCodeException("A function can't be an array key");
 						}
 						if(!array_key_exists($value->value, $this->value))
 						{
@@ -88,7 +88,7 @@ class ArrayStatement extends VariableStatement
 					}
 					break;
 				case 0:
-					if($value instanceof VariableStatement && !$value instanceof FunctionStatement)
+					if(!$value instanceof FunctionStatement)
 					{
 						if(!array_key_exists($value->value, $this->value))
 						{
@@ -98,9 +98,9 @@ class ArrayStatement extends VariableStatement
 						$this->action_data["key"] = $value->value;
 						return;
 					}
-					throw new InvalidCodeException("ArrayStatement doesn't accept ".get_class($value)." in this context");
+					throw new InvalidCodeException("Array doesn't accept ".$value->getType()." in this context");
 				default:
-					throw new InvalidCodeException("ArrayStatement doesn't accept values in this context");
+					throw new InvalidCodeException("Array doesn't accept values in this context");
 			}
 		}
 	}

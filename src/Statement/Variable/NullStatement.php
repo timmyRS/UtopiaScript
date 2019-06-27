@@ -18,12 +18,12 @@ class NullStatement extends VariableStatement
 
 	function acceptValue(VariableStatement $value)
 	{
-		throw new InvalidCodeException("NullStatement doesn't accept values or literals");
+		throw new InvalidCodeException("Null doesn't accept values or literals");
 	}
 
 	function acceptLiteral(string $literal)
 	{
-		throw new InvalidCodeException("NullStatement doesn't accept literals or values");
+		throw new InvalidCodeException("Null doesn't accept literals or values");
 	}
 
 	/**

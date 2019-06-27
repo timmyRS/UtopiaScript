@@ -52,7 +52,7 @@ class NumberStatement extends VariableStatement
 				$this->action_data["b"] = $value->value;
 				return;
 			}
-			throw new InvalidCodeException("NumberStatement doesn't accept ".get_class($value)." in this context");
+			throw new InvalidCodeException("Number doesn't accept ".$value->getType()." in this context");
 		}
 	}
 
@@ -66,7 +66,7 @@ class NumberStatement extends VariableStatement
 		{
 			if($this->action != 0)
 			{
-				throw new InvalidCodeException("NumberStatement doesn't accept literals in this context");
+				throw new InvalidCodeException("Number doesn't accept literals in this context");
 			}
 			switch($literal)
 			{

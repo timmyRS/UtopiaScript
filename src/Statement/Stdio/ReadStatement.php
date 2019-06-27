@@ -15,7 +15,7 @@ class ReadStatement extends OneOptionalLiteralParamStatement
 	{
 		if($utopia->input_stream === null)
 		{
-			throw new InvalidEnvironmentException("ReadStatement only works in Utopias with input streams");
+			throw new InvalidEnvironmentException("Read only works in Utopias with input streams");
 		}
 		$start = microtime(true);
 		$val = Utopia::internalize(rtrim(fgets($utopia->input_stream), "\r\n"));
