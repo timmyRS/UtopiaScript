@@ -295,9 +295,9 @@ class ArrayStatement extends VariableStatement
 	function externalize()
 	{
 		$arr = [];
-		foreach($this->value as $item)
-		{
-			array_push($arr, Utopia::externalize($item));
+		foreach($this->value as $key => $value)
+	{
+			$arr[$key] = Utopia::externalize($value);
 		}
 		return $arr;
 	}
