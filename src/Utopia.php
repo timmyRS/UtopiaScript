@@ -446,11 +446,20 @@ class Utopia
 						}
 						break;
 					case '+':
-					case '-':
 					case '^':
 					case '%':
 					case '|':
 						$this->specialCharacter($chars[$i], $literal, $statement, $local_vars, $ret);
+						break;
+					case '-':
+						if($statement === null && self::is_numeric($literal))
+						{
+							$this->specialCharacter($chars[$i], $literal, $statement, $local_vars, $ret);
+						}
+						else
+						{
+							$literal .= '-';
+						}
 						break;
 					case '/':
 						if($statement === null && $literal == '')
