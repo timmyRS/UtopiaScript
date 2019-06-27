@@ -313,6 +313,7 @@ class Utopia
 				$this->execute_start = microtime(true);
 				$this->input_time = 0;
 				$this->last_output = "";
+				$this->last_error_output = "";
 			}
 			else if($this->maximum_execution_time > 0 && $this->maximum_execution_time < microtime(true) - $this->execute_start - $this->input_time)
 			{
