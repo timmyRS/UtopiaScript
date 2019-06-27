@@ -204,7 +204,14 @@ class NumberStatement extends VariableStatement
 				return new NumberStatement($f($a, $b));
 			}
 			// int a, array b
-			return self::performArithmetic($b, $a, $f);
+			return new ArrayStatement(array_map(function($b) use (&$a, &$f)
+			{
+				if(!$b instanceof NumberStatement)
+				{
+					throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+				}
+				return new NumberStatement($f($a, $b->value));
+			}, $b));
 		}
 		if(is_int($b))
 		{

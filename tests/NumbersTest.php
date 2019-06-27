@@ -30,8 +30,8 @@ class NumbersTest
 	function testArrayNumberArithmetic()
 	{
 		$utopia = new Utopia(null, "keep");
-		$utopia->parseAndExecute("print_line [2 3 4] * 8; print_line 8 * [2 3 4];");
-		Nose::assertEquals($utopia->last_output, "array 16 24 32\r\narray 16 24 32\r\n");
+		$utopia->parseAndExecute("print_line [16 32] / 8; print_line 16 / [8 4];");
+		Nose::assertEquals($utopia->last_output, "array 2 4\r\narray 2 4\r\n");
 	}
 
 	function testPower()
