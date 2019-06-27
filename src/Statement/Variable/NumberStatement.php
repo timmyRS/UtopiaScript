@@ -4,11 +4,31 @@ use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
 class NumberStatement extends VariableStatement
 {
+	const ACTION_PLUS = 1;
+	const ACTION_MINUS = 2;
+	const ACTION_TIMES = 3;
+	const ACTION_DIVIDED_BY = 4;
+	const ACTION_POW = 5;
+	const ACTION_MOD = 6;
+	const ACTION_FACTORIAL = 100;
+	const ACTION_FLOOR = 101;
+	const ACTION_ROUND = 102;
+	const ACTION_CEIL = 103;
 	public $concatenation_string;
 
 	static function getType(): string
 	{
 		return "number";
+	}
+
+	function isFinished(): bool
+	{
+		return $this->isExecutable();
+	}
+
+	function isExecutable(): bool
+	{
+		return $this->concatenation_string !== null || ($this->action > 0 && ($this->action > 99 || $this->action_data["b"] !== null)) || ($this->action <= 0 && parent::isExecutable());
 	}
 
 	/**
@@ -24,54 +44,16 @@ class NumberStatement extends VariableStatement
 				if($value instanceof StringStatement)
 				{
 					$this->concatenation_string = $value->value;
-				}
-				else
-				{
-					throw new InvalidCodeException("NumberStatement doesn't accept ".get_class($value));
+					return;
 				}
 			}
-			else
+			else if($this->action < 100 && $value instanceof NumberStatement)
 			{
-				$this->finishAction($value);
+				$this->action_data["b"] = $value->value;
+				return;
 			}
+			throw new InvalidCodeException("NumberStatement doesn't accept ".get_class($value)." in this context");
 		}
-	}
-
-	/**
-	 * @param $action_value
-	 * @throws InvalidCodeException
-	 */
-	private function finishAction($action_value)
-	{
-		if(!Utopia::is_numeric($action_value))
-		{
-			throw new InvalidCodeException("Expected number, got ".$action_value);
-		}
-		$action_value = Utopia::numval($action_value);
-		switch($this->action)
-		{
-			case 1:
-				$this->value += $action_value;
-				break;
-			case 2:
-				$this->value -= $action_value;
-				break;
-			case 3:
-				$this->value *= $action_value;
-				break;
-			case 4:
-				$this->value /= $action_value;
-				break;
-			case 5:
-				$this->value = pow($this->value, $action_value);
-				break;
-			case 6:
-				$this->value = $this->value % $action_value;
-				break;
-			default:
-				throw new InvalidCodeException("Invalid action: ".$this->action);
-		}
-		$this->action = 0;
 	}
 
 	/**
@@ -82,61 +64,60 @@ class NumberStatement extends VariableStatement
 	{
 		if($this->_acceptLiteral($literal))
 		{
-			if($this->action > 0)
+			if($this->action != 0)
 			{
-				$this->finishAction(Utopia::numval($literal));
+				throw new InvalidCodeException("NumberStatement doesn't accept literals in this context");
 			}
-			else switch($literal)
+			switch($literal)
 			{
 				case '+':
 				case 'plus':
-					$this->action = 1;
+					$this->action = self::ACTION_PLUS;
 					break;
 				case '-':
 				case 'minus':
-					$this->action = 2;
+					$this->action = self::ACTION_MINUS;
 					break;
 				case '*':
 				case 'times':
-					$this->action = 3;
+					$this->action = self::ACTION_TIMES;
 					break;
 				case '/':
 				case 'divided_by':
-					$this->action = 4;
+					$this->action = self::ACTION_DIVIDED_BY;
 					break;
 				case '^':
 				case 'pow':
-					$this->action = 5;
+					$this->action = self::ACTION_POW;
 					break;
 				case '%':
 				case 'mod':
-					$this->action = 6;
+					$this->action = self::ACTION_MOD;
 					break;
 				case 'fact':
 				case 'factorial':
-					$this->value = self::factorial($this->value);
-					break;
-				case 'c':
-				case 'ceil':
-					$this->value = ceil($this->value);
-					break;
-				case 'r':
-				case 'round':
-					$this->value = round($this->value);
+					$this->action = self::ACTION_FACTORIAL;
 					break;
 				case 'f':
 				case 'floor':
-					$this->value = floor($this->value);
+					$this->action = self::ACTION_FLOOR;
+					break;
+				case 'r':
+				case 'round':
+					$this->action = self::ACTION_ROUND;
+					break;
+				case 'c':
+				case 'ceil':
+					$this->action = self::ACTION_CEIL;
 					break;
 				default:
 					throw new InvalidCodeException("Invalid action: ".$literal);
 			}
+			if($this->action < 100)
+			{
+				$this->action_data = ["b" => null];
+			}
 		}
-	}
-
-	private static function factorial($number)
-	{
-		return $number < 1 ? 1 : $number * self::factorial($number - 1);
 	}
 
 	/**
@@ -152,7 +133,7 @@ class NumberStatement extends VariableStatement
 	{
 		if($this->action == self::ACTION_NOT)
 		{
-			$this->value = self::factorial($this->value);
+			$this->action = self::ACTION_FACTORIAL;
 		}
 		$res = $this->_execute($utopia, $local_vars);
 		if($res !== null)
@@ -163,7 +144,47 @@ class NumberStatement extends VariableStatement
 		{
 			return new StringStatement($this->value.$this->concatenation_string);
 		}
+		switch($this->action)
+		{
+			case self::ACTION_PLUS:
+				$this->value += $this->action_data["b"];
+				break;
+			case self::ACTION_MINUS:
+				$this->value -= $this->action_data["b"];
+				break;
+			case self::ACTION_TIMES:
+				$this->value *= $this->action_data["b"];
+				break;
+			case self::ACTION_DIVIDED_BY:
+				$this->value /= $this->action_data["b"];
+				break;
+			case self::ACTION_POW:
+				$this->value **= $this->action_data["b"];
+				break;
+			case self::ACTION_MOD:
+				$this->value %= $this->action_data["b"];
+				break;
+			case self::ACTION_FACTORIAL:
+				$this->value = self::factorial($this->value);
+				break;
+			case self::ACTION_FLOOR:
+				$this->value = floor($this->value);
+				break;
+			case self::ACTION_ROUND:
+				$this->value = round($this->value);
+				break;
+			case self::ACTION_CEIL:
+				$this->value = ceil($this->value);
+				break;
+		}
+		$this->action = 0;
+		$this->action_data = [];
 		return $this;
+	}
+
+	static function factorial(int $number): int
+	{
+		return $number < 1 ? 1 : $number * self::factorial($number - 1);
 	}
 
 	function __toString(): string
