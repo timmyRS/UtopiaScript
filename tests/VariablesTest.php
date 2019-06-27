@@ -45,12 +45,29 @@ EOC
 		$local_vars = [];
 		$utopia->parseAndExecuteWithWritableLocalVars('local bla "bla";', $local_vars);
 		$utopia->parseAndExecuteWithWritableLocalVars('final bla [true];', $local_vars);
-		Nose::expectException(InvalidCodeException::class, function() use (&$utopia, $local_vars)
+		Nose::expectException(InvalidCodeException::class, function() use (&$utopia, &$local_vars)
 		{
 			$utopia->parseAndExecuteWithWritableLocalVars('final bla;', $local_vars);
 		});
 		$utopia->parseAndExecuteWithWritableLocalVars('const bla 1;', $local_vars);
 	}
 
-	// TODO: Add test for type contracts / strict types
+	function testTypeContracts()
+	{
+		$utopia = new Utopia();
+		$local_vars = [];
+		Nose::expectException(InvalidCodeException::class, function() use (&$utopia, &$local_vars)
+		{
+			$utopia->parseAndExecuteWithWritableLocalVars("local string a;", $local_vars);
+		});
+		$utopia->parseAndExecuteWithWritableLocalVars("local string a 'Hi';", $local_vars);
+		Nose::expectException(InvalidCodeException::class, function() use (&$utopia, &$local_vars)
+		{
+			$utopia->parseAndExecuteWithWritableLocalVars("local number a 1337;", $local_vars);
+		});
+		Nose::expectException(InvalidCodeException::class, function() use (&$utopia, &$local_vars)
+		{
+			$utopia->parseAndExecuteWithWritableLocalVars("set a 1337;", $local_vars);
+		});
+	}
 }
