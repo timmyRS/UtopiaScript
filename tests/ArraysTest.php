@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require_once "vendor/autoload.php";
-use UtopiaScript\Utopia;
+use UtopiaScript\
+{Exception\InvalidCodeException, Utopia};
 class ArraysTest
 {
 	function testCreation()
@@ -74,5 +75,14 @@ print [2 3 4] / [2 2 2];
 EOC
 		);
 		Nose::assertEquals($utopia->last_output, "array 1 1.5 2");
+	}
+
+	function testArithmeticSizeMismatch()
+	{
+		$utopia = new Utopia();
+		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
+		{
+			$utopia->parseAndExecute("[1, 2, 3] + [4, 5]");
+		});
 	}
 }
