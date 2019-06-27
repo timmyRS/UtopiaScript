@@ -6,6 +6,10 @@ class ArrayStatement extends VariableStatement
 {
 	const ACTION_FOR_EACH = 1;
 	const ACTION_VALUE_OF_KEY = 2;
+	const ACTION_PLUS = 100;
+	const ACTION_MINUS = 101;
+	const ACTION_TIMES = 102;
+	const ACTION_DIVIDED_BY = 103;
 
 	function __construct(array $value)
 	{
@@ -17,21 +21,33 @@ class ArrayStatement extends VariableStatement
 		return "array";
 	}
 
-	function isExecutable(): bool
-	{
-		return $this->action == 0 || ($this->action_data["var_name"] !== null && $this->action_data["func"] !== null);
-	}
-
 	function isFinished(): bool
 	{
+		if(!$this->isExecutable())
+		{
+			return false;
+		}
+		if($this->action == self::ACTION_FOR_EACH)
+		{
+			return $this->action_data["key_name"] !== null;
+		}
+		return true;
+	}
+
+	function isExecutable(): bool
+	{
+		if($this->action > 99)
+		{
+			return $this->action_data["b"] !== null;
+		}
 		switch($this->action)
 		{
 			case self::ACTION_FOR_EACH:
-				return $this->action_data["var_name"] !== null && $this->action_data["func"] !== null && $this->action_data["key_name"] !== null;
+				return $this->action_data["var_name"] !== null && $this->action_data["func"] !== null;
 			case self::ACTION_VALUE_OF_KEY:
 				return $this->action_data["key"] !== null;
 		}
-		return parent::isFinished();
+		return parent::isExecutable();
 	}
 
 	function acceptsValues(): bool
@@ -47,7 +63,15 @@ class ArrayStatement extends VariableStatement
 	{
 		if($this->_acceptValue($value))
 		{
-			switch($this->action)
+			if($this->action > 99)
+			{
+				if(!$value instanceof ArrayStatement)
+				{
+					throw new InvalidCodeException("ArrayStatement doesn't accept ".get_class($value)." in this context");
+				}
+				$this->action_data["b"] = $value->value;
+			}
+			else switch($this->action)
 			{
 				case self::ACTION_VALUE_OF_KEY:
 					if($this->action_data["key"] === null)
@@ -75,8 +99,9 @@ class ArrayStatement extends VariableStatement
 						return;
 					}
 					throw new InvalidCodeException("ArrayStatement doesn't accept ".get_class($value)." in this context");
+				default:
+					throw new InvalidCodeException("ArrayStatement doesn't accept values in this context");
 			}
-			throw new InvalidCodeException("ArrayStatement doesn't accept values in this context");
 		}
 	}
 
@@ -134,7 +159,7 @@ class ArrayStatement extends VariableStatement
 								"key_name" => null,
 								"func" => null
 							];
-							return;
+							break;
 						case '.':
 						case ':':
 						case 'value_of':
@@ -145,18 +170,37 @@ class ArrayStatement extends VariableStatement
 						case 'value':
 							$this->action = self::ACTION_VALUE_OF_KEY;
 							$this->action_data = ["key" => null];
-							return;
+							break;
+						case '+':
+						case 'plus':
+							$this->action = self::ACTION_PLUS;
+							break;
+						case '-':
+						case 'minus':
+							$this->action = self::ACTION_MINUS;
+							break;
+						case '*':
+						case 'times':
+							$this->action = self::ACTION_TIMES;
+							break;
+						case '/':
+						case 'divided_by':
+							$this->action = self::ACTION_DIVIDED_BY;
+							break;
 						default:
 							if(array_key_exists($literal, $this->value))
 							{
 								$this->action = self::ACTION_VALUE_OF_KEY;
 								$this->action_data = ["key" => $literal];
-								return;
+								break;
 							}
 							throw new InvalidCodeException("Invalid action or key: ".$literal);
 					}
+					if($this->action > 199)
+					{
+						$this->action_data = ["b" => null];
+					}
 			}
-			throw new InvalidCodeException("ArrayStatement doesn't accept literals in this context");
 		}
 	}
 
@@ -171,56 +215,91 @@ class ArrayStatement extends VariableStatement
 	 */
 	function execute(Utopia $utopia, array &$local_vars = []): Statement
 	{
-		return ($this->_execute($utopia, $local_vars) ?? $this->execute_($utopia, $local_vars)) ?? $this;
-	}
-
-	/**
-	 * @param Utopia $utopia
-	 * @param array $local_vars
-	 * @return Statement|null
-	 * @throws IncompleteCodeException
-	 * @throws InvalidCodeException
-	 * @throws InvalidEnvironmentException
-	 * @throws TimeoutException
-	 */
-	function execute_(Utopia $utopia, array $local_vars = [])
-	{
-		switch($this->action)
+		$ret = $this->_execute($utopia, $local_vars);
+		if($ret === null)
 		{
-			case self::ACTION_FOR_EACH:
-				if($this->action_data["var_name"] === null || $this->action_data["func"] === null)
-				{
-					throw new InvalidCodeException("Foreach action was not finished");
-				}
-				$names = ["var_name"];
-				if($this->action_data["key_name"] !== null)
-				{
-					array_push($names, "var_name");
-				}
-				foreach($names as $name)
-				{
-					$utopia->scrutinizeVariableName($name, $local_vars);
-				}
-				foreach($this->value as $key => $item)
-				{
-					$local_vars[$this->action_data["var_name"]] = new Variable($item, true);
+			if($this->action > 99 && count($this->value) != count($this->action_data["b"]))
+			{
+				throw new InvalidCodeException("Can't perform arithmetic operations on arrays of different sizes");
+			}
+			switch($this->action)
+			{
+				case self::ACTION_FOR_EACH:
+					if($this->action_data["var_name"] === null || $this->action_data["func"] === null)
+					{
+						throw new InvalidCodeException("Foreach action was not finished");
+					}
+					$names = ["var_name"];
 					if($this->action_data["key_name"] !== null)
 					{
-						$local_vars[$this->action_data["key_name"]] = new Variable(new StringStatement($key, false), true);
+						array_push($names, "var_name");
 					}
-					$utopia->parseAndExecute($this->action_data["func"], $local_vars);
-				}
-				break;
-			case self::ACTION_VALUE_OF_KEY:
-				if($this->action_data["key"] === null)
-				{
-					throw new InvalidCodeException("Value of key action was not finished");
-				}
-				return $this->value[$this->action_data["key"]];
+					foreach($names as $name)
+					{
+						$utopia->scrutinizeVariableName($name, $local_vars);
+					}
+					foreach($this->value as $key => $item)
+					{
+						$local_vars_ = $local_vars;
+						$local_vars_[$this->action_data["var_name"]] = new Variable($item, true);
+						if($this->action_data["key_name"] !== null)
+						{
+							$local_vars_[$this->action_data["key_name"]] = new Variable(new StringStatement($key, false), true);
+						}
+						$utopia->parseAndExecute($this->action_data["func"], $local_vars_);
+					}
+					break;
+				case self::ACTION_VALUE_OF_KEY:
+					if($this->action_data["key"] === null)
+					{
+						throw new InvalidCodeException("Value of key action was not finished");
+					}
+					$ret = $this->value[$this->action_data["key"]];
+					break;
+				case self::ACTION_PLUS:
+					$this->value = array_map(function($a, $b)
+					{
+						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+						{
+							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+						}
+						return new NumberStatement($a->value + $b->value);
+					}, $this->value, $this->action_data["b"]);
+					break;
+				case self::ACTION_MINUS:
+					$this->value = array_map(function($a, $b)
+					{
+						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+						{
+							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+						}
+						return new NumberStatement($a->value - $b->value);
+					}, $this->value, $this->action_data["b"]);
+					break;
+				case self::ACTION_TIMES:
+					$this->value = array_map(function($a, $b)
+					{
+						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+						{
+							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+						}
+						return new NumberStatement($a->value * $b->value);
+					}, $this->value, $this->action_data["b"]);
+					break;
+				case self::ACTION_DIVIDED_BY:
+					$this->value = array_map(function($a, $b)
+					{
+						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+						{
+							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+						}
+						return new NumberStatement($a->value / $b->value);
+					}, $this->value, $this->action_data["b"]);
+			}
+			$this->action = 0;
+			$this->action_data = null;
 		}
-		$this->action = 0;
-		$this->action_data = null;
-		return null;
+		return $ret ?? $this;
 	}
 
 	function __toString(): string

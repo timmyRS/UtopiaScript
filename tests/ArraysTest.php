@@ -21,4 +21,58 @@ class ArraysTest
 		$utopia = new Utopia();
 		Nose::assertEquals('array "1" 2 array = (array true null)', Utopia::strval($utopia->parseAndExecute('array "1" 2 array:[true null]')));
 	}
+
+	function testForEach()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+final array a = array 1 2 3;
+a for_each item {
+	print item " ";
+};
+print get_type item = "undefined";
+EOC
+);
+		Nose::assertEquals($utopia->last_output, "1 2 3 true");
+	}
+
+	function testAddition()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+print [1, 2] + [3 3];
+EOC
+);
+		Nose::assertEquals($utopia->last_output, "array 4 5");
+	}
+
+	function testSubtraction()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+print [5 10] minus [3 8];
+EOC
+		);
+		Nose::assertEquals($utopia->last_output, "array 2 2");
+	}
+
+	function testMultiplication()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+print [2 3 4] * [8 8 8];
+EOC
+		);
+		Nose::assertEquals($utopia->last_output, "array 16 24 32");
+	}
+
+	function testDivision()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+print [2 3 4] / [2 2 2];
+EOC
+		);
+		Nose::assertEquals($utopia->last_output, "array 1 1.5 2");
+	}
 }
