@@ -1088,7 +1088,7 @@ class Utopia
 		}
 		if(!$extension instanceof Extension)
 		{
-			throw new InvalidArgumentException("Parameter is not a valid extension.");
+			throw new InvalidArgumentException("Parameter is not a valid extension");
 		}
 		$this->statements = array_merge($this->statements, $extension->getStatements());
 	}

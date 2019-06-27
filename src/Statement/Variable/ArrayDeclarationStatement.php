@@ -72,7 +72,7 @@ class ArrayDeclarationStatement extends Statement
 			{
 				if($key instanceof FunctionStatement)
 				{
-					throw new InvalidCodeException("A function can't be an array key.");
+					throw new InvalidCodeException("A function can't be an array key");
 				}
 				$key = $key->value;
 			}
