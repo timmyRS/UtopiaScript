@@ -6,10 +6,10 @@ class ArrayStatement extends VariableStatement
 {
 	const ACTION_FOR_EACH = 1;
 	const ACTION_VALUE_OF_KEY = 2;
-	const ACTION_PLUS = 100;
-	const ACTION_MINUS = 101;
-	const ACTION_TIMES = 102;
-	const ACTION_DIVIDED_BY = 103;
+	const ACTION_ADD = 100;
+	const ACTION_SUB = 101;
+	const ACTION_MUL = 102;
+	const ACTION_DIV = 103;
 
 	function __construct(array $value)
 	{
@@ -23,15 +23,7 @@ class ArrayStatement extends VariableStatement
 
 	function isFinished(): bool
 	{
-		if(!$this->isExecutable())
-		{
-			return false;
-		}
-		if($this->action == self::ACTION_FOR_EACH)
-		{
-			return $this->action_data["key_name"] !== null;
-		}
-		return true;
+		return $this->action != 0 && $this->isExecutable() && ($this->action != self::ACTION_FOR_EACH || $this->action_data["key_name"] !== null);
 	}
 
 	function isExecutable(): bool
@@ -65,7 +57,7 @@ class ArrayStatement extends VariableStatement
 		{
 			if($this->action > 99)
 			{
-				if(!$value instanceof ArrayStatement)
+				if(!$value instanceof ArrayStatement && !$value instanceof NumberStatement)
 				{
 					throw new InvalidCodeException("Array doesn't accept ".$value->getType()." in this context");
 				}
@@ -173,19 +165,19 @@ class ArrayStatement extends VariableStatement
 							break;
 						case '+':
 						case 'plus':
-							$this->action = self::ACTION_PLUS;
+							$this->action = self::ACTION_ADD;
 							break;
 						case '-':
 						case 'minus':
-							$this->action = self::ACTION_MINUS;
+							$this->action = self::ACTION_SUB;
 							break;
 						case '*':
 						case 'times':
-							$this->action = self::ACTION_TIMES;
+							$this->action = self::ACTION_MUL;
 							break;
 						case '/':
 						case 'divided_by':
-							$this->action = self::ACTION_DIVIDED_BY;
+							$this->action = self::ACTION_DIV;
 							break;
 						default:
 							if(array_key_exists($literal, $this->value))
@@ -218,10 +210,6 @@ class ArrayStatement extends VariableStatement
 		$ret = $this->_execute($utopia, $local_vars);
 		if($ret === null)
 		{
-			if($this->action > 99 && count($this->value) != count($this->action_data["b"]))
-			{
-				throw new InvalidCodeException("Can't perform arithmetic operations on arrays of different sizes");
-			}
 			switch($this->action)
 			{
 				case self::ACTION_FOR_EACH:
@@ -256,45 +244,17 @@ class ArrayStatement extends VariableStatement
 					}
 					$ret = $this->value[$this->action_data["key"]];
 					break;
-				case self::ACTION_PLUS:
-					$this->value = array_map(function($a, $b)
-					{
-						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
-						{
-							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
-						}
-						return new NumberStatement($a->value + $b->value);
-					}, $this->value, $this->action_data["b"]);
+				case self::ACTION_ADD:
+					$ret = NumberStatement::add($this->value, $this->action_data["b"]);
 					break;
-				case self::ACTION_MINUS:
-					$this->value = array_map(function($a, $b)
-					{
-						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
-						{
-							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
-						}
-						return new NumberStatement($a->value - $b->value);
-					}, $this->value, $this->action_data["b"]);
+				case self::ACTION_SUB:
+					$ret = NumberStatement::sub($this->value, $this->action_data["b"]);
 					break;
-				case self::ACTION_TIMES:
-					$this->value = array_map(function($a, $b)
-					{
-						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
-						{
-							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
-						}
-						return new NumberStatement($a->value * $b->value);
-					}, $this->value, $this->action_data["b"]);
+				case self::ACTION_MUL:
+					$ret = NumberStatement::mul($this->value, $this->action_data["b"]);
 					break;
-				case self::ACTION_DIVIDED_BY:
-					$this->value = array_map(function($a, $b)
-					{
-						if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
-						{
-							throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
-						}
-						return new NumberStatement($a->value / $b->value);
-					}, $this->value, $this->action_data["b"]);
+				case self::ACTION_DIV:
+					$ret = NumberStatement::div($this->value, $this->action_data["b"]);
 			}
 			$this->action = 0;
 			$this->action_data = null;

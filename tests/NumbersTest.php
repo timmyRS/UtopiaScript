@@ -27,6 +27,13 @@ class NumbersTest
 		Nose::assertEquals(5, Utopia::externalize($utopia->parseAndExecute("20 / 2 / 2")));
 	}
 
+	function testArrayNumberArithmetic()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute("print_line [2 3 4] * 8; print_line 8 * [2 3 4];");
+		Nose::assertEquals($utopia->last_output, "array 16 24 32\r\narray 16 24 32\r\n");
+	}
+
 	function testPower()
 	{
 		$utopia = new Utopia();

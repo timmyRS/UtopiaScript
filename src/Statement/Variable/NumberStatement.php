@@ -4,10 +4,10 @@ use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
 class NumberStatement extends VariableStatement
 {
-	const ACTION_PLUS = 1;
-	const ACTION_MINUS = 2;
-	const ACTION_TIMES = 3;
-	const ACTION_DIVIDED_BY = 4;
+	const ACTION_ADD = 1;
+	const ACTION_SUB = 2;
+	const ACTION_MUL = 3;
+	const ACTION_DIV = 4;
 	const ACTION_POW = 5;
 	const ACTION_MOD = 6;
 	const ACTION_CONCAT = 7;
@@ -23,7 +23,7 @@ class NumberStatement extends VariableStatement
 
 	function isFinished(): bool
 	{
-		return $this->isExecutable();
+		return $this->action != 0 && $this->isExecutable();
 	}
 
 	function isExecutable(): bool
@@ -48,7 +48,7 @@ class NumberStatement extends VariableStatement
 					return;
 				}
 			}
-			else if($this->action < 100 && $value instanceof NumberStatement)
+			else if($this->action < 100 && ($value instanceof NumberStatement || $value instanceof ArrayStatement))
 			{
 				$this->action_data["b"] = $value->value;
 				return;
@@ -73,19 +73,19 @@ class NumberStatement extends VariableStatement
 			{
 				case '+':
 				case 'plus':
-					$this->action = self::ACTION_PLUS;
+					$this->action = self::ACTION_ADD;
 					break;
 				case '-':
 				case 'minus':
-					$this->action = self::ACTION_MINUS;
+					$this->action = self::ACTION_SUB;
 					break;
 				case '*':
 				case 'times':
-					$this->action = self::ACTION_TIMES;
+					$this->action = self::ACTION_MUL;
 					break;
 				case '/':
 				case 'divided_by':
-					$this->action = self::ACTION_DIVIDED_BY;
+					$this->action = self::ACTION_DIV;
 					break;
 				case '^':
 				case 'pow':
@@ -141,24 +141,16 @@ class NumberStatement extends VariableStatement
 		{
 			return $res;
 		}
-		if($this->concatenation_string !== null)
-		{
-			return new StringStatement($this->value.$this->concatenation_string);
-		}
 		switch($this->action)
 		{
-			case self::ACTION_PLUS:
-				$this->value += $this->action_data["b"];
-				break;
-			case self::ACTION_MINUS:
-				$this->value -= $this->action_data["b"];
-				break;
-			case self::ACTION_TIMES:
-				$this->value *= $this->action_data["b"];
-				break;
-			case self::ACTION_DIVIDED_BY:
-				$this->value /= $this->action_data["b"];
-				break;
+			case self::ACTION_ADD:
+				return self::add($this->value, $this->action_data["b"]);
+			case self::ACTION_SUB:
+				return self::sub($this->value, $this->action_data["b"]);
+			case self::ACTION_MUL:
+				return self::mul($this->value, $this->action_data["b"]);
+			case self::ACTION_DIV:
+				return self::div($this->value, $this->action_data["b"]);
 			case self::ACTION_POW:
 				$this->value **= $this->action_data["b"];
 				break;
@@ -193,5 +185,107 @@ class NumberStatement extends VariableStatement
 	function __toString(): string
 	{
 		return strval($this->value);
+	}
+
+	/**
+	 * @param int|array $a
+	 * @param int|array $b
+	 * @param callable $f
+	 * @return ArrayStatement|NumberStatement
+	 * @throws InvalidCodeException
+	 */
+	static function performArithmetic(&$a, &$b, $f)
+	{
+		if(is_int($a))
+		{
+			if(is_int($b))
+			{
+				// int a, int b
+				return new NumberStatement($f($a, $b));
+			}
+			// int a, array b
+			return self::performArithmetic($b, $a, $f);
+		}
+		if(is_int($b))
+		{
+			// array a, int b
+			return new ArrayStatement(array_map(function($a) use (&$b, &$f)
+			{
+				if(!$a instanceof NumberStatement)
+				{
+					throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+				}
+				return new NumberStatement($f($a->value, $b));
+			}, $a));
+		}
+		// array a, array b
+		if(count($a) != count($b))
+		{
+			throw new InvalidCodeException("Can't perform arithmetic operations on arrays of different sizes");
+		}
+		return new ArrayStatement(array_map(function($a, $b) use (&$f)
+		{
+			if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+			{
+				throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+			}
+			return new NumberStatement($f($a->value, $b->value));
+		}, $a, $b));
+	}
+
+	/**
+	 * @param $a
+	 * @param $b
+	 * @return ArrayStatement|NumberStatement
+	 * @throws InvalidCodeException
+	 */
+	static function add($a, $b)
+	{
+		return self::performArithmetic($a, $b, function(&$a, &$b)
+		{
+			return $a + $b;
+		});
+	}
+
+	/**
+	 * @param $a
+	 * @param $b
+	 * @return ArrayStatement|NumberStatement
+	 * @throws InvalidCodeException
+	 */
+	static function sub($a, $b)
+	{
+		return self::performArithmetic($a, $b, function(&$a, &$b)
+		{
+			return $a - $b;
+		});
+	}
+
+	/**
+	 * @param $a
+	 * @param $b
+	 * @return ArrayStatement|NumberStatement
+	 * @throws InvalidCodeException
+	 */
+	static function mul($a, $b)
+	{
+		return self::performArithmetic($a, $b, function(&$a, &$b)
+		{
+			return $a * $b;
+		});
+	}
+
+	/**
+	 * @param $a
+	 * @param $b
+	 * @return ArrayStatement|NumberStatement
+	 * @throws InvalidCodeException
+	 */
+	static function div($a, $b)
+	{
+		return self::performArithmetic($a, $b, function(&$a, &$b)
+		{
+			return $a / $b;
+		});
 	}
 }
