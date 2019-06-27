@@ -282,7 +282,7 @@ abstract class VariableStatement extends Statement
 			{
 				$this->action_data["value"] = $utopia->parseAndExecute($this->action_data["value"], $local_vars);
 			}
-			$a0 = Utopia::externalize($this->value);
+			$a0 = $this->externalize();
 			$a1 = Utopia::externalize($this->action_data["value"]);
 			if($utopia->debug)
 			{
