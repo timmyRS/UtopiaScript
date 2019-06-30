@@ -6,7 +6,7 @@ class NumbersTest
 	function testAddition()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(10, Utopia::externalize($utopia->parseAndExecute("1 + 2 + 3 + 4")));
+		Nose::assertEquals(3.5, Utopia::externalize($utopia->parseAndExecute("1 + 2 + 0.5")));
 	}
 
 	function testSubtraction()

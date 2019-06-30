@@ -204,25 +204,24 @@ class NumberStatement extends VariableStatement
 	 */
 	static function performArithmetic(&$a, &$b, $f)
 	{
-		if(is_int($a))
+		if(is_array($a))
 		{
-			if(is_int($b))
+			if(is_array($b))
 			{
-				// int a, int b
-				return new NumberStatement($f($a, $b));
-			}
-			// int a, array b
-			return new ArrayStatement(array_map(function($b) use (&$a, &$f)
-			{
-				if(!$b instanceof NumberStatement)
+				// array a, array b
+				if(count($a) != count($b))
 				{
-					throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+					throw new InvalidCodeException("Can't perform arithmetic operations on arrays of different sizes");
 				}
-				return new NumberStatement($f($a, $b->value));
-			}, $b));
-		}
-		if(is_int($b))
-		{
+				return new ArrayStatement(array_map(function($a, $b) use (&$f)
+				{
+					if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+					{
+						throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+					}
+					return new NumberStatement($f($a->value, $b->value));
+				}, $a, $b));
+			}
 			// array a, int b
 			return new ArrayStatement(array_map(function($a) use (&$b, &$f)
 			{
@@ -233,19 +232,20 @@ class NumberStatement extends VariableStatement
 				return new NumberStatement($f($a->value, $b));
 			}, $a));
 		}
-		// array a, array b
-		if(count($a) != count($b))
+		if(is_array($b))
 		{
-			throw new InvalidCodeException("Can't perform arithmetic operations on arrays of different sizes");
-		}
-		return new ArrayStatement(array_map(function($a, $b) use (&$f)
-		{
-			if(!$a instanceof NumberStatement || !$b instanceof NumberStatement)
+			// int a, array b
+			return new ArrayStatement(array_map(function($b) use (&$a, &$f)
 			{
-				throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
-			}
-			return new NumberStatement($f($a->value, $b->value));
-		}, $a, $b));
+				if(!$b instanceof NumberStatement)
+				{
+					throw new InvalidCodeException("Can't perform arithmetic operations on arrays containing non-numbers");
+				}
+				return new NumberStatement($f($a, $b->value));
+			}, $b));
+		}
+		// int a, int b
+		return new NumberStatement($f($a, $b));
 	}
 
 	/**
