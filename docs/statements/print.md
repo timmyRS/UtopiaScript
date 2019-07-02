@@ -2,8 +2,6 @@
 
 Aliases: `output`, `write`, `echo`,  `out`, `say`, `<`
 
----
-
 Prints the given [string](../constructs#string) to the console and returns it.
 
     > print "Hello, world!";

@@ -2,8 +2,6 @@
 
 Aliases: `input`, `in`, `>`
 
----
-
 Asks the user for a [string](../constructs#string).
 
 You can use `read` like [set](set):
