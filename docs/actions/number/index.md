@@ -1,7 +1,7 @@
 # Number Actions
 
 - Implicit
-    - Concatenation
+    - [Concatenation](../string/concatenation)
 - Explicit
     - [plus](plus)
     - [minus](minus)
