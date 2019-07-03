@@ -9,9 +9,9 @@
     - [read](read)
 - [Declaration](declaration/)
 - Variable Action
-    - ceil
-    - round
-    - floor
+    - [ceil](ceil)
+    - [round](round)
+    - [floor](floor)
 - Conditional
     - [if](if)
     - [unless](unless)

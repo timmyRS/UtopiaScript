@@ -10,6 +10,6 @@
     - pow
     - mod
     - factorial
-    - ceil
-    - round
-    - floor
+    - [ceil](ceil)
+    - [round](round)
+    - [floor](floor)
