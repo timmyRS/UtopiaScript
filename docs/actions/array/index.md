@@ -5,7 +5,7 @@
 - Explicit
     - get_value
     - for_each
-    - plus
-    - minus
-    - times
-    - divided_by
+    - [plus](../number/plus)
+    - [minus](../number/minus)
+    - [times](../number/times)
+    - [divided_by](../number/divided_by)
