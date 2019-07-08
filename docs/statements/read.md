@@ -1,6 +1,6 @@
 # read
 
-Aliases: `input`, `in`, `>`
+Alias: `>`
 
 Asks the user for a [string](../constructs#string).
 

@@ -1,6 +1,6 @@
 # print
 
-Aliases: `output`, `write`, `echo`,  `out`, `say`, `<`
+Aliases: `output`, `write`, `echo`, `say`, `<`
 
 Prints the given [string](../constructs#string) to the console and returns it.
 
