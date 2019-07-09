@@ -216,12 +216,14 @@ abstract class VariableStatement extends Statement
 						case 'greater_than':
 							$this->setAction(self::ACTION_GREATER);
 							break;
+						case '≥':
 						case 'greater_than_or_equal_to':
 							$this->setAction(self::ACTION_GREATER_OR_EQUALS);
 							break;
 						case 'less_than':
 							$this->setAction(self::ACTION_LESS);
 							break;
+						case '≤':
 						case 'less_than_or_equal_to':
 							$this->setAction(self::ACTION_LESS_OR_EQUALS);
 							break;

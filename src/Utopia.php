@@ -294,7 +294,7 @@ class Utopia
 			{
 				throw new TimeoutException("Script took more than ".$this->maximum_execution_time." seconds to finish");
 			}
-			$chars = str_split($code);
+			$chars = preg_split('//u', $code, null, PREG_SPLIT_NO_EMPTY);
 			$end_i = count($chars);
 			$ret = null;
 			$literal = '';
@@ -424,6 +424,8 @@ class Utopia
 					case '^':
 					case '%':
 					case '|':
+					case '≤':
+					case '≥':
 						$this->specialCharacter($chars[$i], $literal, $statement, $local_vars, $ret);
 						break;
 					case '-':

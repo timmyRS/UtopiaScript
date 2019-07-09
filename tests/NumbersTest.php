@@ -6,25 +6,25 @@ class NumbersTest
 	function testAddition()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(3.5, Utopia::externalize($utopia->parseAndExecute("1 + 2 + 0.5")));
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("1 + 2 + 0.5")), 3.5);
 	}
 
 	function testSubtraction()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(3, Utopia::externalize($utopia->parseAndExecute("9 - 5 - 1")));
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("9 - 5 - 1")), 3);
 	}
 
 	function testMultiplication()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(8, Utopia::externalize($utopia->parseAndExecute("2 * 2 * 2")));
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("2 * 2 * 2")), 8);
 	}
 
 	function testDivision()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(5, Utopia::externalize($utopia->parseAndExecute("20 / 2 / 2")));
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("20 / 2 / 2")), 5);
 	}
 
 	function testArrayNumberArithmetic()
@@ -37,7 +37,7 @@ class NumbersTest
 	function testPower()
 	{
 		$utopia = new Utopia();
-		Nose::assertEquals(256, Utopia::externalize($utopia->parseAndExecute("2 ^ 4 pow 2")));
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("2 ^ 4 pow 2")), 256);
 	}
 
 	function testFactorial()
@@ -45,7 +45,14 @@ class NumbersTest
 		$utopia = new Utopia();
 		foreach(["!", " factorial", " fact"] as $action)
 		{
-			Nose::assertEquals(6, Utopia::externalize($utopia->parseAndExecute('3'.$action)));
+			Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute('3'.$action)), 6);
 		}
+	}
+
+	function testComparisons()
+	{
+		$utopia = new Utopia(null, "keep", "keep");
+		$utopia->parseAndExecute("<<1≤1;<1≥1;");
+		Nose::assertEquals($utopia->last_output, "true\r\ntrue");
 	}
 }
