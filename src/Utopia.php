@@ -4,7 +4,7 @@ use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
 use UtopiaScript\Statement\
-{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
+{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintErrorLineStatement, Stdio\PrintErrorStatement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
 /** An environment with global variables that can execute UtopiaScript code. */
 class Utopia
 {
@@ -70,7 +70,7 @@ class Utopia
 	/**
 	 * @param resource $input_stream NULL to disable the STDIN reads.
 	 * @param resource|string $output Stream to write standard output to, "echo" to use PHP's `echo` function (= STDOUT in CLI), "keep" to write to Utopia::$last_output, or "suppress" to suppress output.
-	 * @param resource|string $error_output Stream to write error output to, "stderr" to use STDERR, "keep" to write to Utopia::$last_error_output, or "suppress" to suppress output.
+	 * @param resource|string $error_output Stream to write error output to, "stderr" to use STDERR, "keep" to write to Utopia::$last_error_output, "keep_mix" to write to Utopia::$last_output, or "suppress" to suppress output.
 	 */
 	function __construct($input_stream = null, $output = "echo", $error_output = "stderr")
 	{
@@ -149,6 +149,10 @@ class Utopia
 			'output' => PrintStatement::class,
 			'print_line' => PrintLineStatement::class,
 			'println' => PrintLineStatement::class,
+			'print_error' => PrintErrorStatement::class,
+			'printerr' => PrintErrorStatement::class,
+			'print_error_line' => PrintErrorLineStatement::class,
+			'printerrln' => PrintErrorLineStatement::class,
 			'read' => ReadStatement::class,
 			// Time
 			'time' => TimeStatement::class,
@@ -394,6 +398,14 @@ class Utopia
 						else if($literal == '' && $statement instanceof WhileStatement)
 						{
 							$statement = new WhileNotStatement();
+						}
+						else if($literal == '' && $statement instanceof PrintLineStatement)
+						{
+							$statement = new PrintErrorLineStatement();
+						}
+						else if($literal == '' && $statement instanceof PrintStatement)
+						{
+							$statement = new PrintErrorStatement();
 						}
 						else
 						{
@@ -680,6 +692,7 @@ class Utopia
 					break;
 				case "no":
 				case "none":
+				case "ignore":
 				case "suppress":
 					break;
 				default:
@@ -1097,19 +1110,23 @@ class Utopia
 		{
 			if(!is_string($this->error_output))
 			{
-				throw new InvalidEnvironmentException("Invalid error output type: ".gettype($this->output));
+				throw new InvalidEnvironmentException("Invalid error output type: ".gettype($this->error_output));
 			}
-			switch($this->output)
+			switch($this->error_output)
 			{
 				case "keep":
 					$this->last_error_output .= $str;
 					break;
+				case "keep_mix":
+					$this->last_output .= $str;
+					break;
 				case "no":
 				case "none":
+				case "ignore":
 				case "suppress":
 					break;
 				default:
-					throw new InvalidEnvironmentException("Invalid error output method: ".$this->output);
+					throw new InvalidEnvironmentException("Invalid error output method: ".$this->error_output);
 			}
 		}
 	}

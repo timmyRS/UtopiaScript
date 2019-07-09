@@ -6,6 +6,8 @@
 - Standard Input/Output (STDIO)
     - [print](print)
     - [print_line](print_line)
+    - print_error
+    - print_error_line
     - [read](read)
 - [Declaration](declaration/)
 - Variable Action

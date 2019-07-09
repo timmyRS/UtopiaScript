@@ -5,6 +5,21 @@ use UtopiaScript\
 class PrintStatement extends OneStringParamStatement
 {
 	/**
+	 * @var boolean $line
+	 */
+	public $line;
+	/**
+	 * @var boolean $error
+	 */
+	public $error;
+
+	function __construct(bool $line = false, bool $error = false)
+	{
+		$this->line = $line;
+		$this->error = $error;
+	}
+
+	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 * @return Statement
@@ -17,18 +32,23 @@ class PrintStatement extends OneStringParamStatement
 	{
 		$this->_execute($utopia, $local_vars);
 		$str = Utopia::strval($this->value);
-		if($this instanceof PrintLineStatement)
+		if($this->line)
 		{
 			$str .= "\r\n";
 		}
+		$ret = new StringStatement($str);
 		if($utopia->debug)
 		{
-			$utopia->say("<output>".$str."</output>");
+			$str = "<output>$str</output>";
+		}
+		if($this->error)
+		{
+			$utopia->complain($str);
 		}
 		else
 		{
 			$utopia->say($str);
 		}
-		return new StringStatement($str);
+		return $ret;
 	}
 }

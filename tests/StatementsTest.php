@@ -47,7 +47,37 @@ EOC
 		] as $statement)
 		{
 			$utopia->parseAndExecute($statement.'"Hi";');
-			Nose::assertEquals("Hi\r\n", $utopia->last_output);
+			Nose::assertEquals($utopia->last_output, "Hi\r\n");
+		}
+	}
+
+	function testPrintError()
+	{
+		$utopia = new Utopia(null, "ignore", "keep");
+		foreach([
+			"print_error ",
+			"print_error",
+			"<!"
+		] as $statement)
+		{
+			$utopia->parseAndExecute($statement.'"Hi";');
+			Nose::assertEquals($utopia->last_output, "");
+			Nose::assertEquals($utopia->last_error_output, "Hi");
+		}
+	}
+
+	function testPrintErrorLine()
+	{
+		$utopia = new Utopia(null, "ignore", "keep_mix");
+		foreach([
+			"print_error_line ",
+			"print_error_line",
+			"<<!"
+		] as $statement)
+		{
+			$utopia->parseAndExecute($statement.'"Hi";');
+			Nose::assertEquals($utopia->last_output, "Hi\r\n");
+			Nose::assertEquals($utopia->last_error_output, "");
 		}
 	}
 
