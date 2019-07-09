@@ -436,6 +436,7 @@ class Utopia
 					case '^':
 					case '%':
 					case '|':
+					case '≠':
 					case '≤':
 					case '≥':
 						$this->specialCharacter($chars[$i], $literal, $statement, $local_vars, $ret);

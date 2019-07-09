@@ -203,6 +203,7 @@ abstract class VariableStatement extends Statement
 						case 'strictly_equal_to':
 							$this->setAction(self::ACTION_STRICT_EQUALS);
 							break;
+						case '≠':
 						case 'not_equal_to':
 						case 'doesnt_equal':
 						case 'does_not_equal':
