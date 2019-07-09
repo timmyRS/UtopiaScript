@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Variable\BooleanStatement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Variable\BooleanStatement, Utopia};
 abstract class OneBooleanParamStatement extends OneValueParamStatement
 {
 	/**
@@ -17,7 +17,7 @@ abstract class OneBooleanParamStatement extends OneValueParamStatement
 		parent::_execute($utopia, $local_vars);
 		if(!$this->value instanceof BooleanStatement)
 		{
-			throw new InvalidCodeException(get_called_class()." only accepts booleans");
+			throw new InvalidTypeException(get_called_class()." only accepts booleans");
 		}
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Stdio;
 use UtopiaScript\
-{Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Statement\OneOptionalLiteralParamStatement, Statement\Statement, Utopia};
+{Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\MissingInputException, Statement\OneOptionalLiteralParamStatement, Statement\Statement, Utopia};
 class ReadStatement extends OneOptionalLiteralParamStatement
 {
 	/**
@@ -15,7 +15,7 @@ class ReadStatement extends OneOptionalLiteralParamStatement
 	{
 		if($utopia->input_stream === null)
 		{
-			throw new InvalidEnvironmentException("Read only works in Utopias with input streams");
+			throw new MissingInputException("Read only works in Utopias with input streams");
 		}
 		$start = microtime(true);
 		$val = Utopia::internalize(rtrim(fgets($utopia->input_stream), "\r\n"));

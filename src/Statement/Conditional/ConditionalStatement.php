@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Conditional;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\OnlyLiteralParamsStatement, Statement\Statement, Statement\Variable\BooleanStatement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\OnlyLiteralParamsStatement, Statement\Statement, Statement\Variable\BooleanStatement, Utopia};
 abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 {
 	public $condition;
@@ -98,7 +98,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 				$ret = Utopia::externalize($utopia->parseAndExecuteWithWritableLocalVars($this->condition, $local_vars));
 				if(!is_bool($ret))
 				{
-					throw new InvalidCodeException("Condition returned ".gettype($ret).", expected boolean");
+					throw new InvalidTypeException("Condition returned ".gettype($ret).", expected boolean");
 				}
 				if(!$ret)
 				{

@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
 class FunctionStatement extends VariableStatement
 {
 	public $params;
@@ -84,7 +84,7 @@ class FunctionStatement extends VariableStatement
 			assert($param_value instanceof VariableStatement);
 			if($param["type"] != "any_type" && $param["type"] != $param_value->getType())
 			{
-				throw new InvalidCodeException("Parameter ".$param["name"]." has to be of type ".$param["type"]);
+				throw new InvalidTypeException("Parameter ".$param["name"]." has to be of type ".$param["type"]);
 			}
 			$local_vars_[$param["name"]] = new Variable($param_value, true);
 			$i++;

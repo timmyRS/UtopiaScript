@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Statement, Utopia};
 class ArrayDeclarationStatement extends Statement
 {
 	/**
@@ -54,7 +54,6 @@ class ArrayDeclarationStatement extends Statement
 
 	/**
 	 * @param $value
-	 * @throws InvalidCodeException
 	 */
 	private function accept($value)
 	{
@@ -74,7 +73,7 @@ class ArrayDeclarationStatement extends Statement
 			{
 				if(!ArrayStatement::isValidKey($key))
 				{
-					throw new InvalidCodeException($key->getType()." can't be an array key");
+					throw new InvalidTypeException($key->getType()." can't be an array key");
 				}
 				$key = $key->value;
 			}

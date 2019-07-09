@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Declaration;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
 abstract class InitialDeclarationStatement extends DeclarationStatement
 {
 	/**
@@ -60,7 +60,7 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 		{
 			if($this->strict_type != "any_type" && array_key_exists($this->name, $utopia->vars) && $utopia->vars[$this->name]->strict_type != "any_type" && $utopia->vars[$this->name]->strict_type != $this->strict_type)
 			{
-				throw new InvalidCodeException($this->name." is already bound to be ".$utopia->vars[$this->name]->strict_type.", so it can't/shouldn't be changed to ".$this->strict_type);
+				throw new InvalidTypeException($this->name." is already bound to be ".$utopia->vars[$this->name]->strict_type.", so it can't/shouldn't be changed to ".$this->strict_type);
 			}
 			$utopia->vars[$this->name] = new Variable($this->value, $this->final, $this->strict_type);
 		}
@@ -68,7 +68,7 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 		{
 			if($this->strict_type != "any_type" && array_key_exists($this->name, $local_vars) && $local_vars[$this->name]->strict_type != "any_type" && $local_vars[$this->name]->strict_type != $this->strict_type)
 			{
-				throw new InvalidCodeException($this->name." is already bound to be ".$local_vars[$this->name]->strict_type.", so it can't/shouldn't be changed to ".$this->strict_type);
+				throw new InvalidTypeException($this->name." is already bound to be ".$local_vars[$this->name]->strict_type.", so it can't/shouldn't be changed to ".$this->strict_type);
 			}
 			$local_vars[$this->name] = new Variable($this->value, $this->final, $this->strict_type);
 		}

@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Declaration;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Statement\Variable\NullStatement, Statement\Variable\VariableStatement, Utopia};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Statement, Statement\Variable\NullStatement, Statement\Variable\VariableStatement, Utopia};
 abstract class DeclarationStatement extends Statement
 {
 	/**
@@ -123,7 +123,7 @@ abstract class DeclarationStatement extends Statement
 		}
 		if(!$this->value instanceof VariableStatement)
 		{
-			throw new InvalidCodeException("Declaration expected variable, got ".get_class($this->value));
+			throw new InvalidTypeException("Declaration expected variable, got ".get_class($this->value));
 		}
 	}
 }

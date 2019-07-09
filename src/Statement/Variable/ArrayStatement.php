@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
 class ArrayStatement extends VariableStatement
 {
 	const ACTION_FOR_EACH = 1;
@@ -61,7 +61,7 @@ class ArrayStatement extends VariableStatement
 			{
 				if(!$value instanceof ArrayStatement && !$value instanceof NumberStatement)
 				{
-					throw new InvalidCodeException("Array doesn't accept ".$value->getType()." in this context");
+					throw new InvalidTypeException("Array doesn't accept ".$value->getType()." in this context");
 				}
 				$this->action_data["b"] = $value->value;
 			}
@@ -72,7 +72,7 @@ class ArrayStatement extends VariableStatement
 					{
 						if(!self::isValidKey($value))
 						{
-							throw new InvalidCodeException($value->getType()." can't be an array key");
+							throw new InvalidTypeException($value->getType()." can't be an array key");
 						}
 						if(!array_key_exists($value->value, $this->value))
 						{
@@ -92,7 +92,7 @@ class ArrayStatement extends VariableStatement
 						$this->action_data["key"] = $value->value;
 						return;
 					}
-					throw new InvalidCodeException("Array doesn't accept ".$value->getType()." in this context");
+					throw new InvalidTypeException("Array doesn't accept ".$value->getType()." in this context");
 				default:
 					throw new InvalidCodeException("Array doesn't accept values in this context");
 			}
@@ -229,7 +229,7 @@ class ArrayStatement extends VariableStatement
 				case self::ACTION_FOR_EACH:
 					if($this->action_data["var_name"] === null || $this->action_data["func"] === null)
 					{
-						throw new InvalidCodeException("Foreach action was not finished");
+						throw new IncompleteCodeException("Foreach action was not finished");
 					}
 					$names = ["var_name"];
 					if($this->action_data["key_name"] !== null)

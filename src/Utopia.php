@@ -321,7 +321,7 @@ class Utopia
 						}
 						else if($literal == '' && $statement instanceof PrintLineStatement && !$statement->isExecutable())
 						{
-							throw new InvalidCodeException("Too much <");
+							throw new InvalidCodeException("Unexpected <");
 						}
 						else if($literal == '' && $statement instanceof PrintStatement && !$statement->isExecutable())
 						{

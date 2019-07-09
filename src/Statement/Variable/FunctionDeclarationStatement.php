@@ -1,7 +1,7 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
-{Exception\InvalidCodeException, Statement\ConsistentParamsStatement, Statement\Statement, Utopia};
+{Exception\InvalidCodeException, Exception\InvalidTypeException, Statement\ConsistentParamsStatement, Statement\Statement, Utopia};
 class FunctionDeclarationStatement extends ConsistentParamsStatement
 {
 	public $params = ["required" => [[]]];
@@ -46,13 +46,12 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 	 * @param VariableStatement $value
 	 * @param Utopia $utopia
 	 * @param array $local_vars
-	 * @throws InvalidCodeException
 	 */
 	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
 	{
 		if(get_class($value) != StringStatement::class)
 		{
-			throw new InvalidCodeException("Function body can't be ".$value->getType());
+			throw new InvalidTypeException("Function body can't be ".$value->getType());
 		}
 		$this->body = $value->value;
 	}
