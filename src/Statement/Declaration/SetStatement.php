@@ -15,6 +15,7 @@ final class SetStatement extends DeclarationStatement
 	 */
 	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
+		$utopia->scrutinizeVariableName($this->name, $local_vars);
 		$this->_execute($utopia, $local_vars);
 		if(array_key_exists($this->name, $local_vars))
 		{
