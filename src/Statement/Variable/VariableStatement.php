@@ -16,6 +16,7 @@ abstract class VariableStatement extends Statement
 	const ACTION_LESS_OR_EQUALS = -107;
 	/**
 	 * The name of the variable this variable is being stored as or null if not applicable.
+	 *
 	 * @var string|null $name
 	 */
 	public $name;

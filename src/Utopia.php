@@ -174,26 +174,6 @@ class Utopia
 		];
 	}
 
-	static function strval($value): string
-	{
-		return $value instanceof VariableStatement ? $value->__toString() : strval(Utopia::externalize($value));
-	}
-
-	/**
-	 * @param Statement $value
-	 * @return mixed
-	 */
-	static function externalize($value)
-	{
-		$value = self::unwrap($value);
-		return $value instanceof VariableStatement ? $value->externalize() : $value;
-	}
-
-	static function unwrap($value, bool $preserve_exit = false)
-	{
-		return ($preserve_exit ? $value instanceof ReturnStatement : $value instanceof ExitStatement) ? self::unwrap($value->value) : $value;
-	}
-
 	static function isStatementExecutionSafe(Statement $statement): bool
 	{
 		return !$statement instanceof StringStatement || !$statement->exec;
@@ -1125,6 +1105,26 @@ class Utopia
 			}
 		}
 		throw new IncompleteCodeException("Code unexpectedly ended whilst reading array");
+	}
+
+	static function strval($value): string
+	{
+		return $value instanceof VariableStatement ? $value->__toString() : strval(Utopia::externalize($value));
+	}
+
+	/**
+	 * @param Statement $value
+	 * @return mixed
+	 */
+	static function externalize($value)
+	{
+		$value = self::unwrap($value);
+		return $value instanceof VariableStatement ? $value->externalize() : $value;
+	}
+
+	static function unwrap($value, bool $preserve_exit = false)
+	{
+		return ($preserve_exit ? $value instanceof ReturnStatement : $value instanceof ExitStatement) ? self::unwrap($value->value) : $value;
 	}
 
 	/**

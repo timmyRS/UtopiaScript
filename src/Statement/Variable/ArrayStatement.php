@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUndefinedMethodInspection */
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
 {Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Declaration\SetStatement, Statement\Statement, Utopia, Variable};
