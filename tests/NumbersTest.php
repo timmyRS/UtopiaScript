@@ -43,7 +43,11 @@ class NumbersTest
 	function testFactorial()
 	{
 		$utopia = new Utopia();
-		foreach(["!", " factorial", " fact"] as $action)
+		foreach([
+			"!",
+			" factorial",
+			" fact"
+		] as $action)
 		{
 			Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute('3'.$action)), 6);
 		}

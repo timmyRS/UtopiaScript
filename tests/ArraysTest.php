@@ -28,7 +28,7 @@ local data [
 data age = (data age) + 1;
 print (data name) " is " (data age) " years old!";
 EOC
-);
+		);
 		Nose::assertEquals($utopia->last_output, "Tim is 18 years old!");
 	}
 
@@ -48,7 +48,7 @@ a for_each item {
 };
 print get_type item = "undefined";
 EOC
-);
+		);
 		Nose::assertEquals($utopia->last_output, "1 2 3 true");
 	}
 
@@ -58,7 +58,7 @@ EOC
 		$utopia->parseAndExecute(<<<EOC
 print [1, 2] + [3 3];
 EOC
-);
+		);
 		Nose::assertEquals($utopia->last_output, "array 4 5");
 	}
 
