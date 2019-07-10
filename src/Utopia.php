@@ -47,8 +47,8 @@ class Utopia
 	 */
 	public $last_execution_time = 0;
 	/**
-	 * The maximum total of seconds a script may take to execute, excluding STDIN reads.
-	 * Use 0 to disable the maximum execution time restriction.
+	 * The maximum amount of seconds a script may take to execute, excluding STDIN reads.
+	 * Use 0 to disable the execution time restriction.
 	 *
 	 * @var float $maximum_execution_time
 	 */
@@ -296,7 +296,7 @@ class Utopia
 			}
 			else if($this->maximum_execution_time > 0 && $this->maximum_execution_time < microtime(true) - $this->execute_start - $this->input_time)
 			{
-				throw new TimeoutException("Script took more than ".$this->maximum_execution_time." seconds to finish");
+				throw new TimeoutException("Script took more than ".$this->maximum_execution_time." second".($this->maximum_execution_time == 1 ? "" : "s")." to finish");
 			}
 			$chars = preg_split('//u', $code, null, PREG_SPLIT_NO_EMPTY);
 			$end_i = count($chars);

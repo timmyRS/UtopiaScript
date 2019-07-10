@@ -1,7 +1,8 @@
 <?php
 $flags = [
-    "repl" => false,
+	"repl" => false,
 	"stopwatch" => false,
+	"time-limit" => 0,
 	"debug" => false,
 	"php-statement" => false,
 	"help" => false
@@ -11,34 +12,34 @@ function switchArg(string $arg) : bool
 	global $flags;
 	switch($arg)
 	{
-        case "-i":
-        case "repl":
-        case "--repl":
-        case "interactive":
-        case "--interactive":
-            $flags["repl"] = true;
-            break;
+		case "-i":
+		case "repl":
+		case "--repl":
+		case "interactive":
+		case "--interactive":
+			$flags["repl"] = true;
+			break;
 
-        case "-t":
-        case "--time":
-        case "stopwatch":
-        case "--stopwatch":
-            $flags["stopwatch"] = true;
-            break;
+		case "-t":
+		case "--time":
+		case "stopwatch":
+		case "--stopwatch":
+			$flags["stopwatch"] = true;
+			break;
 
-        case "-d":
-        case "debug":
-        case "--debug":
-        case "--debug-mode":
-            $flags["debug"] = true;
-            break;
+		case "-d":
+		case "debug":
+		case "--debug":
+		case "--debug-mode":
+			$flags["debug"] = true;
+			break;
 
-	    case "-p":
-        case "--enable-php-statement":
-            $flags["php-statement"] = true;
-            break;
+		case "-p":
+		case "--enable-php-statement":
+			$flags["php-statement"] = true;
+			break;
 
-        case "?":
+		case "?":
 		case "-?":
 		case "help":
 		case "--help":
@@ -64,26 +65,39 @@ for($i = 1; $i < count($argv); $i++)
 	}
 	else if(!switchArg($arg))
 	{
-		$file = $arg;
+		if(substr($arg, 0, 13) == "--time-limit=")
+		{
+			$flags["time-limit"] = floatval(substr($arg, 13));
+		}
+		else
+		{
+			$file = $arg;
+		}
 	}
 }
 if($flags["help"] || (!$file && !$flags["repl"]))
 {
-	die("Syntax: utopia [file] [-i|--repl|--interactive] [-t|--stopwatch] [-d|--debug] [-p|--enable-php-statement] [file]\r\nEither --repl or [file] has to be given.\r\n");
+	die("Syntax: utopia [file] [-i|--repl|--interactive] [-d|--debug] [-t|--stopwatch] [--time-limit=<seconds>] [-p|--enable-php-statement]\r\nEither --repl or [file] has to be given.\r\n");
 }
 if(!is_file(__DIR__."/vendor/autoload.php"))
 {
-    passthru("composer dump-autoload -o -d \"".__DIR__."\"");
+	echo "vendor/autoload.php was not found, attempting to generate it...\n";
+	passthru("composer dump-autoload -o -d \"".__DIR__."\"");
+	if(!is_file(__DIR__."/vendor/autoload.php"))
+	{
+		die("Welp, that didn't work. Try again as root/administrator.\n");
+	}
 }
 require __DIR__."/vendor/autoload.php";
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Statement\ExitStatement, Utopia};
 $utopia = new Utopia(fopen("php://stdin", "r"));
 $utopia->debug = $flags["debug"];
+$utopia->maximum_execution_time = $flags["time-limit"];
 $utopia->loadExtension(UtopiaScriptDebugExtension\DebugExtension::class);
 if($flags["php-statement"])
 {
-    $utopia->loadExtension(UtopiaScriptPhpStatementExtension\PhpStatementExtension::class);
+	$utopia->loadExtension(UtopiaScriptPhpStatementExtension\PhpStatementExtension::class);
 }
 if($flags["repl"])
 {
@@ -144,7 +158,7 @@ if($flags["repl"])
 		}
 		if($flags["stopwatch"])
 		{
-		    echo "Parsed and executed in ".($utopia->last_execution_time)." seconds.\r\n";
+			echo "Parsed and executed in ".($utopia->last_execution_time)." seconds.\r\n";
 		}
 		echo '> ';
 	}
@@ -152,20 +166,20 @@ if($flags["repl"])
 }
 else
 {
-    try
-    {
-	    $utopia->parseAndExecute(file_get_contents($file));
-	    if($flags["stopwatch"])
-        {
-            echo "\r\nParsed and executed in ".($utopia->last_execution_time)." seconds.\r\n";
-        }
+	try
+	{
+		$utopia->parseAndExecute(file_get_contents($file));
+		if($flags["stopwatch"])
+		{
+			echo "\r\nParsed and executed in ".($utopia->last_execution_time)." seconds.\r\n";
+		}
 	}
 	catch(Exception $e)
 	{
-	    echo get_class($e).': '.$e->getMessage()."\r\n";
-	    if($flags["debug"])
-	    {
-	        echo $e->getTraceAsString()."\r\n";
-	    }
+		echo get_class($e).': '.$e->getMessage()."\r\n";
+		if($flags["debug"])
+		{
+			echo $e->getTraceAsString()."\r\n";
+		}
 	}
 }
