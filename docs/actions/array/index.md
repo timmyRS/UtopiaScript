@@ -2,8 +2,10 @@
 
 - Implicit
     - get_value
+    - set_value
 - Explicit
     - get_value
+    - set_value
     - for_each
     - [plus](../number/plus)
     - [minus](../number/minus)

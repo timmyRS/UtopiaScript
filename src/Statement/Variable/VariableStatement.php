@@ -14,6 +14,11 @@ abstract class VariableStatement extends Statement
 	const ACTION_GREATER_OR_EQUALS = -105;
 	const ACTION_LESS = -106;
 	const ACTION_LESS_OR_EQUALS = -107;
+	/**
+	 * The name of the variable this variable is being stored as or null if not applicable.
+	 * @var string|null $name
+	 */
+	public $name;
 	public $value;
 	/**
 	 * @var int $action
@@ -65,7 +70,7 @@ abstract class VariableStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -115,7 +120,7 @@ abstract class VariableStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->_acceptLiteral($literal))
 		{
@@ -281,7 +286,7 @@ abstract class VariableStatement extends Statement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array $local_vars = [])
+	function _execute(Utopia &$utopia, array &$local_vars = [])
 	{
 		if($this->action < -99)
 		{

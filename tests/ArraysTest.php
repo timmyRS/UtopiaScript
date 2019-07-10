@@ -17,6 +17,21 @@ class ArraysTest
 		], Utopia::externalize($utopia->parseAndExecute('array "1" 2 [true null]')));
 	}
 
+	function testChangeKeyValue()
+	{
+		$utopia = new Utopia(null, "keep");
+		$utopia->parseAndExecute(<<<EOC
+local data [
+    name: "Tim"
+    age: 17
+];
+data age = (data age) + 1;
+print (data name) " is " (data age) " years old!";
+EOC
+);
+		Nose::assertEquals($utopia->last_output, "Tim is 18 years old!");
+	}
+
 	function testToString()
 	{
 		$utopia = new Utopia();

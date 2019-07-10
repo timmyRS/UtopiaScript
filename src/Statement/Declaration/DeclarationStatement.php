@@ -71,7 +71,7 @@ abstract class DeclarationStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->name === null)
 		{
@@ -79,11 +79,10 @@ abstract class DeclarationStatement extends Statement
 		}
 		else if($this->value === null)
 		{
-			if($literal == '=')
+			if($literal != '=')
 			{
-				return;
+				$this->value = $literal;
 			}
-			$this->value = $literal;
 		}
 		else if(gettype($this->value) == "string")
 		{
@@ -125,5 +124,6 @@ abstract class DeclarationStatement extends Statement
 		{
 			throw new InvalidTypeException("Declaration expected variable, got ".get_class($this->value));
 		}
+		$this->value->name = $this->name;
 	}
 }

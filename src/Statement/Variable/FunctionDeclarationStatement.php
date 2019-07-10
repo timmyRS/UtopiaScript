@@ -46,6 +46,7 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 	 * @param VariableStatement $value
 	 * @param Utopia $utopia
 	 * @param array $local_vars
+	 * @throws InvalidTypeException
 	 */
 	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{

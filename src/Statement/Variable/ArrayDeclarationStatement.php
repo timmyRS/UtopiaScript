@@ -54,8 +54,9 @@ class ArrayDeclarationStatement extends Statement
 
 	/**
 	 * @param $value
+	 * @throws InvalidTypeException
 	 */
-	private function accept($value)
+	function accept($value)
 	{
 		if($this->key)
 		{

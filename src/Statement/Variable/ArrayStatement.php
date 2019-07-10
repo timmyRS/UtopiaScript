@@ -1,11 +1,13 @@
 <?php
 namespace UtopiaScript\Statement\Variable;
 use UtopiaScript\
-{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Statement, Utopia, Variable};
+{Exception\IncompleteCodeException, Exception\InvalidCodeException, Exception\InvalidEnvironmentException, Exception\InvalidTypeException, Exception\TimeoutException, Statement\Declaration\SetStatement, Statement\Statement, Utopia, Variable};
 class ArrayStatement extends VariableStatement
 {
 	const ACTION_FOR_EACH = 1;
 	const ACTION_VALUE_OF_KEY = 2;
+	const ACTION_GET_VALUE_OF_KEY = 3;
+	const ACTION_SET_VALUE_OF_KEY = 4;
 	const ACTION_ADD = 100;
 	const ACTION_SUB = 101;
 	const ACTION_MUL = 102;
@@ -23,7 +25,20 @@ class ArrayStatement extends VariableStatement
 
 	function isFinished(): bool
 	{
-		return $this->action != 0 && $this->isExecutable() && ($this->action != self::ACTION_FOR_EACH || $this->action_data["key_name"] !== null);
+		if(!$this->isExecutable())
+		{
+			return false;
+		}
+		switch($this->action)
+		{
+			case 0:
+			case self::ACTION_VALUE_OF_KEY:
+			case self::ACTION_SET_VALUE_OF_KEY:
+				return false;
+			case self::ACTION_FOR_EACH:
+				return $this->action_data["key_name"] !== null;
+		}
+		return true;
 	}
 
 	function isExecutable(): bool
@@ -37,7 +52,10 @@ class ArrayStatement extends VariableStatement
 			case self::ACTION_FOR_EACH:
 				return $this->action_data["var_name"] !== null && $this->action_data["func"] !== null;
 			case self::ACTION_VALUE_OF_KEY:
+			case self::ACTION_GET_VALUE_OF_KEY:
 				return $this->action_data["key"] !== null;
+			case self::ACTION_SET_VALUE_OF_KEY:
+				return $this->action_data["key"] !== null && $this->action_data["value"] !== null;
 		}
 		return parent::isExecutable();
 	}
@@ -67,29 +85,49 @@ class ArrayStatement extends VariableStatement
 			}
 			else switch($this->action)
 			{
-				case self::ACTION_VALUE_OF_KEY:
+				case self::ACTION_GET_VALUE_OF_KEY:
+					if(!self::isValidKey($value))
+					{
+						throw new InvalidTypeException($value->getType()." can't be an array key");
+					}
+					$this->action_data["key"] = $value->value;
+					break;
+				/** @noinspection PhpMissingBreakStatementInspection */ case self::ACTION_SET_VALUE_OF_KEY:
 					if($this->action_data["key"] === null)
 					{
 						if(!self::isValidKey($value))
 						{
 							throw new InvalidTypeException($value->getType()." can't be an array key");
 						}
-						if(!array_key_exists($value->value, $this->value))
-						{
-							throw new InvalidCodeException("Array doesn't have a value with key ".$value->value);
-						}
 						$this->action_data["key"] = $value->value;
+						break;
+					}
+				case self::ACTION_VALUE_OF_KEY:
+					if($this->action_data["value"] instanceof Statement)
+					{
+						$this->action_data["value"]->acceptValue($value, $utopia, $local_vars);
+						if($this->action_data["value"]->isFinished())
+						{
+							$this->action_data["value"] = $this->action_data["value"]->execute($utopia, $local_vars);
+						}
+					}
+					else if($this->action_data["value"] === null)
+					{
+						$this->action_data["value"] = $value;
+					}
+					else
+					{
+						$this->action_data["value"] .= " ".$value->toLiteral();
 					}
 					break;
 				case 0:
 					if(self::isValidKey($value))
 					{
-						if(!array_key_exists($value->value, $this->value))
-						{
-							throw new InvalidCodeException("Array doesn't have a value with key ".$value->value);
-						}
 						$this->action = self::ACTION_VALUE_OF_KEY;
-						$this->action_data["key"] = $value->value;
+						$this->action_data = [
+							"key" => $value->value,
+							"value" => null
+						];
 						return;
 					}
 					throw new InvalidTypeException("Array doesn't accept ".$value->getType()." in this context");
@@ -125,30 +163,45 @@ class ArrayStatement extends VariableStatement
 					if($this->action_data["var_name"] === null)
 					{
 						$this->action_data["var_name"] = $literal;
-						return;
 					}
 					else if($this->action_data["func"] === null)
 					{
 						$this->action_data["func"] = $literal;
-						return;
 					}
 					else if($this->action_data["key_name"] === null)
 					{
 						$this->action_data["key_name"] = $this->action_data["var_name"];
 						$this->action_data["var_name"] = $this->action_data["func"];
 						$this->action_data["func"] = $literal;
-						return;
 					}
 					break;
+				case self::ACTION_GET_VALUE_OF_KEY:
+					$this->action_data["key"] = $literal;
+					break;
 				case self::ACTION_VALUE_OF_KEY:
+				case self::ACTION_SET_VALUE_OF_KEY:
 					if($this->action_data["key"] === null)
 					{
-						if(!array_key_exists($literal, $this->value))
-						{
-							throw new InvalidCodeException("Array doesn't have a value with key ".$literal);
-						}
 						$this->action_data["key"] = $literal;
-						return;
+					}
+					else if($this->action_data["value"] instanceof Statement)
+					{
+						$this->action_data["value"]->acceptLiteral($literal, $utopia, $local_vars);
+						if($this->action_data["value"]->isFinished())
+						{
+							$this->action_data["value"] = $this->action_data["value"]->execute($utopia, $local_vars);
+						}
+					}
+					else if($this->action_data["value"] === null)
+					{
+						if($literal != '=')
+						{
+							$this->action_data["value"] = $literal;
+						}
+					}
+					else
+					{
+						$this->action_data["value"] .= " ".$literal;
 					}
 					break;
 				case 0:
@@ -166,16 +219,20 @@ class ArrayStatement extends VariableStatement
 								"func" => null
 							];
 							break;
-						case '.':
-						case ':':
-						case 'value_of':
-						case 'valueof':
 						case 'get':
 						case 'getvalue':
 						case 'get_value':
-						case 'value':
-							$this->action = self::ACTION_VALUE_OF_KEY;
+							$this->action = self::ACTION_GET_VALUE_OF_KEY;
 							$this->action_data = ["key" => null];
+							break;
+						case 'set':
+						case 'setvalue':
+						case 'set_value':
+							$this->action = self::ACTION_SET_VALUE_OF_KEY;
+							$this->action_data = [
+								"key" => null,
+								"value" => null
+							];
 							break;
 						case '+':
 						case 'plus':
@@ -197,7 +254,10 @@ class ArrayStatement extends VariableStatement
 							if(array_key_exists($literal, $this->value))
 							{
 								$this->action = self::ACTION_VALUE_OF_KEY;
-								$this->action_data = ["key" => $literal];
+								$this->action_data = [
+									"key" => $literal,
+									"value" => null
+								];
 								break;
 							}
 							throw new InvalidCodeException("Invalid action or key: ".$literal);
@@ -224,7 +284,13 @@ class ArrayStatement extends VariableStatement
 		$ret = $this->_execute($utopia, $local_vars);
 		if($ret === null)
 		{
-			switch($this->action)
+			$action = $this->action;
+			$this->action = 0;
+			if($action == self::ACTION_VALUE_OF_KEY)
+			{
+				$action = $this->action_data["value"] === null ? self::ACTION_GET_VALUE_OF_KEY : self::ACTION_SET_VALUE_OF_KEY;
+			}
+			switch($action)
 			{
 				case self::ACTION_FOR_EACH:
 					if($this->action_data["var_name"] === null || $this->action_data["func"] === null)
@@ -251,13 +317,33 @@ class ArrayStatement extends VariableStatement
 						$utopia->parseAndExecute($this->action_data["func"], $local_vars_);
 					}
 					break;
-				case self::ACTION_VALUE_OF_KEY:
-					if($this->action_data["key"] === null)
+				case self::ACTION_GET_VALUE_OF_KEY:
+					if(!array_key_exists($this->action_data["key"], $this->value))
 					{
-						throw new InvalidCodeException("Value of key action was not finished");
+						throw new InvalidCodeException("Array doesn't have a value with key ".$this->action_data["key"]);
 					}
-					$ret = $this->value[$this->action_data["key"]];
+					$ret = clone $this->value[$this->action_data["key"]];
 					break;
+				case self::ACTION_SET_VALUE_OF_KEY:
+					if(!$this->action_data["value"] instanceof Statement)
+					{
+						$this->action_data["value"] = $utopia->parseAndExecuteWithWritableLocalVars($this->action_data["value"], $local_vars);
+					}
+					else if($this->action_data["value"]->isExecutable() && Utopia::isStatementExecutionSafe($this->action_data["value"]))
+					{
+						$this->action_data["value"] = $this->action_data["value"]->execute($utopia, $local_vars);
+					}
+					if(!$this->action_data["value"] instanceof VariableStatement)
+					{
+						throw new InvalidTypeException("Expected variable, got ".get_class($this->action_data["value"]));
+					}
+					$ret = $this->value[$this->action_data["key"]] = $this->action_data["value"];
+					$this->action_data = null;
+					$set = new SetStatement();
+					$set->name = $this->name;
+					$set->value = $this;
+					$set->execute($utopia, $local_vars);
+					return $ret;
 				case self::ACTION_ADD:
 					$ret = NumberStatement::add($this->value, $this->action_data["b"]);
 					break;
@@ -270,7 +356,6 @@ class ArrayStatement extends VariableStatement
 				case self::ACTION_DIV:
 					$ret = NumberStatement::div($this->value, $this->action_data["b"]);
 			}
-			$this->action = 0;
 			$this->action_data = null;
 		}
 		return $ret ?? $this;
@@ -282,7 +367,7 @@ class ArrayStatement extends VariableStatement
 		$i = 0;
 		foreach($this->value as $key => $item)
 		{
-			if($key != $i)
+			if($key !== $i)
 			{
 				$str .= " ".$key." =";
 			}
