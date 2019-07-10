@@ -9,7 +9,7 @@ final class DebugStatement extends OneBooleanParamStatement
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$utopia->debug = Utopia::externalize($this->value);
 		return new NullStatement();

@@ -45,7 +45,7 @@ abstract class DeclarationStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->value === null)
 		{
@@ -107,7 +107,7 @@ abstract class DeclarationStatement extends Statement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array &$local_vars = [])
+	function _execute(Utopia &$utopia, array &$local_vars = [])
 	{
 		if($this->value === null)
 		{

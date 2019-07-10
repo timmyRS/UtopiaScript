@@ -9,7 +9,7 @@ final class DumpStatement extends OneValueParamStatement
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		var_dump($this->value);
 		return new NullStatement();

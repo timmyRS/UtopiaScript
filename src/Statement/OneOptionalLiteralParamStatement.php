@@ -31,7 +31,7 @@ abstract class OneOptionalLiteralParamStatement extends OnlyLiteralParamsStateme
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		$this->arg = $literal;
 	}

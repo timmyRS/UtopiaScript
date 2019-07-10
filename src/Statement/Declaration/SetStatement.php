@@ -13,7 +13,7 @@ final class SetStatement extends DeclarationStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$this->_execute($utopia, $local_vars);
 		if(array_key_exists($this->name, $local_vars))

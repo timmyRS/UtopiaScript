@@ -19,7 +19,7 @@ abstract class OnlyLiteralParamsStatement extends Statement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 	}
 }

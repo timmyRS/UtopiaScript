@@ -16,12 +16,12 @@ class NullStatement extends VariableStatement
 		return "null";
 	}
 
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		throw new InvalidCodeException("Null doesn't accept values or literals");
 	}
 
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		throw new InvalidCodeException("Null doesn't accept literals or values");
 	}
@@ -35,7 +35,7 @@ class NullStatement extends VariableStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		return $this->_execute($utopia, $local_vars) ?? $this;
 	}

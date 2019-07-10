@@ -13,7 +13,7 @@ final class WhileStatement extends ConditionalStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		if($this->isConditionTrue($utopia, $local_vars))
 		{

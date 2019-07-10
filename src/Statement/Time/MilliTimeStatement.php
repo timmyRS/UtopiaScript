@@ -9,7 +9,7 @@ class MilliTimeStatement extends NoParamStatement
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		return new NumberStatement(microtime(true) * 1000);
 	}

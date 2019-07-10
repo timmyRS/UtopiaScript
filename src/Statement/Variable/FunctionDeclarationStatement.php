@@ -47,7 +47,7 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if(get_class($value) != StringStatement::class)
 		{
@@ -62,7 +62,7 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if(in_array($literal, [
 			":",
@@ -114,7 +114,7 @@ class FunctionDeclarationStatement extends ConsistentParamsStatement
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$type = $this->getCurrentparamType();
 		unset($this->params[$type][count($this->params[$type]) - 1]);

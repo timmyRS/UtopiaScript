@@ -37,7 +37,7 @@ class NumberStatement extends VariableStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -65,7 +65,7 @@ class NumberStatement extends VariableStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->_acceptLiteral($literal))
 		{
@@ -134,7 +134,7 @@ class NumberStatement extends VariableStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		if($this->action == self::ACTION_NOT)
 		{
@@ -187,7 +187,7 @@ class NumberStatement extends VariableStatement
 	 * @return ArrayStatement|NumberStatement
 	 * @throws InvalidCodeException
 	 */
-	static function add($a, $b)
+	static function add(&$a, &$b)
 	{
 		return self::performArithmetic($a, $b, function(&$a, &$b)
 		{
@@ -254,7 +254,7 @@ class NumberStatement extends VariableStatement
 	 * @return ArrayStatement|NumberStatement
 	 * @throws InvalidCodeException
 	 */
-	static function sub($a, $b)
+	static function sub(&$a, &$b)
 	{
 		return self::performArithmetic($a, $b, function(&$a, &$b)
 		{
@@ -268,7 +268,7 @@ class NumberStatement extends VariableStatement
 	 * @return ArrayStatement|NumberStatement
 	 * @throws InvalidCodeException
 	 */
-	static function mul($a, $b)
+	static function mul(&$a, &$b)
 	{
 		return self::performArithmetic($a, $b, function(&$a, &$b)
 		{
@@ -282,7 +282,7 @@ class NumberStatement extends VariableStatement
 	 * @return ArrayStatement|NumberStatement
 	 * @throws InvalidCodeException
 	 */
-	static function div($a, $b)
+	static function div(&$a, &$b)
 	{
 		return self::performArithmetic($a, $b, function(&$a, &$b)
 		{

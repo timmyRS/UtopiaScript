@@ -48,7 +48,7 @@ class FunctionStatement extends VariableStatement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		array_push($this->args, $value);
 	}
@@ -62,7 +62,7 @@ class FunctionStatement extends VariableStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$ret = $this->_execute($utopia, $local_vars);
 		if($ret !== null)

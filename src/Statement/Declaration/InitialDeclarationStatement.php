@@ -29,7 +29,7 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->name === null)
 		{
@@ -52,7 +52,7 @@ abstract class InitialDeclarationStatement extends DeclarationStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$utopia->scrutinizeVariableName($this->name, $this->global ? [] : $local_vars);
 		$this->_execute($utopia, $local_vars);

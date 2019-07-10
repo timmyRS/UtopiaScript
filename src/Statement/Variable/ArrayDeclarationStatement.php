@@ -47,7 +47,7 @@ class ArrayDeclarationStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		$this->accept($value);
 	}
@@ -92,7 +92,7 @@ class ArrayDeclarationStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($literal == ':' || $literal == '=')
 		{
@@ -117,7 +117,7 @@ class ArrayDeclarationStatement extends Statement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$arr = [];
 		foreach($this->arr as $key => $item)

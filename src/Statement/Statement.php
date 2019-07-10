@@ -31,19 +31,19 @@ abstract class Statement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	abstract function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars);
+	abstract function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars);
 
 	/**
 	 * @param string $literal
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	abstract function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars);
+	abstract function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars);
 
 	/**
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	abstract function execute(Utopia $utopia, array &$local_vars = []): Statement;
+	abstract function execute(Utopia &$utopia, array &$local_vars = []): Statement;
 }

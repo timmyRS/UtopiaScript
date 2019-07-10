@@ -12,7 +12,7 @@ abstract class OneStringParamStatement extends OneValueParamStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array &$local_vars = [])
+	function _execute(Utopia &$utopia, array &$local_vars = [])
 	{
 		parent::_execute($utopia, $local_vars);
 		if(!$this->value instanceof StringStatement)

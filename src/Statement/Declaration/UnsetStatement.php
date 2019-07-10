@@ -10,7 +10,7 @@ class UnsetStatement extends OneLiteralParamStatement
 	 * @return Statement
 	 * @throws InvalidCodeException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		if(array_key_exists($this->arg, $local_vars))
 		{

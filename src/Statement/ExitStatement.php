@@ -18,7 +18,7 @@ class ExitStatement extends OneValueParamStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$this->_execute($utopia, $local_vars);
 		return $this;

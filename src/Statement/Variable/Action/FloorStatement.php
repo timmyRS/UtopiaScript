@@ -9,7 +9,7 @@ class FloorStatement extends OneNumberParamStatement
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		return new NumberStatement(floor(Utopia::externalize($this->value)));
 	}

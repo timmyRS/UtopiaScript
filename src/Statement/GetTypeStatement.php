@@ -9,7 +9,7 @@ class GetTypeStatement extends OneParamStatement
 	 * @param array $local_vars
 	 * @return Statement
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		return new StringStatement($this->arg instanceof VariableStatement ? $this->arg->getType() : (array_key_exists($this->arg, $utopia->statements) ? "statement" : "undefined"), false);
 	}

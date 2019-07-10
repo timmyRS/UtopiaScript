@@ -13,7 +13,7 @@ final class PhpStatement extends OneStringParamStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$this->_execute($utopia, $local_vars);
 		return Utopia::internalize(eval(Utopia::externalize($this->value)));

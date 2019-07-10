@@ -13,7 +13,7 @@ final class IfStatement extends ConditionalStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		return $this->isConditionTrue($utopia, $local_vars) ? $this->_execute($utopia, $local_vars) : $this->false($utopia, $local_vars);
 	}

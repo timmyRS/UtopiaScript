@@ -26,7 +26,7 @@ class StringStatement extends VariableStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
@@ -40,7 +40,7 @@ class StringStatement extends VariableStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		$this->exec = false;
 		if($this->_acceptLiteral($literal))
@@ -80,7 +80,7 @@ class StringStatement extends VariableStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		$ret = $this->_execute($utopia, $local_vars);
 		if($ret !== null)

@@ -35,7 +35,7 @@ abstract class OneParamStatement extends ConsistentParamsStatement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		$this->arg = $value;
 	}
@@ -45,7 +45,7 @@ abstract class OneParamStatement extends ConsistentParamsStatement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		$this->arg = $literal;
 	}

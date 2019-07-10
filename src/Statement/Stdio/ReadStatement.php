@@ -11,7 +11,7 @@ class ReadStatement extends OneOptionalLiteralParamStatement
 	 * @throws InvalidCodeException
 	 * @throws InvalidEnvironmentException
 	 */
-	function execute(Utopia $utopia, array &$local_vars = []): Statement
+	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
 		if($utopia->input_stream === null)
 		{

@@ -46,7 +46,7 @@ abstract class OneValueParamStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptValue(VariableStatement $value, Utopia $utopia, array &$local_vars)
+	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->value === null)
 		{
@@ -72,7 +72,7 @@ abstract class OneValueParamStatement extends Statement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->value === null)
 		{
@@ -100,7 +100,7 @@ abstract class OneValueParamStatement extends Statement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array &$local_vars = [])
+	function _execute(Utopia &$utopia, array &$local_vars = [])
 	{
 		if($this->value !== null)
 		{

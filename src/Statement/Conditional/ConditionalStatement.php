@@ -35,7 +35,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	 * @param Utopia $utopia
 	 * @param array $local_vars
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->else)
 		{
@@ -75,7 +75,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function isConditionTrue(Utopia $utopia, array &$local_vars = [])
+	function isConditionTrue(Utopia &$utopia, array &$local_vars = [])
 	{
 		if($this->condition instanceof BooleanStatement)
 		{
@@ -118,7 +118,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function false(Utopia $utopia, array &$local_vars = [])
+	function false(Utopia &$utopia, array &$local_vars = [])
 	{
 		return $this->inverted_result ? $utopia->parseAndExecute($this->inverted_result, $local_vars) : new BooleanStatement(false);
 	}
@@ -132,7 +132,7 @@ abstract class ConditionalStatement extends OnlyLiteralParamsStatement
 	 * @throws InvalidEnvironmentException
 	 * @throws TimeoutException
 	 */
-	function _execute(Utopia $utopia, array &$local_vars = [])
+	function _execute(Utopia &$utopia, array &$local_vars = [])
 	{
 		return $utopia->parseAndExecute($this->result, $local_vars);
 	}

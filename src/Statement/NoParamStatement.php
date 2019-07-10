@@ -31,7 +31,7 @@ abstract class NoParamStatement extends OnlyLiteralParamsStatement
 	 * @param array $local_vars
 	 * @throws InvalidCodeException
 	 */
-	function acceptLiteral(string $literal, Utopia $utopia, array &$local_vars)
+	function acceptLiteral(string $literal, Utopia &$utopia, array &$local_vars)
 	{
 		throw new InvalidCodeException(get_called_class()." doesn't accept parameters");
 	}
