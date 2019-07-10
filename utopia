@@ -89,6 +89,7 @@ if($flags["repl"])
 {
 	$code = "";
 	$local_vars = [];
+	$utopia->error_output = "echo";
 	echo "UtopiaScript REPL (Read-eval-print loop)".($flags["debug"] ? " [Debug Mode]" : "")."\r\n";
 	if($file)
 	{
