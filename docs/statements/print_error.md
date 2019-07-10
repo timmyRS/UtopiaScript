@@ -1,6 +1,6 @@
 # print_error
 
-Aliases: `printerr`, `<!`
+Aliases: `printerr`, `<!`, `≤`
 
 Prints the given [string](../constructs#string) to the Utopia's error output and returns it, which can be seen via REPL:
 

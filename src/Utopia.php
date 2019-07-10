@@ -327,6 +327,10 @@ class Utopia
 						{
 							throw new InvalidCodeException("Unexpected <");
 						}
+						else if($literal == '' && $statement instanceof PrintErrorStatement && !$statement->isExecutable())
+						{
+							$statement = new PrintErrorLineStatement();
+						}
 						else if($literal == '' && $statement instanceof PrintStatement && !$statement->isExecutable())
 						{
 							$statement = new PrintLineStatement();
@@ -339,11 +343,21 @@ class Utopia
 					case '≤':
 						if($statement === null && $literal == '')
 						{
-							$statement = new PrintLineStatement();
+							$statement = new PrintErrorStatement();
 						}
 						else
 						{
 							$this->specialCharacter('≤', $literal, $statement, $local_vars, $ret);
+						}
+						break;
+					case '≪':
+						if($statement === null && $literal == '')
+						{
+							$statement = new PrintLineStatement();
+						}
+						else
+						{
+							$this->specialCharacter('≪', $literal, $statement, $local_vars, $ret);
 						}
 						break;
 					case '>':
