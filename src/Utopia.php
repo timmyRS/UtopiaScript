@@ -1063,11 +1063,19 @@ class Utopia
 			switch($chars[$i])
 			{
 				case '{':
+					if($this->debug)
+					{
+						$this->say('{');
+					}
 					$str .= '{'.$this->readBracketString($chars, $i, $end_i).'}';
 					break;
 				case '"':
 				case '\'':
 				case '`':
+					if($this->debug)
+					{
+						$this->say($chars[$i]);
+					}
 					$str .= $chars[$i].$this->readString($chars[$i], $chars, $i, $end_i).$chars[$i];
 					break;
 				case ';':
