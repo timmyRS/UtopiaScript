@@ -79,7 +79,7 @@ abstract class DeclarationStatement extends Statement
 		}
 		else if($this->value === null)
 		{
-			if($literal != '=')
+			if($literal != '=' && $literal != 'as')
 			{
 				$this->value = $literal;
 			}

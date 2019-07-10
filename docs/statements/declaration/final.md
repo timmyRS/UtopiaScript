@@ -1,7 +1,7 @@
 # final
 
 - Alias: `,`
-- Syntax: `final [type] <name> [[=] value]`
+- Syntax: `final [type] <name> [[=|as] value]`
 
 Declares an immutable [local](local) variable.
 

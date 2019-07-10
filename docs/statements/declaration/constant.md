@@ -1,7 +1,7 @@
 # constant
 
 - Aliases: `const`, `!`
-- Syntax: `constant [type] <name> [[=] value]`
+- Syntax: `constant [type] <name> [[=|as] value]`
 
 Declares an immutable [global](global) variable.
 

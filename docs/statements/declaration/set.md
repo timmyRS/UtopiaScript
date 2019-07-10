@@ -1,6 +1,6 @@
 # set
 
-- Syntax: `set <name> [=] <new_value>`
+- Syntax: `set <name> [=|as] <new_value>`
 
 Overwrites a variable, producing an error if it wasn't yet defined.
 

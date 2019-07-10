@@ -194,7 +194,7 @@ class ArrayStatement extends VariableStatement
 					}
 					else if($this->action_data["value"] === null)
 					{
-						if($literal != '=')
+						if($literal != '=' && $literal != 'as')
 						{
 							$this->action_data["value"] = $literal;
 						}
