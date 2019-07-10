@@ -43,7 +43,8 @@ EOC
 		foreach([
 			"print_line ",
 			"print_line",
-			"<<"
+			"<<",
+			"≤"
 		] as $statement)
 		{
 			$utopia->parseAndExecute($statement.'"Hi";');
@@ -72,7 +73,8 @@ EOC
 		foreach([
 			"print_error_line ",
 			"print_error_line",
-			"<<!"
+			"<<!",
+			"≤!"
 		] as $statement)
 		{
 			$utopia->parseAndExecute($statement.'"Hi";');
