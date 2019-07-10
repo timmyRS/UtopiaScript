@@ -665,11 +665,11 @@ class Utopia
 			{
 				if($this->debug)
 				{
-					$this->say("<output>".Utopia::externalize($ret->value)."</output>");
+					$this->say("<output>".Utopia::strval($ret->value)."</output>");
 				}
 				else
 				{
-					$this->say(Utopia::externalize($ret->value));
+					$this->say(Utopia::strval($ret->value));
 				}
 			}
 			if($this->debug)
