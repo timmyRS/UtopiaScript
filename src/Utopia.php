@@ -70,7 +70,7 @@ class Utopia
 	/**
 	 * @param resource $input_stream NULL to disable the STDIN reads.
 	 * @param resource|string $output Stream to write standard output to, "echo" to use PHP's `echo` function (= STDOUT in CLI), "keep" to write to Utopia::$last_output, or "suppress" to suppress output.
-	 * @param resource|string $error_output Stream to write error output to, "stderr" to use STDERR, "keep" to write to Utopia::$last_error_output, "keep_mix" to write to Utopia::$last_output, or "suppress" to suppress output.
+	 * @param resource|string $error_output Stream to write error output to, "stderr" to use STDERR, "keep" to write to Utopia::$last_error_output, "keep_mix" to write to Utopia::$last_output, "echo" to use PHP's `echo` function, or "suppress" to suppress output.
 	 */
 	function __construct($input_stream = null, $output = "echo", $error_output = "stderr")
 	{
@@ -1115,6 +1115,10 @@ class Utopia
 			}
 			switch($this->error_output)
 			{
+				case "echo":
+				case "print":
+					echo $str;
+					break;
 				case "keep":
 					$this->last_error_output .= $str;
 					break;
