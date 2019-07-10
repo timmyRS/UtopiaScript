@@ -13,13 +13,19 @@ class Utopia
 	 */
 	public $input_stream;
 	/**
-	 * @var resource|string $output
+	 * @var callable|null $output_handler
 	 */
-	public $output;
+	public $output_handler;
 	/**
-	 * @var resource|string $error_output
+	 * @var callable|null $error_output_handler
 	 */
-	public $error_output;
+	public $error_output_handler;
+	/**
+	 * Called when a new script is being executed.
+	 *
+	 * @var callable|null $reset_handler
+	 */
+	public $reset_handler;
 	/**
 	 * If true, parsing will print debug information but take considerably longer.
 	 *
@@ -53,36 +59,39 @@ class Utopia
 	 * @var float $maximum_execution_time
 	 */
 	public $maximum_execution_time = 0;
-	/**
-	 * The output of the latest execution, if $output is "keep".
-	 *
-	 * @var string $last_output
-	 */
-	public $last_output = "";
-	/**
-	 * The output of the latest execution, if $error_output is "keep".
-	 *
-	 * @var string $last_error_output
-	 */
-	public $last_error_output = "";
 	protected $execute_start = null;
 
 	/**
-	 * @param resource $input_stream NULL to disable the STDIN reads.
-	 * @param resource|string $output Stream to write standard output to, "echo" to use PHP's `echo` function (= STDOUT in CLI), "keep" to write to Utopia::$last_output, or "suppress" to suppress output.
-	 * @param resource|string $error_output Stream to write error output to, "stderr" to use STDERR, "keep" to write to Utopia::$last_error_output, "keep_mix" to write to Utopia::$last_output, "echo" to use PHP's `echo` function, or "suppress" to suppress output.
+	 * @param resource|null $input_stream NULL to disable the STDIN reads.
+	 * @param callable|null|string $output_handler The function called to output standard output. Defaults to using PHP's echo function.
+	 * @param callable|null|string $error_output_handler The function called to output error output. Defaults to writing to STDERR.
 	 */
-	function __construct($input_stream = null, $output = "echo", $error_output = "stderr")
+	function __construct($input_stream = null, $output_handler = "echo", $error_output_handler = "stderr")
 	{
 		$this->input_stream = $input_stream;
-		$this->output = $output;
-		if($error_output === "stderr")
+		if($output_handler === "echo")
 		{
-			$this->error_output = fopen("php://stderr", "w");
+			$this->output_handler = function($str)
+			{
+				echo $str;
+			};
 		}
 		else
 		{
-			$this->error_output = $error_output;
+			$this->output_handler = $output_handler;
+		}
+		if($error_output_handler === "stderr")
+		{
+			$stderr = fopen("php://stderr", "w");
+			$this->error_output_handler = function($str) use (&$stderr)
+			{
+				fwrite($stderr, $str);
+				fflush($stderr);
+			};
+		}
+		else
+		{
+			$this->error_output_handler = $error_output_handler;
 		}
 		try
 		{
@@ -214,6 +223,11 @@ class Utopia
 		return $value;
 	}
 
+	static function unwrap($value, bool $preserve_exit = false)
+	{
+		return ($preserve_exit ? $value instanceof ReturnStatement : $value instanceof ExitStatement) ? self::unwrap($value->value) : $value;
+	}
+
 	static function is_numeric($value): bool
 	{
 		return $value instanceof NumberStatement || is_numeric($value) || (gettype($value) == "string" && preg_match('/^0(x[0-9A-F]+|b[01]+)$/', $value) === 1);
@@ -271,8 +285,10 @@ class Utopia
 			{
 				$this->execute_start = microtime(true);
 				$this->input_time = 0;
-				$this->last_output = "";
-				$this->last_error_output = "";
+				if($this->reset_handler)
+				{
+					($this->reset_handler)();
+				}
 			}
 			else if($this->maximum_execution_time > 0 && $this->maximum_execution_time < microtime(true) - $this->execute_start - $this->input_time)
 			{
@@ -670,38 +686,12 @@ class Utopia
 
 	/**
 	 * @param string $str
-	 * @throws InvalidEnvironmentException
 	 */
 	function say(string $str)
 	{
-		if(is_resource($this->output))
+		if($this->output_handler)
 		{
-			fwrite($this->output, $str);
-			fflush($this->output);
-		}
-		else
-		{
-			if(!is_string($this->output))
-			{
-				throw new InvalidEnvironmentException("Invalid output type: ".gettype($this->output));
-			}
-			switch($this->output)
-			{
-				case "echo":
-				case "print":
-					echo $str;
-					break;
-				case "keep":
-					$this->last_output .= $str;
-					break;
-				case "no":
-				case "none":
-				case "ignore":
-				case "suppress":
-					break;
-				default:
-					throw new InvalidEnvironmentException("Invalid output method: ".$this->output);
-			}
+			($this->output_handler)($str);
 		}
 	}
 
@@ -709,7 +699,6 @@ class Utopia
 	 * @param array $chars
 	 * @param int $i
 	 * @param int $end_i
-	 * @throws InvalidEnvironmentException
 	 */
 	function processComment(array &$chars, int &$i, int &$end_i)
 	{
@@ -885,7 +874,6 @@ class Utopia
 	 * @param int $end_i
 	 * @return string
 	 * @throws IncompleteCodeException
-	 * @throws InvalidEnvironmentException
 	 */
 	function readString(string $delimiter, array &$chars, int &$i, int &$end_i)
 	{
@@ -919,7 +907,6 @@ class Utopia
 	 * @param int $end_i
 	 * @return string
 	 * @throws IncompleteCodeException
-	 * @throws InvalidEnvironmentException
 	 */
 	function readBracketString(array &$chars, int &$i, int &$end_i)
 	{
@@ -972,7 +959,6 @@ class Utopia
 	 * @param int $end_i
 	 * @return string
 	 * @throws IncompleteCodeException
-	 * @throws InvalidEnvironmentException
 	 */
 	function readInlineStatement(array &$chars, int &$i, int &$end_i)
 	{
@@ -1042,7 +1028,6 @@ class Utopia
 	 * @return string
 	 * @throws IncompleteCodeException
 	 * @throws InvalidCodeException
-	 * @throws InvalidEnvironmentException
 	 */
 	function readArray(array &$chars, int &$i, int &$end_i)
 	{
@@ -1122,48 +1107,14 @@ class Utopia
 		return $value instanceof VariableStatement ? $value->externalize() : $value;
 	}
 
-	static function unwrap($value, bool $preserve_exit = false)
-	{
-		return ($preserve_exit ? $value instanceof ReturnStatement : $value instanceof ExitStatement) ? self::unwrap($value->value) : $value;
-	}
-
 	/**
 	 * @param string $str
-	 * @throws InvalidEnvironmentException
 	 */
 	function complain(string $str)
 	{
-		if(is_resource($this->error_output))
+		if($this->error_output_handler)
 		{
-			fwrite($this->error_output, $str);
-			fflush($this->error_output);
-		}
-		else
-		{
-			if(!is_string($this->error_output))
-			{
-				throw new InvalidEnvironmentException("Invalid error output type: ".gettype($this->error_output));
-			}
-			switch($this->error_output)
-			{
-				case "echo":
-				case "print":
-					echo $str;
-					break;
-				case "keep":
-					$this->last_error_output .= $str;
-					break;
-				case "keep_mix":
-					$this->last_output .= $str;
-					break;
-				case "no":
-				case "none":
-				case "ignore":
-				case "suppress":
-					break;
-				default:
-					throw new InvalidEnvironmentException("Invalid error output method: ".$this->error_output);
-			}
+			($this->error_output_handler)($str);
 		}
 	}
 

@@ -110,7 +110,20 @@ if($flags["repl"])
 {
 	$code = "";
 	$local_vars = [];
-	$utopia->error_output = "echo";
+	$output = "";
+	$utopia->output_handler = $utopia->error_output_handler = function($str) use (&$output)
+	{
+		if($str === "")
+		{
+			return;
+		}
+		if($output === "")
+		{
+			echo "< ";
+		}
+		$output .= $str;
+		echo $str;
+	};
 	echo "UtopiaScript REPL (Read-eval-print loop)".($flags["debug"] ? " [Debug Mode]" : "")."\r\n";
 	if($file)
 	{
@@ -127,26 +140,17 @@ if($flags["repl"])
 		$code .= $input;
 		try
 		{
-			ob_start(function ($buffer)
-			{
-				if($buffer)
-				{
-					$buffer = "< ".$buffer;
-					if(substr($buffer, -1) != "\n")
-					{
-						$buffer .= "\r\n";
-					}
-				}
-				return $buffer;
-			});
+			$output = "";
 			$ret = $utopia->parseAndExecuteWithWritableLocalVars($code, $local_vars);
-			ob_end_flush();
+			if($output !== "" && substr($output, -1) != "\n")
+			{
+				echo "\r\n";
+			}
 			echo "= ".Utopia::strval($ret)."\r\n";
 			$code = "";
 		}
 		catch(IncompleteCodeException $e)
 		{
-			ob_end_flush();
 			if(in_array(trim($input), ['', ';']))
 			{
 				$code = "";
@@ -159,7 +163,6 @@ if($flags["repl"])
 		}
 		catch(Exception $e)
 		{
-			ob_end_flush();
 			echo get_class($e).': '.$e->getMessage()."\r\n";
 			$code = "";
 		}

@@ -1,13 +1,13 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require_once "vendor/autoload.php";
 use UtopiaScript\
-{Exception\InvalidCodeException, Utopia};
+{Exception\InvalidCodeException, Utopia, UtopiaWithKeepOutput};
 use UtopiaScriptPhpStatementExtension\PhpStatementExtension;
 class StatementsTest
 {
 	function testGetType()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 << get_type bla;
 << get_type print;
@@ -25,7 +25,7 @@ EOC
 
 	function testPrint()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		foreach([
 			"print ",
 			"print",
@@ -39,7 +39,7 @@ EOC
 
 	function testPrintLine()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		foreach([
 			"print_line ",
 			"print_line",
@@ -54,7 +54,7 @@ EOC
 
 	function testPrintError()
 	{
-		$utopia = new Utopia(null, "ignore", "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		foreach([
 			"print_error ",
 			"print_error",
@@ -70,7 +70,7 @@ EOC
 
 	function testPrintErrorLine()
 	{
-		$utopia = new Utopia(null, "ignore", "keep_mix");
+		$utopia = new UtopiaWithKeepOutput();
 		foreach([
 			"print_error_line ",
 			"print_error_line",
@@ -81,8 +81,8 @@ EOC
 		] as $statement)
 		{
 			$utopia->parseAndExecute($statement.'"Hi";');
-			Nose::assertEquals($utopia->last_output, "Hi\r\n");
-			Nose::assertEquals($utopia->last_error_output, "");
+			Nose::assertEquals($utopia->last_output, "");
+			Nose::assertEquals($utopia->last_error_output, "Hi\r\n");
 		}
 	}
 
@@ -99,7 +99,7 @@ EOC
 
 	function testReturnAndExit()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		Nose::assertEquals('Exit', Utopia::externalize($utopia->parseAndExecute('local myFunc function { return "Return"; print "Unreachable"; }; myFunc; exit "Exit"; print "Unreachable";')));
 		Nose::assertEquals('Exit', $utopia->last_output);
 		Nose::assertEquals('Exit', Utopia::externalize($utopia->parseAndExecute('local myFunc func { exit "Exit"; print "Unreachable"; }; myFunc; print "Unreachable";')));

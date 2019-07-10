@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require_once "vendor/autoload.php";
 use UtopiaScript\Utopia;
+use UtopiaScript\UtopiaWithKeepOutput;
 class NumbersTest
 {
 	function testAddition()
@@ -29,7 +30,7 @@ class NumbersTest
 
 	function testArrayNumberArithmetic()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute("print_line [16 32] / 8; print_line 16 / [8 4];");
 		Nose::assertEquals($utopia->last_output, "array 2 4\r\narray 2 4\r\n");
 	}
@@ -55,7 +56,7 @@ class NumbersTest
 
 	function testComparisons()
 	{
-		$utopia = new Utopia(null, "keep", "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute("<<1≤1;<1≥1;");
 		Nose::assertEquals($utopia->last_output, "true\r\ntrue");
 	}

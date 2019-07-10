@@ -1,12 +1,12 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require_once "vendor/autoload.php";
 use UtopiaScript\
-{Exception\TimeoutException, Utopia};
+{Exception\TimeoutException, Utopia, UtopiaWithKeepOutput};
 class ConditionalsTest
 {
 	function testWhile()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 local counter 10;
 while counter > 0 {
@@ -30,7 +30,7 @@ EOC
 
 	function testIfAndElse()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 [0 1] for_each item {
 	if item == 0 {
@@ -46,7 +46,7 @@ EOC
 
 	function testWhileOtherwise()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 local var = 0;
 while var >= 1

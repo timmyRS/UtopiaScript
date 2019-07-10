@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require_once "vendor/autoload.php";
 use UtopiaScript\
-{Exception\InvalidCodeException, Utopia};
+{Exception\InvalidCodeException, Utopia, UtopiaWithKeepOutput};
 class ArraysTest
 {
 	function testCreation()
@@ -19,7 +19,7 @@ class ArraysTest
 
 	function testChangeKeyValue()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 local data [
     name: "Tim"
@@ -40,7 +40,7 @@ EOC
 
 	function testForEach()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 final array a = array 1 2 3;
 a for_each item {
@@ -54,7 +54,7 @@ EOC
 
 	function testAddition()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 print [1, 2] + [3 3];
 EOC
@@ -64,7 +64,7 @@ EOC
 
 	function testSubtraction()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 print [5 10] minus [3 8];
 EOC
@@ -74,7 +74,7 @@ EOC
 
 	function testMultiplication()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 print [2 3 4] * [8 8 8];
 EOC
@@ -84,7 +84,7 @@ EOC
 
 	function testDivision()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 print [2 3 4] / [2 2 2];
 EOC

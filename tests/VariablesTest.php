@@ -1,12 +1,12 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 require_once "vendor/autoload.php";
 use UtopiaScript\
-{Exception\InvalidCodeException, Utopia};
+{Exception\InvalidCodeException, Utopia, UtopiaWithKeepOutput};
 class VariablesTest
 {
 	function testScopedDeclarations()
 	{
-		$utopia = new Utopia(null, "keep");
+		$utopia = new UtopiaWithKeepOutput();
 		$utopia->parseAndExecute(<<<EOC
 global greeting "Hi";
 local farewell "Bye";
