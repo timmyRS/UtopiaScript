@@ -8,6 +8,8 @@ Prints the given [string](../constructs#string) to the Utopia's error output and
     < You didn't do the thing!
     = You didn't do the thing!
 
+[[ Run it online ]](https://utopia.sh/repl#print_error%20%22You%20didn't%20do%20the%20thing!%22%3B)
+
 ## See also
 
 - [print](print): Prints the given string to the Utopia's standard output and returns it.

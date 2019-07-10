@@ -8,6 +8,8 @@ Prints the given [string](../constructs#string) to the Utopia's standard output 
     < Hello, world!
     = Hello, world!
 
+[[ Run it online ]](https://utopia.sh/repl#print%20%22Hello%2C%20world!%22%3B)
+
 ## See also
 
 - [print_line](print_line): Does the same as print, except that it appends `crlf` to the string.

@@ -10,25 +10,31 @@ Once you've installed UtopiaScript via [Cone](https://getcone.org/) using `cone 
 
 If you'd like to understand UtopiaScript statement-by-statement, enter a [read-eval-print loop](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop) using `utopia repl`, which will allow you to enter a statement (`>`), execute it by pressing enter, and receive its return value after `=`:
 
-    > 1 + 2
+    > 1 + 2;
     = 3
+
+[[ Run it online ]](https://utopia.sh/repl#1%20%2B%202%3B)
 
 Any output will be presented after `<`:
 
-    > print 1 + 2
+    > print 1 + 2;
     < 3
     = 3
+
+[[ Run it online ]](https://utopia.sh/repl#print%201%20%2B%202%3B)
 
 And now you've already learned that `print` returns what it prints!
 
 You can also submit incomplete code which will allow you to continue input into the next line, if detected:
 
     > print "Hello
-    >> world"
+    >> world";
     < Hello
     world
     = Hello
     world
+
+[[ Try it ]](https://utopia.sh/repl)
 
 ## Stopwatch
 

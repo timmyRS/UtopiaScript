@@ -33,6 +33,8 @@ The debug extension, which is enabled by default when using the `utopia` CLI com
     =
     ```
 
+[[ Try it ]](https://utopia.sh/repl)
+
 ### PHP Statement
 
 Because UtopiaScript is interpreted in PHP, this extension is no magic. However, using it is not recommended unless you have some ***very*** specific needs.
