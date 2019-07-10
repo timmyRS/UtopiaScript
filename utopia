@@ -1,9 +1,10 @@
 <?php
 $flags = [
 	"repl" => false,
+	"debug" => false,
 	"stopwatch" => false,
 	"time-limit" => 0,
-	"debug" => false,
+	"stdin" => true,
 	"php-statement" => false,
 	"help" => false
 ];
@@ -20,6 +21,13 @@ function switchArg(string $arg) : bool
 			$flags["repl"] = true;
 			break;
 
+		case "-d":
+		case "debug":
+		case "--debug":
+		case "--debug-mode":
+			$flags["debug"] = true;
+			break;
+
 		case "-t":
 		case "--time":
 		case "stopwatch":
@@ -27,11 +35,9 @@ function switchArg(string $arg) : bool
 			$flags["stopwatch"] = true;
 			break;
 
-		case "-d":
-		case "debug":
-		case "--debug":
-		case "--debug-mode":
-			$flags["debug"] = true;
+		case "-s":
+		case "--no-stdin":
+			$flags["stdin"] = false;
 			break;
 
 		case "-p":
@@ -77,7 +83,7 @@ for($i = 1; $i < count($argv); $i++)
 }
 if($flags["help"] || (!$file && !$flags["repl"]))
 {
-	die("Syntax: utopia [file] [-i|--repl|--interactive] [-d|--debug] [-t|--stopwatch] [--time-limit=<seconds>] [-p|--enable-php-statement]\r\nEither --repl or [file] has to be given.\r\n");
+	die("Syntax: utopia [file] [-i|--repl|--interactive] [-d|--debug] [-t|--stopwatch] [--time-limit=<seconds>] [-s|--no-stdin] [-p|--enable-php-statement]\r\nEither --repl or [file] has to be given.\r\n");
 }
 if(!is_file(__DIR__."/vendor/autoload.php"))
 {
@@ -91,7 +97,8 @@ if(!is_file(__DIR__."/vendor/autoload.php"))
 require __DIR__."/vendor/autoload.php";
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Statement\ExitStatement, Utopia};
-$utopia = new Utopia(fopen("php://stdin", "r"));
+$stdin = fopen("php://stdin", "r");
+$utopia = new Utopia($flags["stdin"] ? $stdin : null);
 $utopia->debug = $flags["debug"];
 $utopia->maximum_execution_time = $flags["time-limit"];
 $utopia->loadExtension(UtopiaScriptDebugExtension\DebugExtension::class);
@@ -112,7 +119,7 @@ if($flags["repl"])
 	echo "> ";
 	do
 	{
-		$input = rtrim(fgets($utopia->input_stream), "\r\n");
+		$input = rtrim(fgets($stdin), "\r\n");
 		if($code != "")
 		{
 			$code .= "\r\n";
