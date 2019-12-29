@@ -8,7 +8,7 @@ $flags = [
 	"php-statement" => false,
 	"help" => false
 ];
-function switchArg(string $arg) : bool
+function switchArg(string $arg): bool
 {
 	global $flags;
 	switch($arg)
@@ -20,43 +20,38 @@ function switchArg(string $arg) : bool
 		case "--interactive":
 			$flags["repl"] = true;
 			break;
-
 		case "-d":
 		case "debug":
 		case "--debug":
 		case "--debug-mode":
 			$flags["debug"] = true;
 			break;
-
 		case "-t":
 		case "--time":
 		case "stopwatch":
 		case "--stopwatch":
 			$flags["stopwatch"] = true;
 			break;
-
 		case "-s":
 		case "--no-stdin":
 			$flags["stdin"] = false;
 			break;
-
 		case "-p":
 		case "--enable-php-statement":
 			$flags["php-statement"] = true;
 			break;
-
 		case "?":
 		case "-?":
 		case "help":
 		case "--help":
 			$flags["help"] = true;
 			break;
-
 		default:
 			return false;
 	}
 	return true;
 }
+
 $file = "";
 for($i = 1; $i < count($argv); $i++)
 {
@@ -96,7 +91,7 @@ if(!is_file(__DIR__."/vendor/autoload.php"))
 }
 require __DIR__."/vendor/autoload.php";
 use UtopiaScript\
-{Exception\Exception, Exception\IncompleteCodeException, Statement\ExitStatement, Utopia};
+{Exception\Exception, Exception\IncompleteCodeException, Utopia};
 $stdin = fopen("php://stdin", "r");
 $utopia = new Utopia($flags["stdin"] ? $stdin : null);
 $utopia->debug = $flags["debug"];
@@ -151,7 +146,10 @@ if($flags["repl"])
 		}
 		catch(IncompleteCodeException $e)
 		{
-			if(in_array(trim($input), ['', ';']))
+			if(in_array(trim($input), [
+				'',
+				';'
+			]))
 			{
 				$code = "";
 				echo get_class($e).": ".$e->getMessage()."\r\n";
