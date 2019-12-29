@@ -83,17 +83,18 @@ if($flags["help"] || (!$file && !$flags["repl"]))
 if(!is_file(__DIR__."/vendor/autoload.php"))
 {
 	echo "vendor/autoload.php was not found, attempting to generate it...\n";
-	passthru("composer dump-autoload -o -d \"".__DIR__."\"");
+	passthru("composer install -o -d \"".__DIR__."\" --no-dev");
 	if(!is_file(__DIR__."/vendor/autoload.php"))
 	{
 		die("Welp, that didn't work. Try again as root/administrator.\n");
 	}
 }
 require __DIR__."/vendor/autoload.php";
+use hellsh\pai;
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Utopia};
-$stdin = fopen("php://stdin", "r");
-$utopia = new Utopia($flags["stdin"] ? $stdin : null);
+pai::init();
+$utopia = new Utopia($flags["stdin"] ? "stdin" : null);
 $utopia->debug = $flags["debug"];
 $utopia->maximum_execution_time = $flags["time-limit"];
 $utopia->loadExtension(UtopiaScriptDebugExtension\DebugExtension::class);
@@ -127,7 +128,7 @@ if($flags["repl"])
 	echo "> ";
 	do
 	{
-		$input = rtrim(fgets($stdin), "\r\n");
+		$input = rtrim(pai::awaitLine(), "\r\n");
 		if($code != "")
 		{
 			$code .= "\r\n";

@@ -1,5 +1,6 @@
 <?php /** @noinspection CheckEmptyScriptTag HtmlUnknownTag */
 namespace UtopiaScript;
+use hellsh\pai;
 use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
@@ -62,18 +63,46 @@ class Utopia
 	protected $execute_start = null;
 
 	/**
-	 * @param resource|null $input_stream NULL to disable the STDIN reads.
-	 * @param callable|null|string $output_handler The function called to output standard output. Defaults to using PHP's echo function.
-	 * @param callable|null|string $error_output_handler The function called to output error output. Defaults to writing to STDERR.
+	 * @param callable|resource|string|null $input_stream
+	 * @param callable|resource|string|null $output_handler
+	 * @param callable|resource|string|null $error_output_handler
 	 */
-	function __construct($input_stream = null, $output_handler = "echo", $error_output_handler = "stderr")
+	function __construct($input_stream = "stdin", $output_handler = "echo", $error_output_handler = "stderr")
 	{
-		$this->input_stream = $input_stream;
+		if($input_stream == "stdin")
+		{
+			if(!pai::isInitialized())
+			{
+				pai::init();
+			}
+			$this->input_stream = function()
+			{
+				return pai::awaitLine();
+			};
+		}
+		else if(is_resource($input_stream))
+		{
+			$this->input_stream = function() use (&$input_stream)
+			{
+				return fgets($input_stream);
+			};
+		}
+		else
+		{
+			$this->input_stream = $input_stream;
+		}
 		if($output_handler === "echo")
 		{
 			$this->output_handler = function($str)
 			{
 				echo $str;
+			};
+		}
+		else if(is_resource($output_handler))
+		{
+			$this->output_handler = function() use (&$output_handler)
+			{
+				return fgets($output_handler);
 			};
 		}
 		else
@@ -87,6 +116,13 @@ class Utopia
 			{
 				fwrite($stderr, $str);
 				fflush($stderr);
+			};
+		}
+		else if(is_resource($error_output_handler))
+		{
+			$this->error_output_handler = function() use (&$error_output_handler)
+			{
+				return fgets($error_output_handler);
 			};
 		}
 		else

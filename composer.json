@@ -11,7 +11,8 @@
 		}
 	},
 	"require": {
-		"php": "^7.0"
+		"php": "^7.0",
+		"hell-sh/pai": "^2.1"
 	},
 	"require-dev": {
 		"hell-sh/nose": "^1.0"

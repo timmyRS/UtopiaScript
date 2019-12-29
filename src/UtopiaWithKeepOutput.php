@@ -6,6 +6,9 @@ class UtopiaWithKeepOutput extends Utopia
 	public $last_error_output;
 	public $last_combined_output;
 
+	/**
+	 * @param callable|resource|string|null $input_stream
+	 */
 	function __construct($input_stream = null)
 	{
 		parent::__construct($input_stream, function($str)
