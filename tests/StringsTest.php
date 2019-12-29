@@ -20,6 +20,12 @@ class StringsTest
 		Nose::assertEquals("A\nB\nC", Utopia::externalize($utopia->parseAndExecute("= \"A\n\" 'B\n'`C`;")));
 	}
 
+	function testFunctionConcatenation()
+	{
+		$utopia = new Utopia(null, null);
+		Nose::assertEquals(substr(Utopia::externalize($utopia->parseAndExecute("!pi*{=m_pi};='I ate some pi and it tasted like 'pi")), 0, 37), "I ate some pi and it tasted like 3.14");
+	}
+
 	function testParenthesesEvaluation()
 	{
 		$utopia = new Utopia(null, null);

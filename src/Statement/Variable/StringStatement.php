@@ -24,13 +24,23 @@ class StringStatement extends VariableStatement
 	 * @param mixed $value
 	 * @param Utopia $utopia
 	 * @param array $local_vars
+	 * @throws IncompleteCodeException
 	 * @throws InvalidCodeException
+	 * @throws InvalidEnvironmentException
+	 * @throws TimeoutException
 	 */
 	function acceptValue(VariableStatement $value, Utopia &$utopia, array &$local_vars)
 	{
 		if($this->_acceptValue($value))
 		{
-			$this->value .= $value;
+			if($value instanceof FunctionStatement)
+			{
+				$this->acceptValue($value->execute($utopia, $local_vars), $utopia, $local_vars);
+			}
+			else
+			{
+				$this->value .= $value;
+			}
 		}
 	}
 
