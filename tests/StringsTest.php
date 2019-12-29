@@ -6,10 +6,8 @@ class StringsTest
 {
 	function testBracketStrings()
 	{
-		$utopia = new Utopia();
-		ob_start();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals("< {Utopia\nScript\n};", Utopia::externalize($utopia->parseAndExecute("= {< {Utopia\nScript\n};};")));
-		ob_end_clean();
 		Nose::expectException(IncompleteCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute("< { There is an unfinished { bracket. }");
@@ -18,26 +16,21 @@ class StringsTest
 
 	function testConcatenation()
 	{
-		$utopia = new Utopia();
-		ob_start();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals("A\nB\nC", Utopia::externalize($utopia->parseAndExecute("= \"A\n\" 'B\n'`C`;")));
-		ob_end_clean();
 	}
 
 	function testParenthesesEvaluation()
 	{
-		$utopia = new Utopia();
-		ob_start();
+		$utopia = new Utopia(null, null);
 		$utopia->parseAndExecute('const myFunc {= "Hi";};');
 		Nose::assertEquals('= "Hi";', Utopia::externalize($utopia->parseAndExecute('= myFunc;')));
 		Nose::assertEquals('Hi', Utopia::externalize($utopia->parseAndExecute('= (myFunc);')));
-		ob_end_clean();
 	}
 
 	function testToUpperCase()
 	{
-		$utopia = new Utopia();
-		ob_start();
+		$utopia = new Utopia(null, null);
 		foreach([
 			"to_upper_case",
 			"^"
@@ -45,13 +38,11 @@ class StringsTest
 		{
 			Nose::assertEquals('HI', Utopia::externalize($utopia->parseAndExecute("='Hi'{$action};")));
 		}
-		ob_end_clean();
 	}
 
 	function testToLowerCase()
 	{
-		$utopia = new Utopia();
-		ob_start();
+		$utopia = new Utopia(null, null);
 		foreach([
 			"to_lower_case",
 			"v"
@@ -59,6 +50,5 @@ class StringsTest
 		{
 			Nose::assertEquals('hi', Utopia::externalize($utopia->parseAndExecute("='Hi'{$action};")));
 		}
-		ob_end_clean();
 	}
 }
