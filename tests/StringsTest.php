@@ -24,6 +24,7 @@ class StringsTest
 	{
 		$utopia = new Utopia(null, null);
 		Nose::assertEquals(substr(Utopia::externalize($utopia->parseAndExecute("!pi*{=m_pi};='I ate some pi and it tasted like 'pi")), 0, 37), "I ate some pi and it tasted like 3.14");
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("!greet str:name{='hi 'name};='oh 'greet'mark'")), "oh hi mark");
 	}
 
 	function testParenthesesEvaluation()

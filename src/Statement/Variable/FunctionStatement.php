@@ -40,7 +40,22 @@ class FunctionStatement extends VariableStatement
 	 */
 	function isFinished(): bool
 	{
-		return count($this->args) == (count($this->params["required"]) + count($this->params["optionals"]));
+		return count($this->args) == $this->getTotalParameters();
+	}
+
+	/**
+	 * Returns the total amount of parameters (required + optional) the function accepts.
+	 *
+	 * @return int
+	 */
+	function getTotalParameters(): int
+	{
+		$total = count($this->params["required"]);
+		if($this->params["optionals"] !== [[]])
+		{
+			$total += count($this->params["optionals"]);
+		}
+		return $total;
 	}
 
 	/**
