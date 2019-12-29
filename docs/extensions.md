@@ -65,4 +65,4 @@ You can simply see if `get_type` returns `statement`:
 
 Your project simply has to expose a class extending `UtopiaScript\Extension` which currently only allows you to provide custom statements.
 
-To write a custom statement, I can only recommend looking at the source code of the built-in [extensions](https://github.com/timmyrs/UtopiaScript/extensions) and [statements](https://github.com/timmyrs/UtopiaScript/src/Statement).
+To write a custom statement, I can only recommend looking at the source code of the built-in [extensions](https://github.com/timmyRS/UtopiaScript/tree/master/extensions) and [statements](https://github.com/timmyRS/UtopiaScript/tree/master/src/Statement).
