@@ -1,5 +1,8 @@
 # Array Actions
 
+- Creation
+    - [array](../../statements/array)
+    - [range](../../statements/range)
 - Implicit
     - get_value
     - set_value

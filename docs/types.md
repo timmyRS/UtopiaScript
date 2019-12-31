@@ -30,6 +30,8 @@ A boolean can either be [true](constants/true) or [false](constants/false).
 
 - Names: `array`, `arr`
 
+Instantiated using an [array](statements/array) or [range](statements/range) statement. 
+
 ## Null
 
 - Names: `null`, `none`, `void`, `nil`

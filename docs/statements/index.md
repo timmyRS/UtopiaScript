@@ -9,6 +9,9 @@
     - [print_error](print_error)
     - [print_error_line](print_error_line)
     - [read](read)
+- Array Creation
+    - [array](array)
+    - [range](range)
 - [Declaration](declaration/)
 - Variable Action
     - [ceil](ceil)
