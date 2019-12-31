@@ -209,6 +209,7 @@ class Utopia
 			'microtime' => MicroTimeStatement::class,
 			'micro_time' => MicroTimeStatement::class,
 			// Variables
+			'arr' => ArrayDeclarationStatement::class,
 			'array' => ArrayDeclarationStatement::class,
 			'range' => RangeStatement::class,
 			'func' => FunctionDeclarationStatement::class,
