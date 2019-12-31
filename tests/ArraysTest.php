@@ -100,4 +100,23 @@ EOC
 			$utopia->parseAndExecute("[1, 2, 3] + [4, 5]");
 		});
 	}
+
+	function testRange()
+	{
+		$utopia = new Utopia(null, null);
+		$arr_123 = [
+			1,
+			2,
+			3
+		];
+		$arr_abc = [
+			"A",
+			"B",
+			"C"
+		];
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute('range from 1 to 3')), $arr_123);
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute('array 1 - 3')), $arr_123);
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute('range "A" "C"')), $arr_abc);
+		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute('["A" - "C"]')), $arr_abc);
+	}
 }

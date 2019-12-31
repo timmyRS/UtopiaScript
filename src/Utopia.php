@@ -5,7 +5,7 @@ use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
 use UtopiaScript\Statement\
-{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintErrorLineStatement, Stdio\PrintErrorStatement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\StringStatement, Variable\VariableStatement};
+{Conditional\IfNotStatement, Conditional\IfStatement, Conditional\WhileNotStatement, Conditional\WhileStatement, Declaration\ConstStatement, Declaration\FinalStatement, Declaration\GlobalStatement, Declaration\LocalStatement, Declaration\SetStatement, Declaration\UnsetStatement, ExitStatement, GetTypeStatement, ReturnStatement, Statement, Stdio\PrintErrorLineStatement, Stdio\PrintErrorStatement, Stdio\PrintLineStatement, Stdio\PrintStatement, Stdio\ReadStatement, Time\MicroTimeStatement, Time\MilliTimeStatement, Time\TimeStatement, Variable\Action\CeilStatement, Variable\Action\FloorStatement, Variable\Action\RoundStatement, Variable\ArrayDeclarationStatement, Variable\ArrayStatement, Variable\BooleanStatement, Variable\FunctionDeclarationStatement, Variable\NullStatement, Variable\NumberStatement, Variable\RangeStatement, Variable\StringStatement, Variable\VariableStatement};
 /** An environment with global variables that can execute UtopiaScript code. */
 class Utopia
 {
@@ -209,6 +209,7 @@ class Utopia
 			'micro_time' => MicroTimeStatement::class,
 			// Variables
 			'array' => ArrayDeclarationStatement::class,
+			'range' => RangeStatement::class,
 			'func' => FunctionDeclarationStatement::class,
 			'function' => FunctionDeclarationStatement::class,
 			'routine' => FunctionDeclarationStatement::class,
@@ -489,22 +490,13 @@ class Utopia
 						}
 						break;
 					case '+':
+					case '-':
 					case '^':
 					case '%':
 					case '|':
 					case '≠':
 					case '≥':
 						$this->specialCharacter($chars[$i], $literal, $statement, $local_vars, $ret);
-						break;
-					case '-':
-						if($statement === null && self::is_numeric($literal))
-						{
-							$this->specialCharacter($chars[$i], $literal, $statement, $local_vars, $ret);
-						}
-						else
-						{
-							$literal .= '-';
-						}
 						break;
 					case '/':
 						if($statement === null && $literal == '')

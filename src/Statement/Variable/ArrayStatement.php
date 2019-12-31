@@ -137,13 +137,17 @@ class ArrayStatement extends VariableStatement
 		}
 	}
 
-	static function isValidKey(VariableStatement $statement)
+	static function isValidKey($key)
 	{
-		return in_array($statement->getType(), [
+		if($key instanceof VariableStatement)
+		{
+			$key = $key->value;
+		}
+		return in_array(gettype($key), [
 			"string",
-			"number",
+			"integer",
 			"boolean",
-			"null"
+			"NULL"
 		]);
 	}
 

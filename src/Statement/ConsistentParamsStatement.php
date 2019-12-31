@@ -1,5 +1,8 @@
 <?php
 namespace UtopiaScript\Statement;
+/**
+ * A statement that is finished when it is executable.
+ */
 abstract class ConsistentParamsStatement extends Statement
 {
 	/**
