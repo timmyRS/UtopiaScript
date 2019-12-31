@@ -6,7 +6,7 @@ class ArraysTest
 {
 	function testCreation()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals([
 			"1",
 			2,
@@ -34,7 +34,7 @@ EOC
 
 	function testToString()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals('array "1" 2 array = (array true null)', Utopia::strval($utopia->parseAndExecute('array "1" 2 array:[true null]')));
 	}
 
@@ -94,7 +94,7 @@ EOC
 
 	function testArithmeticSizeMismatch()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute("[1, 2, 3] + [4, 5]");

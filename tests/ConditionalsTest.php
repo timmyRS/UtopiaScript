@@ -20,7 +20,7 @@ EOC
 
 	function testTimeLimit()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		$utopia->maximum_execution_time = 0.05;
 		Nose::expectException(TimeoutException::class, function() use (&$utopia)
 		{

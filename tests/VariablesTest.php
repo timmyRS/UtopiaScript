@@ -23,7 +23,7 @@ EOC
 
 	function testStatementCantBeOverwritten()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute('local local "bla";');
@@ -32,7 +32,7 @@ EOC
 
 	function testConstCantBeOverwritten()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute('local NL 1;');
@@ -41,7 +41,7 @@ EOC
 
 	function testFinal()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		$local_vars = [];
 		$utopia->parseAndExecuteWithWritableLocalVars('local bla "bla";', $local_vars);
 		$utopia->parseAndExecuteWithWritableLocalVars('final bla [true];', $local_vars);
@@ -54,7 +54,7 @@ EOC
 
 	function testTypeContracts()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		$local_vars = [];
 		Nose::expectException(InvalidCodeException::class, function() use (&$utopia, &$local_vars)
 		{

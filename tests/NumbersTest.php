@@ -6,25 +6,25 @@ class NumbersTest
 {
 	function testAddition()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("1 + 2 + 0.5")), 3.5);
 	}
 
 	function testSubtraction()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("9 - 5 - 1")), 3);
 	}
 
 	function testMultiplication()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("2 * 2 * 2")), 8);
 	}
 
 	function testDivision()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("20 / 2 / 2")), 5);
 	}
 
@@ -37,13 +37,13 @@ class NumbersTest
 
 	function testPower()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::assertEquals(Utopia::externalize($utopia->parseAndExecute("2 ^ 4 pow 2")), 256);
 	}
 
 	function testFactorial()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		foreach([
 			"!",
 			" factorial",

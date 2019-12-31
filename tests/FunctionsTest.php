@@ -13,7 +13,7 @@ class FunctionsTest
 
 	function testFunctionWithStrictParameters()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		$utopia->parseAndExecute("const myAdd*number a, number b { return a + b; };");
 		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
 		{

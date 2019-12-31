@@ -88,7 +88,7 @@ EOC
 
 	function testPhp()
 	{
-		$utopia = new Utopia();
+		$utopia = new Utopia(null, null);
 		Nose::expectException(InvalidCodeException::class, function() use (&$utopia)
 		{
 			$utopia->parseAndExecute("php { return \"H\".'i'; }");
