@@ -71,12 +71,12 @@ class Utopia
 	{
 		if($input_stream == "stdin")
 		{
-			if(!pai::isInitialized())
-			{
-				pai::init();
-			}
 			$this->input_stream = function()
 			{
+				if(!pai::isInitialized())
+				{
+					pai::init();
+				}
 				return pai::awaitLine();
 			};
 		}

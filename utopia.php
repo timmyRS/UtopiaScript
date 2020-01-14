@@ -93,7 +93,6 @@ require __DIR__."/vendor/autoload.php";
 use hellsh\pai;
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Utopia};
-pai::init();
 $utopia = new Utopia($flags["stdin"] ? "stdin" : null);
 $utopia->debug = $flags["debug"];
 $utopia->maximum_execution_time = $flags["time-limit"];
@@ -120,6 +119,10 @@ if($flags["repl"])
 		$output .= $str;
 		echo $str;
 	};
+	if(!pai::isInitialized())
+	{
+		pai::init();
+	}
 	echo "UtopiaScript REPL (Read-eval-print loop)".($flags["debug"] ? " [Debug Mode]" : "")."\r\n";
 	if($file)
 	{
