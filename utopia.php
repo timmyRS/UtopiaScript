@@ -90,7 +90,7 @@ if(!is_file(__DIR__."/vendor/autoload.php"))
 	}
 }
 require __DIR__."/vendor/autoload.php";
-use hellsh\pai;
+use Asyncore\stdin;
 use UtopiaScript\
 {Exception\Exception, Exception\IncompleteCodeException, Utopia};
 $utopia = new Utopia($flags["stdin"] ? "stdin" : null);
@@ -119,10 +119,7 @@ if($flags["repl"])
 		$output .= $str;
 		echo $str;
 	};
-	if(!pai::isInitialized())
-	{
-		pai::init();
-	}
+	stdin::init(null, false);
 	echo "UtopiaScript REPL (Read-eval-print loop)".($flags["debug"] ? " [Debug Mode]" : "")."\r\n";
 	if($file)
 	{
@@ -131,7 +128,7 @@ if($flags["repl"])
 	echo "> ";
 	do
 	{
-		$input = rtrim(pai::awaitLine(), "\r\n");
+		$input = rtrim(stdin::getNextLine(), "\r\n");
 		if($code != "")
 		{
 			$code .= "\r\n";

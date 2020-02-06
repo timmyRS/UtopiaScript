@@ -1,6 +1,6 @@
 <?php /** @noinspection CheckEmptyScriptTag HtmlUnknownTag */
 namespace UtopiaScript;
-use hellsh\pai;
+use Asyncore\stdin;
 use InvalidArgumentException;
 use UtopiaScript\Exception\
 {IncompleteCodeException, InvalidCodeException, InvalidEnvironmentException, TimeoutException};
@@ -71,13 +71,10 @@ class Utopia
 	{
 		if($input_stream == "stdin")
 		{
+			stdin::init(null, false);
 			$this->input_stream = function()
 			{
-				if(!pai::isInitialized())
-				{
-					pai::init();
-				}
-				return pai::awaitLine();
+				return stdin::getNextLine();
 			};
 		}
 		else if(is_resource($input_stream))
