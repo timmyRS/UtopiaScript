@@ -425,24 +425,24 @@ class Utopia
 							$literal .= '.';
 						}
 						break;
-					case ':':
+					case ',':
 						if($statement === null && $literal == '')
 						{
 							$statement = new FinalStatement();
 						}
 						else
 						{
-							$this->specialCharacter(':', $literal, $statement, $local_vars, $ret);
+							$this->specialCharacter(',', $literal, $statement, $local_vars, $ret);
 						}
 						break;
-					case ',':
+					case ':':
 						if($statement === null && $literal == '')
 						{
 							$statement = new GlobalStatement();
 						}
 						else
 						{
-							$this->specialCharacter(',', $literal, $statement, $local_vars, $ret);
+							$this->specialCharacter(':', $literal, $statement, $local_vars, $ret);
 						}
 						break;
 					case '!':
