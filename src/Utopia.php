@@ -71,9 +71,12 @@ class Utopia
 	{
 		if($input_stream == "stdin")
 		{
-			stdin::init(null, false);
 			$this->input_stream = function()
 			{
+				if(!stdin::isInitialized())
+				{
+					stdin::init(null, false);
+				}
 				return stdin::getNextLine();
 			};
 		}
