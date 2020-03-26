@@ -10,9 +10,9 @@ use UtopiaScript\Statement\
 class Utopia
 {
 	/**
-	 * @var resource $input_stream
+	 * @var callable|null $input_function
 	 */
-	public $input_stream;
+	public $input_function;
 	/**
 	 * @var callable|null $output_handler
 	 */
@@ -63,15 +63,15 @@ class Utopia
 	protected $execute_start = null;
 
 	/**
-	 * @param callable|resource|string|null $input_stream
+	 * @param callable|resource|string|null $input
 	 * @param callable|resource|string|null $output_handler
 	 * @param callable|resource|string|null $error_output_handler
 	 */
-	function __construct($input_stream = "stdin", $output_handler = "echo", $error_output_handler = "stderr")
+	function __construct($input = "stdin", $output_handler = "echo", $error_output_handler = "stderr")
 	{
-		if($input_stream == "stdin")
+		if($input == "stdin")
 		{
-			$this->input_stream = function()
+			$this->input_function = function()
 			{
 				if(!stdin::isInitialized())
 				{
@@ -80,16 +80,16 @@ class Utopia
 				return stdin::getNextLine();
 			};
 		}
-		else if(is_resource($input_stream))
+		else if(is_resource($input))
 		{
-			$this->input_stream = function() use (&$input_stream)
+			$this->input_function = function() use (&$input)
 			{
-				return fgets($input_stream);
+				return fgets($input);
 			};
 		}
 		else
 		{
-			$this->input_stream = $input_stream;
+			$this->input_function = $input;
 		}
 		if($output_handler === "echo")
 		{

@@ -13,12 +13,12 @@ class ReadStatement extends OneOptionalLiteralParamStatement
 	 */
 	function execute(Utopia &$utopia, array &$local_vars = []): Statement
 	{
-		if($utopia->input_stream === null)
+		if($utopia->input_function === null)
 		{
 			throw new MissingInputException("Read only works in Utopias with input streams");
 		}
 		$start = microtime(true);
-		$val = Utopia::internalize(rtrim(fgets($utopia->input_stream), "\r\n"));
+		$val = Utopia::internalize(rtrim(($utopia->input_function)(), "\r\n"));
 		$utopia->input_time += (microtime(true) - $start);
 		if($this->arg !== null)
 		{
